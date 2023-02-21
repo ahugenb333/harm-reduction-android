@@ -23,5 +23,10 @@ class CalculatorViewModel: ViewModel() {
         _units.value = newUnits
         _ozPureEthanol.value = newOzEthanol
     }
+
+    fun clear() {
+        _units.value = 0.0
+        _ozPureEthanol.value = 0.0
+    }
 }
 

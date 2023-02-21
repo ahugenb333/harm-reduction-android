@@ -1,5 +1,6 @@
 package com.ahugenb.hra.calculator
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
@@ -15,13 +16,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.ahugenb.hra.R
 
 @Composable
-fun CalculatorView(viewModel: CalculatorViewModel) {
+fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel) {
     val volume = remember { mutableStateOf("") }
     val abv = remember { mutableStateOf("") }
     val drinks = remember { mutableStateOf("1.0") }
+
+    BackHandler(enabled = true) {
+        viewModel.clear()
+        navController.navigateUp()
+    }
 
     Column(
         modifier = Modifier.fillMaxHeight(),
@@ -100,12 +107,17 @@ fun CalculatorView(viewModel: CalculatorViewModel) {
     }
 }
 
-//sanitized input must not contain more than one decimal and may only contain digits from validInput
+/*
+* sanitized input:
+*  -is less than 10 digits in length
+*  -may not contain more than one decimal
+*  -may only contain digits from validInput
+*/
 private fun String.isSanitized(): Boolean {
     val validInput = "1234567890."
 
-    return (this.isEmpty() || this.count { ch -> ch == '.' } < 2
-            && (this.all { ch -> validInput.contains(ch) }))
+    return (this.isEmpty() || this.length < 10 && this.count { ch -> ch == '.' } < 2
+            && this.all { ch -> validInput.contains(ch) })
 }
 
 private fun Double.isValidPercent(): Boolean = this in 0.0..100.0

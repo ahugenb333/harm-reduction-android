@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(NavScreen.SCREEN_CALCULATOR.title) {
-                        CalculatorView(calculatorViewModel)
+                        CalculatorView(navController, calculatorViewModel)
                     }
                 }
             }
