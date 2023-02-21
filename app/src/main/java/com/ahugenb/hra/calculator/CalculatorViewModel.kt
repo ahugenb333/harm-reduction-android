@@ -1,38 +1,31 @@
 package com.ahugenb.hra.calculator
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.ahugenb.hra.calculator.UnitCalculator.Companion.updateAbv
-import com.ahugenb.hra.calculator.UnitCalculator.Companion.updateDrinks
-import com.ahugenb.hra.calculator.UnitCalculator.Companion.updateVolume
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.StateFlow
+import kotlin.math.roundToLong
 
 class CalculatorViewModel: ViewModel() {
-
-    private val _state: MutableStateFlow<CalculatorState> = MutableStateFlow(CalculatorState(1.0, 0.0, 0.0, 0.0))
-    val state: Flow<CalculatorState> = _state
-
-    fun updateDrinks(drinks: Double) {
-        val updatedState = _state.value.updateDrinks(drinks)
-        emitCalculatorState(updatedState)
+    companion object {
+        const val ETHANOL_TO_UNITS: Double = 10.0 / 6.0
+        const val PERCENT: Double = 100.0
     }
 
-    fun updateVolume(volume: Double) {
-        val updatedState = _state.value.updateVolume(volume)
-        emitCalculatorState(updatedState)
-    }
+    private val _units: MutableStateFlow<String> = MutableStateFlow("0.00 Units")
+    val units: StateFlow<String> = _units
 
-    fun updateAbv(abv: Double) {
-        val updatedState = _state.value.updateAbv(abv)
-        emitCalculatorState(updatedState)
-    }
+    private val _ozPureEthanol: MutableStateFlow<String> =
+        MutableStateFlow("0.00 fl Oz Pure Ethanol")
+    val ozPureEthanol: StateFlow<String> = _ozPureEthanol
 
-    private fun emitCalculatorState(updatedState: CalculatorState) {
-        viewModelScope.launch {
-            _state.emit(updatedState)
-        }
+    fun updateUnits(abv: Double, volume: Double, drinks: Double) {
+        val newOzEthanol = volume * drinks * (abv / PERCENT)
+        val newUnits = newOzEthanol * ETHANOL_TO_UNITS
+        val unitsText: String = String.format("%.2f Units", newUnits)
+        val ozEthanolText: String = String.format("%.2f fl Oz Pure Ethanol", newOzEthanol)
+
+        _units.value = unitsText
+        _ozPureEthanol.value = ozEthanolText
     }
 }
 
