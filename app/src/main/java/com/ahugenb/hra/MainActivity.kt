@@ -93,16 +93,39 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val volume = remember { mutableStateOf(0.0) }
+        val volume = remember { mutableStateOf("") }
+        val abv = remember { mutableStateOf("") }
+        val drinks = remember { mutableStateOf("") }
 
         OutlinedTextField(
-            value = volume.value.toString(),
+            modifier = Modifier.weight(1f, true),
+            value = volume.value,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             onValueChange = {
-                volume.value = it.toDouble()
-                viewModel.updateVolume(volume.value)
+                volume.value = it
+                //viewModel.updateVolume(volume.value)
             },
             label = { Text(text = "Oz") }
+        )
+        OutlinedTextField(
+            modifier = Modifier.weight(1f, true),
+            value = abv.value,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            onValueChange = {
+                abv.value = it
+                //viewModel.updateVolume(volume.value)
+            },
+            label = { Text(text = "% ABV") }
+        )
+        OutlinedTextField(
+            modifier = Modifier.weight(1f, true),
+            value = drinks.value,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            onValueChange = {
+                drinks.value = it
+                //viewModel.updateVolume(volume.value)
+            },
+            label = { Text(text = "No. of Drinks") }
         )
     }
 }
