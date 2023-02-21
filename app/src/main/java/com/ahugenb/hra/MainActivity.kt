@@ -4,28 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.ahugenb.hra.calculator.CalculatorView
 import com.ahugenb.hra.calculator.CalculatorViewModel
+import com.ahugenb.hra.list.MenuList
+import com.ahugenb.hra.navigation.NavScreen
 import com.ahugenb.hra.ui.theme.HraTheme
 
 class MainActivity : ComponentActivity() {
@@ -54,84 +39,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-@Composable
-fun MenuList(navController: NavController, menuItems: List<MenuItem>) {
-    LazyColumn {
-        menuItems.forEach {
-            item(key = it.id, content = {
-                ListItem(navController = navController, menuItem = it)
-            })
-        }
-    }
-}
-
-@Composable
-fun ListItem(navController: NavController, menuItem: MenuItem) {
-    ClickableText(modifier = Modifier
-        .padding(vertical = 8.dp, horizontal = 4.dp)
-        .fillMaxWidth(),
-        text = AnnotatedString(menuItem.text),
-        style = typography.h6,
-        onClick = { handleClick(navController, menuItem.id) }
-    )
-    Divider(modifier = Modifier.height(2.dp))
-}
-
-private fun handleClick(navController: NavController, id: Int) {
-    when (id) {
-        0 -> navController.navigate("screenCalculator")
-    }
-}
-
-@Composable
-fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        val volume = remember { mutableStateOf("") }
-        val abv = remember { mutableStateOf("") }
-        val drinks = remember { mutableStateOf("") }
-
-        OutlinedTextField(
-            modifier = Modifier.weight(1f, true),
-            value = volume.value,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            onValueChange = {
-                volume.value = it
-                //viewModel.updateVolume(volume.value)
-            },
-            label = { Text(text = "Oz") }
-        )
-        OutlinedTextField(
-            modifier = Modifier.weight(1f, true),
-            value = abv.value,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            onValueChange = {
-                abv.value = it
-                //viewModel.updateVolume(volume.value)
-            },
-            label = { Text(text = "% ABV") }
-        )
-        OutlinedTextField(
-            modifier = Modifier.weight(1f, true),
-            value = drinks.value,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            onValueChange = {
-                drinks.value = it
-                //viewModel.updateVolume(volume.value)
-            },
-            label = { Text(text = "No. of Drinks") }
-        )
-    }
-}
-
-enum class NavScreen(val title: String) {
-    SCREEN_LIST("screenList"),
-    SCREEN_CALCULATOR("screenCalculator"),
-    SCREEN_PHILOSOPHY("screenPhilosophy")
 }
