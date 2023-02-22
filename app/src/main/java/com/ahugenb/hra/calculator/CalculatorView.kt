@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,7 +25,9 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
     val volume = remember { mutableStateOf("") }
     val abv = remember { mutableStateOf("") }
     val drinks = remember { mutableStateOf("1.0") }
-
+    val mlChecked = remember { mutableStateOf(false) }
+    val labelId = if (mlChecked.value) R.string.hra_ml else R.string.hra_oz
+    val ethanolId = if (mlChecked.value) R.string.hra_ethanol_ml else R.string.hra_ethanol_oz
     BackHandler(enabled = true) {
         viewModel.clear()
         navController.navigateUp()
@@ -50,11 +53,12 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
                         viewModel.updateCalculation(
                             abv.value.smartToDouble(),
                             volume.value.smartToDouble(),
-                            drinks.value.smartToDouble()
+                            drinks.value.smartToDouble(),
+                            mlChecked.value
                         )
                     }
                 },
-                label = { Text(text = "fl Oz") }
+                label = { Text(text = stringResource(labelId)) }
             )
             OutlinedTextField(
                 maxLines = 1,
@@ -67,7 +71,8 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
                         viewModel.updateCalculation(
                             abv.value.smartToDouble(),
                             volume.value.smartToDouble(),
-                            drinks.value.smartToDouble()
+                            drinks.value.smartToDouble(),
+                            mlChecked.value
                         )
                     }
                 },
@@ -84,25 +89,45 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
                         viewModel.updateCalculation(
                             abv.value.smartToDouble(),
                             volume.value.smartToDouble(),
-                            drinks.value.smartToDouble()
+                            drinks.value.smartToDouble(),
+                            mlChecked.value
                         )
                     }
                 },
                 label = { Text(text = "No. of Drinks") }
             )
         }
+        Text(text = stringResource(labelId))
+        Switch(
+            checked = mlChecked.value,
+            onCheckedChange = {
+                mlChecked.value = it
+
+                viewModel.updateCalculation(
+                    abv.value.smartToDouble(),
+                    volume.value.smartToDouble(),
+                    drinks.value.smartToDouble(),
+                    mlChecked.value
+                )
+            }
+        )
+
         val units = viewModel.units.collectAsState().value
-        val ozPureEthanol = viewModel.ozPureEthanol.collectAsState().value
+        val pureEthanol = viewModel.pureEthanol.collectAsState().value
         Text(
             textAlign = TextAlign.Right,
             text = stringResource(R.string.hra_units, units), style = MaterialTheme.typography.h4,
-            modifier = Modifier.padding(horizontal = 8.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .fillMaxWidth(),
         )
         Text(
             textAlign = TextAlign.Right,
-            text = stringResource(R.string.hra_ethanol, ozPureEthanol),
+            text = stringResource(ethanolId, pureEthanol),
             style = MaterialTheme.typography.h4,
-            modifier = Modifier.padding(horizontal = 8.dp).fillMaxWidth()
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .fillMaxWidth()
         )
     }
 }
