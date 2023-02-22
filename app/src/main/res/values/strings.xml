@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Harm Reduction for Alcohol</string>
+    <string name="hra_units">%.2f Units</string>
+    <string name="hra_ethanol_oz">%.2f fl. Oz Ethanol</string>
+    <string name="hra_ethanol_ml">%.2f mL Ethanol</string>
+    <string name="hra_oz">fl. Oz</string>
+    <string name="hra_ml">mL</string>
 </resources>
