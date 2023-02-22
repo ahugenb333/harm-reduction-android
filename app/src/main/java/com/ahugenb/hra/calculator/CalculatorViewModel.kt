@@ -3,6 +3,8 @@ package com.ahugenb.hra.calculator
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
 class CalculatorViewModel: ViewModel() {
     companion object {
         const val OZ_ETHANOL_TO_UNITS: Double = 10.0 / 6.0
@@ -10,12 +12,9 @@ class CalculatorViewModel: ViewModel() {
         const val PERCENT: Double = 100.0
     }
 
-    private val _units: MutableStateFlow<Double> = MutableStateFlow(0.0)
-    val units: StateFlow<Double> = _units
-
-    private val _pureEthanol: MutableStateFlow<Double> =
-        MutableStateFlow(0.0)
-    val pureEthanol: StateFlow<Double> = _pureEthanol
+    private val _calculatorState: MutableStateFlow<CalculatorState> =
+        MutableStateFlow(CalculatorState(units = 0.0, ethanol = 0.0))
+    val calculatorState = _calculatorState.asStateFlow()
 
     fun updateCalculation(abv: Double, volume: Double, drinks: Double, mlChecked: Boolean) {
         val newEthanol = volume * drinks * (abv / PERCENT)
@@ -25,13 +24,11 @@ class CalculatorViewModel: ViewModel() {
             else
                 newEthanol * OZ_ETHANOL_TO_UNITS
 
-        _units.value = newUnits
-        _pureEthanol.value = newEthanol
+        _calculatorState.value = CalculatorState(units = newUnits, ethanol = newEthanol)
     }
 
     fun clear() {
-        _units.value = 0.0
-        _pureEthanol.value = 0.0
+        _calculatorState.value =  CalculatorState(0.0, 0.0)
     }
 }
 

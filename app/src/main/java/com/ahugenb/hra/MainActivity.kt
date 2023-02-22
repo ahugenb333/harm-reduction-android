@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
             HraTheme {
                 val navController = rememberNavController()
                 val menuList = mutableListOf(
-                    MenuItem(0, "Unit Calculator"),
+                    MenuItem(0, "Unit Calculator (USA)"),
                     MenuItem(1, "Drink Tracker"),
                     MenuItem(2, "Harm Reduction Philosophy")
                 )
