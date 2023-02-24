@@ -12,7 +12,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ahugenb.hra.MenuItem
-import com.ahugenb.hra.navigation.NavScreen
+import com.ahugenb.hra.NavScreen
 
 @Composable
 fun ListItem(navController: NavController, menuItem: MenuItem) {

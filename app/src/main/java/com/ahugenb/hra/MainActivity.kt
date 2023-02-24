@@ -10,7 +10,6 @@ import androidx.navigation.compose.rememberNavController
 import com.ahugenb.hra.calculator.CalculatorView
 import com.ahugenb.hra.calculator.CalculatorViewModel
 import com.ahugenb.hra.list.MenuList
-import com.ahugenb.hra.navigation.NavScreen
 import com.ahugenb.hra.ui.theme.HraTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,12 +22,12 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val menuList = mutableListOf(
                     MenuItem(0, "Unit Calculator (USA)"),
-                    MenuItem(1, "Drink Tracker"),
+                    MenuItem(1, "Drink Tracker / Planner"),
                     MenuItem(2, "Harm Reduction Philosophy")
                 )
 
-                NavHost(navController, startDestination = NavScreen.SCREEN_LIST.title) {
-                    composable(NavScreen.SCREEN_LIST.title) {
+                NavHost(navController, startDestination = NavScreen.SCREEN_HOME.title) {
+                    composable(NavScreen.SCREEN_HOME.title) {
                         MenuList(navController, menuList)
                     }
 
