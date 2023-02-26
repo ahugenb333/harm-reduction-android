@@ -24,6 +24,7 @@ fun ListItem(navController: NavController, menuItem: MenuItem) {
         onClick = {
             when(menuItem.id) {
                 0 -> navController.navigate(NavScreen.SCREEN_CALCULATOR.title)
+                1 -> navController.navigate(NavScreen.SCREEN_TRACKER.title)
             }
         }
     )

@@ -10,10 +10,16 @@ import androidx.navigation.compose.rememberNavController
 import com.ahugenb.hra.calculator.CalculatorView
 import com.ahugenb.hra.calculator.CalculatorViewModel
 import com.ahugenb.hra.list.MenuList
+import com.ahugenb.hra.tracker.DayView
+import com.ahugenb.hra.tracker.TrackerViewModel
+import com.ahugenb.hra.tracker.TrackerViewModelFactory
 import com.ahugenb.hra.ui.theme.HraTheme
 
 class MainActivity : ComponentActivity() {
     private val calculatorViewModel: CalculatorViewModel by viewModels()
+    private val trackerViewModel: TrackerViewModel by viewModels {
+        TrackerViewModelFactory((application as HraApplication).dbHelper)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,14 +31,19 @@ class MainActivity : ComponentActivity() {
                     MenuItem(1, "Drink Tracker / Planner"),
                     MenuItem(2, "Harm Reduction Philosophy")
                 )
+                //trackerViewModel.getDay("26/02/2023")
 
-                NavHost(navController, startDestination = NavScreen.SCREEN_HOME.title) {
-                    composable(NavScreen.SCREEN_HOME.title) {
+                NavHost(navController, startDestination = NavScreen.SCREEN_LIST.title) {
+                    composable(NavScreen.SCREEN_LIST.title) {
                         MenuList(navController, menuList)
                     }
 
                     composable(NavScreen.SCREEN_CALCULATOR.title) {
                         CalculatorView(navController, calculatorViewModel)
+                    }
+
+                    composable(NavScreen.SCREEN_TRACKER.title) {
+                        DayView(navController = navController, trackerViewModel = trackerViewModel)
                     }
                 }
             }
