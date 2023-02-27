@@ -11,8 +11,13 @@ class DatabaseHelperImpl(
         emit(trackerDatabase.dayDao().getDays())
     }
 
-    override fun insertAll(days: List<Day>): Flow<List<Day>> = flow {
+    override fun insertAll(days: List<Day>): Flow<Unit> = flow {
         trackerDatabase.dayDao().insertDays(days)
-        emit(days)
+        emit(Unit)
+    }
+
+    override fun updateDay(day: Day): Flow<Unit> = flow {
+        trackerDatabase.dayDao().updateDay(day)
+        emit(Unit)
     }
 }

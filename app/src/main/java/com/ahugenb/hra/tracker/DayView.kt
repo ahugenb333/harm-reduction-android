@@ -12,7 +12,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.joda.time.LocalDate
 import com.ahugenb.hra.R
@@ -23,19 +22,15 @@ import com.ahugenb.hra.tracker.db.Day
 fun DayView(navController: NavController, trackerViewModel: TrackerViewModel) {
     val weekDay = LocalDate.now().dayOfWeek.toShortWeekDay()
     val state = trackerViewModel.trackerState.collectAsState().value
-    val id = "26/02/2022"
+    var drinks = 0.0
+    var cravings = 0
 
-    val days = when(state) {
-        is TrackerState.TrackerStateDays -> state.days
-        else -> emptyList()
-    }
-    var todayNullable = days.find {
-       it.id == "26/02/2022"
-    }
-
-    val today = when(todayNullable) {
-        null -> Day(id, 0.0, 0.0, 0, 0.0, "")
-        else -> todayNullable
+    when(state) {
+        is TrackerState.TrackerStateDay -> {
+            drinks = state.day.drinks
+            cravings = state.day.cravings
+        }
+        else -> { }
     }
 
     Card(
@@ -47,20 +42,18 @@ fun DayView(navController: NavController, trackerViewModel: TrackerViewModel) {
     ) {
         Column {
             Text(text = weekDay, modifier = Modifier.padding(16.dp))
-            Text(text = stringResource(id = R.string.hra_drinks, today.drinks))
-            Text(text = stringResource(id = R.string.hra_cravings, today.cravings))
+            Text(text = stringResource(id = R.string.hra_drinks, drinks))
+            Text(text = stringResource(id = R.string.hra_cravings, cravings))
             Button(
                 onClick = {
-                    val updated = today.copy(drinks = today.drinks + 1)
-                    trackerViewModel.updateDays(listOf(updated))
+                    trackerViewModel.updateDrinks(drinks + 1)
                 }
             ) {
                 Text(text = stringResource(id = R.string.hra_drink))
             }
             Button(
                 onClick = {
-                    val updated = today.copy(cravings = today.cravings + 1)
-                    trackerViewModel.updateDays(listOf(updated))
+                    trackerViewModel.updateCravings(cravings + 1)
                 }
             ) {
                 Text(text = stringResource(id = R.string.hra_craving))
@@ -68,9 +61,6 @@ fun DayView(navController: NavController, trackerViewModel: TrackerViewModel) {
         }
     }
 }
-
-//todo: editable todayview (reuse for planner/tracker)
-
 private fun Int.toShortWeekDay(): String =
     when(this) {
         1 -> "M"
