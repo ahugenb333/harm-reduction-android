@@ -41,6 +41,8 @@ class TrackerViewModel(
                            today
                         ))
                         _trackerState.value = TrackerState.TrackerStateDay(today)
+                    } else {
+                        _trackerState.value = TrackerState.TrackerStateDay(it.filterToday()[0])
                     }
                 }
         }
@@ -52,6 +54,9 @@ class TrackerViewModel(
                 .flowOn(Dispatchers.IO)
                 .catch { e ->
                     Log.e("Error inserting days", e.toString())
+                }
+                .collect {
+                    Log.d("Inserted days successfully", "")
                 }
         }
     }

@@ -8,7 +8,7 @@ interface DayDao {
     @Query("SELECT * FROM days")
     fun getDays(): List<Day>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertDays(days: List<Day>)
 
     @Update
