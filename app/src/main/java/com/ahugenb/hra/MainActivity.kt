@@ -31,7 +31,6 @@ class MainActivity : ComponentActivity() {
                     MenuItem(1, "Drink Tracker / Planner"),
                     MenuItem(2, "Harm Reduction Philosophy")
                 )
-                //trackerViewModel.getDay("26/02/2023")
 
                 NavHost(navController, startDestination = NavScreen.SCREEN_LIST.title) {
                     composable(NavScreen.SCREEN_LIST.title) {

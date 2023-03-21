@@ -8,6 +8,8 @@
     <string name="hra_cravings">%d Cravings</string>
     <string name="hra_drink">I Had a Drink</string>
     <string name="hra_craving">I Had a Craving</string>
+    <string name="hra_bought">I Bought Alcohol</string>
+    <string name="hra_spent">How much did you spend?</string>
     <string name="hra_oz">fl. Oz</string>
     <string name="hra_ml">mL</string>
 </resources>
