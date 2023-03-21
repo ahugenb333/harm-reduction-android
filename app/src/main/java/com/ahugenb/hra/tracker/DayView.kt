@@ -12,14 +12,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import org.joda.time.LocalDate
 import com.ahugenb.hra.R
-import com.ahugenb.hra.tracker.db.Day
-
 
 @Composable
-fun DayView(navController: NavController, trackerViewModel: TrackerViewModel) {
+fun DayView(trackerViewModel: TrackerViewModel) {
     val weekDay = LocalDate.now().dayOfWeek.toShortWeekDay()
     val state = trackerViewModel.trackerState.collectAsState().value
     var drinks = 0.0

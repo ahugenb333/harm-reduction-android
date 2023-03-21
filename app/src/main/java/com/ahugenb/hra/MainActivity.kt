@@ -18,7 +18,7 @@ import com.ahugenb.hra.ui.theme.HraTheme
 class MainActivity : ComponentActivity() {
     private val calculatorViewModel: CalculatorViewModel by viewModels()
     private val trackerViewModel: TrackerViewModel by viewModels {
-        TrackerViewModelFactory((application as HraApplication).dbHelper)
+        TrackerViewModelFactory((application as HraApplication).dayRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(NavScreen.SCREEN_TRACKER.title) {
-                        DayView(navController = navController, trackerViewModel = trackerViewModel)
+                        DayView(trackerViewModel = trackerViewModel)
                     }
                 }
             }

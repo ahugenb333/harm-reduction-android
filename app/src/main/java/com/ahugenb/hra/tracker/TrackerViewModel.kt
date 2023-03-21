@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ahugenb.hra.tracker.db.DatabaseHelper
+import com.ahugenb.hra.tracker.db.DayRepository
 import com.ahugenb.hra.tracker.db.Day
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 
 class TrackerViewModel(
-    private val dbHelper: DatabaseHelper
+    private val dayRepository: DayRepository
 ) : ViewModel() {
     companion object {
         const val DATE_PATTERN = "dd/MM/yyyy"
@@ -28,7 +28,7 @@ class TrackerViewModel(
 
     private fun fetchDays() {
         viewModelScope.launch {
-            dbHelper.getDays()
+            dayRepository.getDays()
                 .flowOn(Dispatchers.IO)
                 .catch { e ->
                     Log.e("Error fetching days", e.toString())
@@ -50,7 +50,7 @@ class TrackerViewModel(
 
     private fun insertDays(days: List<Day>) {
         viewModelScope.launch {
-            dbHelper.insertAll(days)
+            dayRepository.insertDays(days)
                 .flowOn(Dispatchers.IO)
                 .catch { e ->
                     Log.e("Error inserting days", e.toString())
@@ -81,7 +81,7 @@ class TrackerViewModel(
 
     private fun updateDay(day: Day) {
         viewModelScope.launch {
-            dbHelper.updateDay(day)
+            dayRepository.updateDay(day)
                 .flowOn(Dispatchers.IO)
                 .catch { e ->
                     Log.e("Error updating day", e.toString())
@@ -99,7 +99,7 @@ class TrackerViewModel(
     private fun List<Day>.filterToday(): List<Day> = this.filter { it.isToday() }
 }
 
-class TrackerViewModelFactory(private val dbHelper: DatabaseHelper) : ViewModelProvider.Factory {
+class TrackerViewModelFactory(private val dbHelper: DayRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TrackerViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
