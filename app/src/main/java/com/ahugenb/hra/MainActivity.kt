@@ -37,6 +37,8 @@ class MainActivity : ComponentActivity() {
                     MenuItem(3, "Quick Actions", showDivider = false)
                 )
 
+                //TODO use Hilt to avoid passing dependencies through
+
                 NavHost(navController, startDestination = NavScreen.SCREEN_LIST.title) {
                     composable(NavScreen.SCREEN_LIST.title) {
                         Column {

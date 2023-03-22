@@ -35,9 +35,7 @@ class TrackerViewModel(
                     if (it.filterToday().isEmpty()) {
                         val today = Day()
 
-                        insertDays(listOf(
-                           today
-                        ))
+                        insertDays(listOf(today))
                         _trackerState.value = TrackerState.TrackerStateDay(today)
                     } else {
                         _trackerState.value = TrackerState.TrackerStateDay(it.filterToday()[0])
