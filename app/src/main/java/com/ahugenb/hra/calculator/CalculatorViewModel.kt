@@ -12,7 +12,7 @@ class CalculatorViewModel: ViewModel() {
     }
 
     private val _calculatorState: MutableStateFlow<CalculatorState> =
-        MutableStateFlow(CalculatorState(units = 0.0, ethanol = 0.0))
+        MutableStateFlow(CalculatorState())
     val calculatorState = _calculatorState.asStateFlow()
 
     fun updateCalculation(abv: Double, volume: Double, drinks: Double, mlChecked: Boolean) {
@@ -27,7 +27,7 @@ class CalculatorViewModel: ViewModel() {
     }
 
     fun clear() {
-        _calculatorState.value =  CalculatorState(0.0, 0.0)
+        _calculatorState.value =  CalculatorState()
     }
 }
 

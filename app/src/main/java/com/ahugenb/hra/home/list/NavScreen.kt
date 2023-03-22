@@ -1,4 +1,4 @@
-package com.ahugenb.hra
+package com.ahugenb.hra.home.list
 
 enum class NavScreen(val title: String) {
     SCREEN_LIST("screenList"),

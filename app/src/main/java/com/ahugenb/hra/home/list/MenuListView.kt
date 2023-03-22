@@ -3,7 +3,6 @@ package com.ahugenb.hra.home.list
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import com.ahugenb.hra.MenuItem
 
 @Composable
 fun MenuList(navController: NavController, menuItems: List<MenuItem>) {

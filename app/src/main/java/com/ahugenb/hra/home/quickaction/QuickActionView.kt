@@ -1,15 +1,14 @@
 package com.ahugenb.hra.home.quickaction
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -24,48 +23,61 @@ fun QuickActionView(trackerViewModel: TrackerViewModel) {
     var drinks = 0.0
     var cravings = 0
 
-    when(state) {
+    when (state) {
         is TrackerState.TrackerStateDay -> {
             drinks = state.day.drinks
             cravings = state.day.cravings
         }
-        else -> { }
+        else -> {}
     }
 
     if (showDialog.value) {
         MoneyDialog(
             onDismiss = { showDialog.value = false },
-            onConfirm = { showDialog.value = false },
-            viewModel = trackerViewModel
+            onConfirm = { showDialog.value = false }
         )
     }
 
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.Center
+            .padding(horizontal = 16.dp, vertical = 4.dp),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Button(
             onClick = {
                 trackerViewModel.updateDrinks(drinks + 1)
-            }
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = stringResource(id = R.string.hra_drink))
+            Text(
+                text = stringResource(id = R.string.hra_drink),
+                style = MaterialTheme.typography.h6
+            )
         }
         Button(
             onClick = {
                 trackerViewModel.updateCravings(cravings + 1)
-            }
+            },
+            modifier = Modifier.fillMaxWidth()
+
         ) {
-            Text(text = stringResource(id = R.string.hra_craving))
+            Text(
+                text = stringResource(id = R.string.hra_craving),
+                style = MaterialTheme.typography.h6
+            )
         }
         Button(
             onClick = {
                 showDialog.value = true
-            }
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = stringResource(id = R.string.hra_bought))
+            Text(
+                text = stringResource(id = R.string.hra_bought),
+                style = MaterialTheme.typography.h6
+            )
         }
     }
 }

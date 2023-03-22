@@ -11,8 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.ahugenb.hra.MenuItem
-import com.ahugenb.hra.NavScreen
 
 @Composable
 fun ListItem(navController: NavController, menuItem: MenuItem) {
@@ -28,5 +26,7 @@ fun ListItem(navController: NavController, menuItem: MenuItem) {
             }
         }
     )
-    Divider(modifier = Modifier.height(2.dp))
+    if (menuItem.showDivider) {
+        Divider(modifier = Modifier.height(2.dp))
+    }
 }

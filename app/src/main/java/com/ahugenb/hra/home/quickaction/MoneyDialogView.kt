@@ -13,14 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.ahugenb.hra.R
-import com.ahugenb.hra.tracker.TrackerViewModel
 
-
+//todo: sanitize input
 @Composable
 fun MoneyDialog(
     onDismiss: () -> Unit,
-    onConfirm: (Double) -> Unit,
-    viewModel: TrackerViewModel
+    onConfirm: (Double) -> Unit
 ) {
     val textValue = remember { mutableStateOf("") }
 
