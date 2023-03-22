@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.ahugenb.hra.Format
 import com.ahugenb.hra.tracker.db.DayRepository
 import com.ahugenb.hra.tracker.db.Day
 import kotlinx.coroutines.Dispatchers
@@ -14,9 +15,6 @@ import org.joda.time.DateTime
 class TrackerViewModel(
     private val dayRepository: DayRepository
 ) : ViewModel() {
-    companion object {
-        const val DATE_PATTERN = "dd/MM/yyyy"
-    }
 
     private val _trackerState: MutableStateFlow<TrackerState> =
         MutableStateFlow(TrackerState.TrackerStateEmpty())
@@ -35,7 +33,7 @@ class TrackerViewModel(
                 }
                 .collect {
                     if (it.filterToday().isEmpty()) {
-                        val today = Day(todaysId(), 0.0, 0.0, 0.0, 0, "")
+                        val today = Day()
 
                         insertDays(listOf(
                            today
@@ -92,7 +90,7 @@ class TrackerViewModel(
         }
     }
 
-    private fun todaysId(): String = DateTime.now().toString(DATE_PATTERN)
+    private fun todaysId(): String = DateTime.now().toString(Format.DATE_PATTERN)
 
     private fun Day.isToday(): Boolean = this.id == todaysId()
 
