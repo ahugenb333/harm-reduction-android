@@ -49,7 +49,7 @@ fun QuickActionView(trackerViewModel: TrackerViewModel) {
             onClick = {
                 trackerViewModel.updateDrinks(drinks + 1)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
             Text(
                 text = stringResource(id = R.string.hra_drink),
@@ -60,7 +60,7 @@ fun QuickActionView(trackerViewModel: TrackerViewModel) {
             onClick = {
                 trackerViewModel.updateCravings(cravings + 1)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
 
         ) {
             Text(
@@ -72,7 +72,7 @@ fun QuickActionView(trackerViewModel: TrackerViewModel) {
             onClick = {
                 showDialog.value = true
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
             Text(
                 text = stringResource(id = R.string.hra_bought),

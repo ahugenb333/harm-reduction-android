@@ -47,7 +47,7 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
         ) {
             OutlinedTextField(
                 maxLines = 1,
-                modifier = Modifier.weight(1f, true),
+                modifier = Modifier.weight(1f, true).padding(end = 8.dp),
                 value = volume.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
                 onValueChange = {
@@ -65,7 +65,7 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
             )
             OutlinedTextField(
                 maxLines = 1,
-                modifier = Modifier.weight(1f, true),
+                modifier = Modifier.weight(1f, true).padding(end = 8.dp),
                 value = abv.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
                 onValueChange = {
@@ -124,11 +124,11 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
         }
         Text(
             text = stringResource(labelId),
-            modifier = Modifier.padding(end = 24.dp),
-            textAlign = TextAlign.Center
+            modifier = Modifier.padding(end = 16.dp),
+            textAlign = TextAlign.Left
         )
         Switch(
-            modifier = Modifier.padding(end = 16.dp),
+            modifier = Modifier.padding(end = 12.dp),
             checked = mlChecked.value,
             onCheckedChange = {
                 focusManager.clearFocus()
