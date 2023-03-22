@@ -14,6 +14,7 @@ class Format {
             (this.isEmpty() || this.length < 10 && this.count { ch -> ch == '.' } < 2
                     && this.all { ch -> VALID_INPUT.contains(ch) })
 
+        //money may only have 2 decimal places
         fun String.isSanitizedDollars(): Boolean =
             this.isSanitized() && countAfterDecimal() < 3
 

@@ -59,7 +59,21 @@ fun QuickActionView(viewModel: TrackerViewModel) {
     ) {
         Button(
             onClick = {
-                val newDrinks = drinks++
+                val newDrinks = drinks + 0.5
+                viewModel.updateDrinks(newDrinks)
+                Toast.makeText(context, context.getString(R.string.hra_drinks_today, newDrinks),
+                    Toast.LENGTH_SHORT).show()
+            },
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+        ) {
+            Text(
+                text = stringResource(id = R.string.hra_half_drink),
+                style = MaterialTheme.typography.h6
+            )
+        }
+        Button(
+            onClick = {
+                val newDrinks = ++drinks
                 viewModel.updateDrinks(newDrinks)
                 Toast.makeText(context, context.getString(R.string.hra_drinks_today, newDrinks),
                     Toast.LENGTH_SHORT).show()
@@ -73,7 +87,7 @@ fun QuickActionView(viewModel: TrackerViewModel) {
         }
         Button(
             onClick = {
-                val newCravings = cravings++
+                val newCravings = ++cravings
                 viewModel.updateCravings(newCravings)
                 Toast.makeText(context, context.getString(R.string.hra_cravings_today, newCravings),
                     Toast.LENGTH_SHORT).show()
