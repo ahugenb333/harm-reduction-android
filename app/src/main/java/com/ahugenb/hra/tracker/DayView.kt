@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import org.joda.time.LocalDate
 import com.ahugenb.hra.R
 
+//TODO this is WIP to confirm quick actions work. Will be completed on branch 'tracker'
 @Composable
 fun DayView(trackerViewModel: TrackerViewModel) {
     val weekDay = LocalDate.now().dayOfWeek.toShortWeekDay()

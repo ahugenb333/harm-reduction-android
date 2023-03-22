@@ -18,6 +18,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.ahugenb.hra.Format.Companion.isSanitized
+import com.ahugenb.hra.Format.Companion.isValidDrinks
+import com.ahugenb.hra.Format.Companion.isValidPercent
+import com.ahugenb.hra.Format.Companion.isValidVolume
+import com.ahugenb.hra.Format.Companion.smartToDouble
 import com.ahugenb.hra.R
 
 @Composable
@@ -153,28 +158,3 @@ private fun String.acceptDrinksText(): Boolean =
 
 private fun String.acceptVolumeText(): Boolean =
     this.isSanitized() && this.smartToDouble().isValidVolume()
-
-/*
-* sanitized input:
-*  -is less than 10 digits in length
-*  -may not contain more than one decimal
-*  -may only contain digits from validInput
-*/
-private fun String.isSanitized(): Boolean {
-    val validInput = "1234567890."
-
-    return (this.isEmpty() || this.length < 10 && this.count { ch -> ch == '.' } < 2
-            && this.all { ch -> validInput.contains(ch) })
-}
-
-private fun Double.isValidPercent(): Boolean = this in 0.0..100.0
-
-private fun Double.isValidDrinks(): Boolean = this in 0.0..1000.0
-
-private fun Double.isValidVolume(): Boolean = this in 0.0..100000.0
-
-private fun String.smartToDouble(): Double =
-    when (this.isEmpty() || this == ".") {
-        true -> 0.0
-        else -> this.toDouble()
-    }

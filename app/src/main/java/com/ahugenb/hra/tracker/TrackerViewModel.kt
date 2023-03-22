@@ -77,6 +77,15 @@ class TrackerViewModel(
         }
     }
 
+    fun updateMoneySpent(moneySpent: Double) {
+        when (val currentTrackerState = _trackerState.value) {
+            is TrackerState.TrackerStateDay -> {
+                updateDay(currentTrackerState.day.copy(moneySpent = moneySpent))
+            }
+            else -> { }
+        }
+    }
+
     private fun updateDay(day: Day) {
         viewModelScope.launch {
             dayRepository.updateDay(day)
