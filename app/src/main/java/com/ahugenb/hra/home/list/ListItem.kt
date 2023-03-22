@@ -1,4 +1,4 @@
-package com.ahugenb.hra.list
+package com.ahugenb.hra.home.list
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height

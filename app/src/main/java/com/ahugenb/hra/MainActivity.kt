@@ -4,12 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ahugenb.hra.calculator.CalculatorView
 import com.ahugenb.hra.calculator.CalculatorViewModel
-import com.ahugenb.hra.list.MenuList
+import com.ahugenb.hra.home.list.MenuList
+import com.ahugenb.hra.home.quickaction.QuickActionView
 import com.ahugenb.hra.tracker.DayView
 import com.ahugenb.hra.tracker.TrackerViewModel
 import com.ahugenb.hra.tracker.TrackerViewModelFactory
@@ -34,7 +36,10 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController, startDestination = NavScreen.SCREEN_LIST.title) {
                     composable(NavScreen.SCREEN_LIST.title) {
-                        MenuList(navController, menuList)
+                        Column {
+                            MenuList(navController, menuList)
+                            QuickActionView(trackerViewModel)
+                        }
                     }
 
                     composable(NavScreen.SCREEN_CALCULATOR.title) {

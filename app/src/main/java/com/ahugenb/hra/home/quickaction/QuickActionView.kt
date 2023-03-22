@@ -1,4 +1,4 @@
-package com.ahugenb.hra.quickaction
+package com.ahugenb.hra.home.quickaction
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -32,13 +32,13 @@ fun QuickActionView(trackerViewModel: TrackerViewModel) {
         else -> { }
     }
 
-//    when(showDialog.value) {
-//        MoneyDialog(
-//            onDismiss = { showDialog.value = false },
-//            onConfirm = { showDialog.value = false },
-//            viewModel = trackerViewModel
-//        )
-//    }
+    if (showDialog.value) {
+        MoneyDialog(
+            onDismiss = { showDialog.value = false },
+            onConfirm = { showDialog.value = false },
+            viewModel = trackerViewModel
+        )
+    }
 
     Row(
         modifier = Modifier

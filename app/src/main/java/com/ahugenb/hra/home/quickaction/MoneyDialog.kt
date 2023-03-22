@@ -1,4 +1,4 @@
-package com.ahugenb.hra.quickaction
+package com.ahugenb.hra.home.quickaction
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions

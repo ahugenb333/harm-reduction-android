@@ -1,4 +1,4 @@
-package com.ahugenb.hra.list
+package com.ahugenb.hra.home.list
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
