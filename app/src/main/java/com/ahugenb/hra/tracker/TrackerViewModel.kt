@@ -32,8 +32,10 @@ class TrackerViewModel(
                 .catch { e ->
                     Log.e("Error fetching days", e.toString())
                 }
-                .collect {
-                    val allDays = generateAllDays(it)
+                .collect { it ->
+                    val allDays = generateAllDays(it).sortedBy {
+                        it.id.toDateTime()
+                    }
 
                     insertDays(allDays)
 
@@ -54,9 +56,8 @@ class TrackerViewModel(
         var earliest = days[0]
 
         days.forEach {
-            val earliestDt = DateTime.parse(earliest.id,
-                DateTimeFormat.forPattern(Format.DATE_PATTERN))
-            val dt = DateTime.parse(it.id, DateTimeFormat.forPattern(Format.DATE_PATTERN))
+            val earliestDt = earliest.id.toDateTime()
+            val dt = it.id.toDateTime()
             if (dt < earliestDt) {
                 earliest = it
             }
@@ -66,8 +67,8 @@ class TrackerViewModel(
         }
 
         val today = newDays.filterToday()[0]
-        val todayDt = DateTime.parse(today.id, DateTimeFormat.forPattern(Format.DATE_PATTERN))
-        var nextDt = DateTime.parse(earliest.id, DateTimeFormat.forPattern(Format.DATE_PATTERN))
+        val todayDt = today.id.toDateTime()
+        var nextDt = earliest.id.toDateTime()
 
         //Next we iterate from earliest -> today, adding a Day object where one does not exist.
         while (nextDt < todayDt) {
@@ -135,6 +136,9 @@ class TrackerViewModel(
         }
     }
 
+    private fun String.toDateTime(): DateTime =
+        DateTime.parse(this, DateTimeFormat.forPattern(Format.DATE_PATTERN))
+
     private fun DateTime.toId(): String = this.toString(Format.DATE_PATTERN)
 
     private fun todaysId(): String = DateTime.now().toId()
@@ -142,6 +146,7 @@ class TrackerViewModel(
     private fun Day.isToday(): Boolean = this.id == todaysId()
 
     private fun List<Day>.filterToday(): List<Day> = this.filter { it.isToday() }
+
 }
 
 class TrackerViewModelFactory(private val dbHelper: DayRepository) : ViewModelProvider.Factory {
