@@ -42,7 +42,7 @@ fun QuickActionView(viewModel: TrackerViewModel) {
             onConfirm = { showDialog.value = false
                 if (it > 0) {
                     val newMoneySpent = moneySpent + it
-                    viewModel.updateMoneySpent(newMoneySpent)
+                    viewModel.updateMoneySpentToday(newMoneySpent)
                     Toast.makeText(context, context.getString(R.string.hra_money_spent_today, newMoneySpent),
                         Toast.LENGTH_SHORT).show()
                 }
@@ -60,7 +60,7 @@ fun QuickActionView(viewModel: TrackerViewModel) {
         Button(
             onClick = {
                 val newDrinks = drinks + 0.5
-                viewModel.updateDrinks(newDrinks)
+                viewModel.updateDrinksToday(newDrinks)
                 Toast.makeText(context, context.getString(R.string.hra_drinks_today, newDrinks),
                     Toast.LENGTH_SHORT).show()
             },
@@ -74,7 +74,7 @@ fun QuickActionView(viewModel: TrackerViewModel) {
         Button(
             onClick = {
                 val newDrinks = ++drinks
-                viewModel.updateDrinks(newDrinks)
+                viewModel.updateDrinksToday(newDrinks)
                 Toast.makeText(context, context.getString(R.string.hra_drinks_today, newDrinks),
                     Toast.LENGTH_SHORT).show()
             },
@@ -88,7 +88,7 @@ fun QuickActionView(viewModel: TrackerViewModel) {
         Button(
             onClick = {
                 val newCravings = ++cravings
-                viewModel.updateCravings(newCravings)
+                viewModel.updateCravingsToday(newCravings)
                 Toast.makeText(context, context.getString(R.string.hra_cravings_today, newCravings),
                     Toast.LENGTH_SHORT).show()
             },

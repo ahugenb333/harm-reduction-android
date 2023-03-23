@@ -8,7 +8,7 @@ import org.joda.time.DateTime
 
 @Entity(tableName = "days")
 data class Day(
-    @PrimaryKey val id: String = DateTime.now().toString(Format.DATE_PATTERN),
+    @PrimaryKey val id: String = DateTime.now().toString(Format.DATE_PATTERN_ID),
     @ColumnInfo(name = "drinks") val drinks: Double = 0.0,
     @ColumnInfo(name = "planned") val planned: Double = 0.0,
     @ColumnInfo(name = "money_spent") val moneySpent: Double = 0.0,

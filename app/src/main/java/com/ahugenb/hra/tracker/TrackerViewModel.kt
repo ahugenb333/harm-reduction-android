@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ahugenb.hra.Format
+import com.ahugenb.hra.Format.Companion.idToDateTime
+import com.ahugenb.hra.Format.Companion.toId
 import com.ahugenb.hra.tracker.db.DayRepository
 import com.ahugenb.hra.tracker.db.Day
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +36,7 @@ class TrackerViewModel(
                 }
                 .collect { it ->
                     val allDays = generateAllDays(it).sortedBy {
-                        it.id.toDateTime()
+                        it.id.idToDateTime()
                     }
 
                     insertDays(allDays)
@@ -45,6 +47,7 @@ class TrackerViewModel(
         }
     }
 
+    //TODO include the monday before the earliest, not just the earliest
     //Creates a Day object for each day between the beginning and end of days in `days` (inclusive)
     private fun generateAllDays(days: List<Day>): List<Day> {
         if (days.isEmpty()) return listOf(Day())
@@ -56,8 +59,8 @@ class TrackerViewModel(
         var earliest = days[0]
 
         days.forEach {
-            val earliestDt = earliest.id.toDateTime()
-            val dt = it.id.toDateTime()
+            val earliestDt = earliest.id.idToDateTime()
+            val dt = it.id.idToDateTime()
             if (dt < earliestDt) {
                 earliest = it
             }
@@ -67,8 +70,8 @@ class TrackerViewModel(
         }
 
         val today = newDays.filterToday()[0]
-        val todayDt = today.id.toDateTime()
-        var nextDt = earliest.id.toDateTime()
+        val todayDt = today.id.idToDateTime()
+        var nextDt = earliest.id.idToDateTime()
 
         //Next we iterate from earliest -> today, adding a Day object where one does not exist.
         while (nextDt < todayDt) {
@@ -96,7 +99,7 @@ class TrackerViewModel(
         }
     }
 
-    fun updateDrinks(drinks: Double) {
+    fun updateDrinksToday(drinks: Double) {
         when (val currentTrackerState = _trackerState.value) {
             is TrackerState.TrackerStateAll -> {
                 updateDay(currentTrackerState.today.copy(drinks = drinks))
@@ -105,7 +108,11 @@ class TrackerViewModel(
         }
     }
 
-    fun updateCravings(cravings: Int) {
+    fun updateDrinks(day: Day, drinks: Double) {
+        updateDay(day.copy(drinks = drinks))
+    }
+
+    fun updateCravingsToday(cravings: Int) {
         when (val currentTrackerState = _trackerState.value) {
             is TrackerState.TrackerStateAll -> {
                 updateDay(currentTrackerState.today.copy(cravings = cravings))
@@ -114,13 +121,21 @@ class TrackerViewModel(
         }
     }
 
-    fun updateMoneySpent(moneySpent: Double) {
+    fun updateCravings(day: Day, cravings: Int) {
+        updateDay(day.copy(cravings = cravings))
+    }
+
+    fun updateMoneySpentToday(moneySpent: Double) {
         when (val currentTrackerState = _trackerState.value) {
             is TrackerState.TrackerStateAll -> {
                 updateDay(currentTrackerState.today.copy(moneySpent = moneySpent))
             }
             else -> { }
         }
+    }
+
+    fun updateMoneySpent(day: Day, moneySpent: Double) {
+        updateDay(day.copy(moneySpent = moneySpent))
     }
 
     private fun updateDay(day: Day) {
@@ -131,15 +146,52 @@ class TrackerViewModel(
                     Log.e("Error updating day", e.toString())
                 }
                 .collect {
-                    _trackerState.value = TrackerState.TrackerStateAll(day)
+                    val all = mutableListOf<Day>()
+                    //sync tracker state list with the updated day.
+                    when (val trackerState = _trackerState.value) {
+                        is TrackerState.TrackerStateAll ->
+                            trackerState.all.forEach { all.add(it) }
+                        else -> {}
+                    }
+                    val filtered = all.filterDay(day)
+                    if (filtered.isNotEmpty()) {
+                        all.remove(filtered[0])
+                    }
+                    all.add(day)
+                    _trackerState.value = TrackerState.TrackerStateAll(day, all)
                 }
         }
     }
 
-    private fun String.toDateTime(): DateTime =
-        DateTime.parse(this, DateTimeFormat.forPattern(Format.DATE_PATTERN))
+    //returns a list of Days from the beginning to the end of this week.
+    fun getThisWeek(): List<Day> {
+        val thisWeek = mutableListOf<Day>()
+        var dt = Day().id.idToDateTime()
 
-    private fun DateTime.toId(): String = this.toString(Format.DATE_PATTERN)
+        while (dt.dayOfWeek > 0) {
+            dt = dt.minusDays(1)
+        }
+
+        val days = when(val trackerState = _trackerState.value) {
+            is TrackerState.TrackerStateAll -> trackerState.all
+            else -> return listOf()
+        }
+
+        val endDt = dt.plusDays(7)
+        while (dt < endDt) {
+            val filtered = days.filter {
+                it.id == dt.toId()
+            }
+            if (filtered.isNotEmpty()) {
+                thisWeek.add(filtered[0])
+            } else {
+                thisWeek.add(Day(dt.toId()))
+            }
+            dt = dt.plusDays(1)
+        }
+
+        return thisWeek
+    }
 
     private fun todaysId(): String = DateTime.now().toId()
 
@@ -147,6 +199,7 @@ class TrackerViewModel(
 
     private fun List<Day>.filterToday(): List<Day> = this.filter { it.isToday() }
 
+    private fun List<Day>.filterDay(day: Day) = this.filter { day.id == it.id }
 }
 
 class TrackerViewModelFactory(private val dbHelper: DayRepository) : ViewModelProvider.Factory {

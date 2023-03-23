@@ -14,7 +14,7 @@ import com.ahugenb.hra.home.list.MenuItem
 import com.ahugenb.hra.home.list.MenuList
 import com.ahugenb.hra.home.list.NavScreen
 import com.ahugenb.hra.home.quickaction.QuickActionView
-import com.ahugenb.hra.tracker.DayView
+import com.ahugenb.hra.tracker.TrackerView
 import com.ahugenb.hra.tracker.TrackerViewModel
 import com.ahugenb.hra.tracker.TrackerViewModelFactory
 import com.ahugenb.hra.ui.theme.HraTheme
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(NavScreen.SCREEN_TRACKER.title) {
-                        DayView(trackerViewModel = trackerViewModel)
+                        TrackerView(trackerViewModel)
                     }
                 }
             }

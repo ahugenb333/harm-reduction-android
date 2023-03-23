@@ -1,9 +1,13 @@
 package com.ahugenb.hra
 
+import com.ahugenb.hra.tracker.db.Day
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+
 class Format {
     companion object {
-        const val DATE_PATTERN = "dd/MM/yyyy"
-        const val DATE_PATTERN_TZ = "dd/MM/yyyy HH:mm"
+        const val DATE_PATTERN_ID = "dd/MM/yyyy"
+        const val DATE_PATTERN_DISPLAY = "MM/dd/yyyy"
         private const val VALID_INPUT = "1234567890."
         /*
         * sanitized input:
@@ -46,5 +50,14 @@ class Format {
                 true -> 0.0
                 else -> this.toDouble()
             }
+
+        fun String.idToDateTime(): DateTime =
+            DateTime.parse(this, DateTimeFormat.forPattern(DATE_PATTERN_ID))
+
+        fun DateTime.toDisplay(): String = this.toString(DATE_PATTERN_DISPLAY)
+
+        fun DateTime.toId(): String = this.toString(DATE_PATTERN_ID)
+
+        fun Day.prettyPrint(): String = this.id.idToDateTime().toDisplay()
     }
 }
