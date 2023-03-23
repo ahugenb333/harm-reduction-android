@@ -28,10 +28,10 @@ fun QuickActionView(viewModel: TrackerViewModel) {
     var moneySpent = 0.0
 
     when (state) {
-        is TrackerState.TrackerStateDay -> {
-            drinks = state.day.drinks
-            cravings = state.day.cravings
-            moneySpent = state.day.moneySpent
+        is TrackerState.TrackerStateAll -> {
+            drinks = state.today.drinks
+            cravings = state.today.cravings
+            moneySpent = state.today.moneySpent
         }
         else -> {}
     }

@@ -24,9 +24,9 @@ fun DayView(trackerViewModel: TrackerViewModel) {
     var cravings = 0
 
     when(state) {
-        is TrackerState.TrackerStateDay -> {
-            drinks = state.day.drinks
-            cravings = state.day.cravings
+        is TrackerState.TrackerStateAll -> {
+            drinks = state.today.drinks
+            cravings = state.today.cravings
         }
         else -> { }
     }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 
 class TrackerViewModel(
     private val dayRepository: DayRepository
@@ -32,16 +33,53 @@ class TrackerViewModel(
                     Log.e("Error fetching days", e.toString())
                 }
                 .collect {
-                    if (it.filterToday().isEmpty()) {
-                        val today = Day()
+                    val allDays = generateAllDays(it)
 
-                        insertDays(listOf(today))
-                        _trackerState.value = TrackerState.TrackerStateDay(today)
-                    } else {
-                        _trackerState.value = TrackerState.TrackerStateDay(it.filterToday()[0])
-                    }
+                    insertDays(allDays)
+
+                    _trackerState.value = TrackerState.TrackerStateAll(all = allDays,
+                        today = allDays.filterToday()[0])
                 }
         }
+    }
+
+    //Creates a Day object for each day between the beginning and end of days in `days` (inclusive)
+    private fun generateAllDays(days: List<Day>): List<Day> {
+        if (days.isEmpty()) return listOf(Day())
+
+        val newDays = mutableListOf<Day>()
+        newDays.addAll(days)
+
+        //First we find the earliest day in Days (the first day the user opened the app)
+        var earliest = days[0]
+
+        days.forEach {
+            val earliestDt = DateTime.parse(earliest.id,
+                DateTimeFormat.forPattern(Format.DATE_PATTERN))
+            val dt = DateTime.parse(it.id, DateTimeFormat.forPattern(Format.DATE_PATTERN))
+            if (dt < earliestDt) {
+                earliest = it
+            }
+        }
+        if (days.filterToday().isEmpty()) {
+            newDays.add(Day())
+        }
+
+        val today = newDays.filterToday()[0]
+        val todayDt = DateTime.parse(today.id, DateTimeFormat.forPattern(Format.DATE_PATTERN))
+        var nextDt = DateTime.parse(earliest.id, DateTimeFormat.forPattern(Format.DATE_PATTERN))
+
+        //Next we iterate from earliest -> today, adding a Day object where one does not exist.
+        while (nextDt < todayDt) {
+            val isNotInDays = newDays.none {
+                it.id == nextDt.toId()
+            }
+            if (isNotInDays) {
+                newDays.add(Day(nextDt.toId()))
+            }
+            nextDt = nextDt.plusDays(1)
+        }
+        return newDays
     }
 
     private fun insertDays(days: List<Day>) {
@@ -59,8 +97,8 @@ class TrackerViewModel(
 
     fun updateDrinks(drinks: Double) {
         when (val currentTrackerState = _trackerState.value) {
-            is TrackerState.TrackerStateDay -> {
-                updateDay(currentTrackerState.day.copy(drinks = drinks))
+            is TrackerState.TrackerStateAll -> {
+                updateDay(currentTrackerState.today.copy(drinks = drinks))
             }
             else -> { }
         }
@@ -68,8 +106,8 @@ class TrackerViewModel(
 
     fun updateCravings(cravings: Int) {
         when (val currentTrackerState = _trackerState.value) {
-            is TrackerState.TrackerStateDay -> {
-                updateDay(currentTrackerState.day.copy(cravings = cravings))
+            is TrackerState.TrackerStateAll -> {
+                updateDay(currentTrackerState.today.copy(cravings = cravings))
             }
             else -> { }
         }
@@ -77,8 +115,8 @@ class TrackerViewModel(
 
     fun updateMoneySpent(moneySpent: Double) {
         when (val currentTrackerState = _trackerState.value) {
-            is TrackerState.TrackerStateDay -> {
-                updateDay(currentTrackerState.day.copy(moneySpent = moneySpent))
+            is TrackerState.TrackerStateAll -> {
+                updateDay(currentTrackerState.today.copy(moneySpent = moneySpent))
             }
             else -> { }
         }
@@ -92,12 +130,14 @@ class TrackerViewModel(
                     Log.e("Error updating day", e.toString())
                 }
                 .collect {
-                    _trackerState.value = TrackerState.TrackerStateDay(day)
+                    _trackerState.value = TrackerState.TrackerStateAll(day)
                 }
         }
     }
 
-    private fun todaysId(): String = DateTime.now().toString(Format.DATE_PATTERN)
+    private fun DateTime.toId(): String = this.toString(Format.DATE_PATTERN)
+
+    private fun todaysId(): String = DateTime.now().toId()
 
     private fun Day.isToday(): Boolean = this.id == todaysId()
 

@@ -4,6 +4,5 @@ import com.ahugenb.hra.tracker.db.Day
 
 sealed class TrackerState {
     class TrackerStateEmpty: TrackerState()
-
-    class TrackerStateDay(val day: Day): TrackerState()
+    class TrackerStateAll(val today: Day, val all: List<Day> = listOf()): TrackerState()
 }

@@ -3,6 +3,7 @@ package com.ahugenb.hra
 class Format {
     companion object {
         const val DATE_PATTERN = "dd/MM/yyyy"
+        const val DATE_PATTERN_TZ = "dd/MM/yyyy HH:mm"
         private const val VALID_INPUT = "1234567890."
         /*
         * sanitized input:
