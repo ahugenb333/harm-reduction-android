@@ -7,7 +7,8 @@ import org.joda.time.format.DateTimeFormat
 class Utils {
     companion object {
         const val DATE_PATTERN_ID = "dd/MM/yyyy"
-        const val DATE_PATTERN_DISPLAY = "MM/dd/yyyy"
+        private const val DATE_PATTERN_DISPLAY_LONG = "M/d/yyyy (E) "
+        private const val DATE_PATTERN_DISPLAY_SHORT = "M/d/yyyy"
         private const val VALID_INPUT = "1234567890."
         /*
         * sanitized input:
@@ -54,7 +55,9 @@ class Utils {
         fun String.idToDateTime(): DateTime =
             DateTime.parse(this, DateTimeFormat.forPattern(DATE_PATTERN_ID))
 
-        fun DateTime.toDisplay(): String = this.toString(DATE_PATTERN_DISPLAY)
+        fun DateTime.toDisplayLong(): String = this.toString(DATE_PATTERN_DISPLAY_LONG)
+
+        fun DateTime.toDisplayShort(): String = this.toString(DATE_PATTERN_DISPLAY_SHORT)
 
         fun DateTime.toId(): String = this.toString(DATE_PATTERN_ID)
 
@@ -73,6 +76,8 @@ class Utils {
             }!!
         }
 
-        fun Day.prettyPrint(): String = this.id.idToDateTime().toDisplay()
+        fun Day.prettyPrintLong(): String = this.id.idToDateTime().toDisplayLong()
+
+        fun Day.prettyPrintShort(): String = this.id.idToDateTime().toDisplayShort()
     }
 }

@@ -12,17 +12,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import com.ahugenb.hra.Utils.Companion.prettyPrint
+import com.ahugenb.hra.Utils.Companion.isToday
+import com.ahugenb.hra.Utils.Companion.prettyPrintLong
 import com.ahugenb.hra.tracker.db.Day
 
 @Composable
 fun TrackerItemView(day: Day) {
     val showExpanded = remember { mutableStateOf(false) }
 
+    if (day.isToday()) {
+        showExpanded.value = true
+    }
+
     ClickableText(modifier = Modifier
         .padding(vertical = 8.dp, horizontal = 4.dp)
         .fillMaxWidth(),
-        text = AnnotatedString(day.prettyPrint()),
+        text = AnnotatedString(day.prettyPrintLong()),
         style = MaterialTheme.typography.h6,
         onClick = {
             showExpanded.value = !showExpanded.value
