@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.ahugenb.hra.Utils.Companion.filterDay
+import com.ahugenb.hra.Utils.Companion.filterToday
 import com.ahugenb.hra.Utils.Companion.idToDateTime
 import com.ahugenb.hra.Utils.Companion.toId
 import com.ahugenb.hra.tracker.db.DayRepository
@@ -172,9 +174,18 @@ class TrackerViewModel(
         }
     }
 
+    fun getWeekBeginnings(): List<Day> {
+        val days = when(val trackerState = _trackerState.value) {
+            is TrackerState.TrackerStateAll -> trackerState.all
+            else -> return listOf()
+        }
+        return days.filter {
+            it.id.idToDateTime().dayOfWeek == 1
+        }
+    }
+
     //returns a list of Days from the beginning to the end of this week.
     fun getWeekOf(day: Day): List<Day> {
-        val thisWeek = mutableListOf<Day>()
         var dt = day.id.idToDateTime()
 
         val days = when(val trackerState = _trackerState.value) {
@@ -182,20 +193,10 @@ class TrackerViewModel(
             else -> return listOf()
         }
 
-        thisWeek.addAll(days.filter {
+        return days.filter {
             it.id.idToDateTime().weekOfWeekyear == dt.weekOfWeekyear
-        })
-
-        return thisWeek
+        }
     }
-
-    private fun todaysId(): String = DateTime.now().toId()
-
-    private fun Day.isToday(): Boolean = this.id == todaysId()
-
-    private fun List<Day>.filterToday(): List<Day> = this.filter { it.isToday() }
-
-    private fun List<Day>.filterDay(day: Day) = this.filter { day.id == it.id }
 }
 
 class TrackerViewModelFactory(private val dbHelper: DayRepository) : ViewModelProvider.Factory {

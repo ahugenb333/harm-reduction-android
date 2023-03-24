@@ -58,6 +58,21 @@ class Utils {
 
         fun DateTime.toId(): String = this.toString(DATE_PATTERN_ID)
 
+        fun todaysId(): String = DateTime.now().toId()
+
+        fun Day.isToday(): Boolean = this.id == todaysId()
+
+        fun List<Day>.filterToday(): List<Day> = this.filter { it.isToday() }
+
+        fun List<Day>.filterDay(day: Day) = this.filter { day.id == it.id }
+
+        fun List<Day>.getClosestMonday(day: Day): Day {
+            return this.find {
+                it.id.idToDateTime().weekOfWeekyear == day.id.idToDateTime().weekOfWeekyear
+                        && it.id.idToDateTime().dayOfWeek == 1
+            }!!
+        }
+
         fun Day.prettyPrint(): String = this.id.idToDateTime().toDisplay()
     }
 }
