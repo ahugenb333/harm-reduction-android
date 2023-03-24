@@ -13,7 +13,6 @@ import com.ahugenb.hra.tracker.db.Day
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
 
 class TrackerViewModel(
     private val dayRepository: DayRepository
@@ -35,42 +34,53 @@ class TrackerViewModel(
                     Log.e("Error fetching days", e.toString())
                 }
                 .collect { it ->
-                    val allDays = generateAllDays(it).sortedBy {
+                    val sorted = it.sortedBy {
                         it.id.idToDateTime()
                     }
+                    val allDays = generateAllDays(sorted)
 
                     insertDays(allDays)
 
                     val today = allDays.filterToday()[0]
 
                     _trackerState.value = TrackerState.TrackerStateAll(all = allDays, today = today)
+                    completeInit()
                 }
         }
+    }
+
+    private fun completeInit() {
+        val state = _trackerState.value as TrackerState.TrackerStateAll
+        val daysOfWeek = getWeekOf(state.selectedDay)
+        _trackerState.value =
+            state.copy(
+                weekBeginnings = getWeekBeginnings(),
+                daysOfWeek = daysOfWeek,
+                selectedMonday = daysOfWeek.first {
+                    it.id.idToDateTime().dayOfWeek == 1
+                }
+            )
     }
 
     //Creates a Day object for each day between the beginning and end of days in `days` (inclusive)
     private fun generateAllDays(days: List<Day>): List<Day> {
         if (days.isEmpty()) return listOf(Day())
 
-        val newDays = mutableListOf<Day>()
-        newDays.addAll(days)
+        val allDays = mutableListOf<Day>()
+        allDays.addAll(days)
 
-        //First we find the earliest day in Days (the first day the user opened the app)
-        var earliest = days[0]
-
-        days.forEach {
-            var earliestDt = earliest.id.idToDateTime()
-
-            val dt = it.id.idToDateTime()
-            if (dt < earliestDt) {
-                earliest = it
-            }
-        }
         if (days.filterToday().isEmpty()) {
-            newDays.add(Day())
+            allDays.add(Day())
         }
 
-        val today = newDays.filterToday()[0]
+        val today = allDays.filterToday()[0]
+        val earliest = days[0]
+
+        //We rewind to the first day of `earliest`'s week
+        var nextDt = earliest.id.idToDateTime()
+        while (nextDt.dayOfWeek > 1) {
+            nextDt = nextDt.minusDays(1)
+        }
 
         //We fast forward from `today` to the last day of `today`'s week
         var finalDt = today.id.idToDateTime()
@@ -78,23 +88,17 @@ class TrackerViewModel(
             finalDt = finalDt.plusDays(1)
         }
 
-        //Then we rewind to the first day of `earliest`'s week
-        var nextDt = earliest.id.idToDateTime()
-        while (nextDt.dayOfWeek > 1) {
-            nextDt = nextDt.minusDays(1)
-        }
-
         //Next we iterate from monday of earliest to sunday of final, adding a Day object where one does not exist.
         while (nextDt <= finalDt) {
-            val isNotInDays = newDays.none {
+            val isNotInDays = allDays.none {
                 it.id == nextDt.toId()
             }
             if (isNotInDays) {
-                newDays.add(Day(nextDt.toId()))
+                allDays.add(Day(nextDt.toId()))
             }
             nextDt = nextDt.plusDays(1)
         }
-        return newDays
+        return allDays
     }
 
     private fun insertDays(days: List<Day>) {
@@ -111,45 +115,21 @@ class TrackerViewModel(
     }
 
     fun updateDrinksToday(drinks: Double) {
-        when (val currentTrackerState = _trackerState.value) {
-            is TrackerState.TrackerStateAll -> {
-                updateDay(currentTrackerState.today.copy(drinks = drinks))
-            }
-            else -> { }
-        }
-    }
-
-    fun updateDrinks(day: Day, drinks: Double) {
-        updateDay(day.copy(drinks = drinks))
+        val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
+        updateDay(currentTrackerState.today.copy(drinks = drinks))
     }
 
     fun updateCravingsToday(cravings: Int) {
-        when (val currentTrackerState = _trackerState.value) {
-            is TrackerState.TrackerStateAll -> {
-                updateDay(currentTrackerState.today.copy(cravings = cravings))
-            }
-            else -> { }
-        }
-    }
-
-    fun updateCravings(day: Day, cravings: Int) {
-        updateDay(day.copy(cravings = cravings))
+        val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
+        updateDay(currentTrackerState.today.copy(cravings = cravings))
     }
 
     fun updateMoneySpentToday(moneySpent: Double) {
-        when (val currentTrackerState = _trackerState.value) {
-            is TrackerState.TrackerStateAll -> {
-                updateDay(currentTrackerState.today.copy(moneySpent = moneySpent))
-            }
-            else -> { }
-        }
+        val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
+        updateDay(currentTrackerState.today.copy(moneySpent = moneySpent))
     }
 
-    fun updateMoneySpent(day: Day, moneySpent: Double) {
-        updateDay(day.copy(moneySpent = moneySpent))
-    }
-
-    private fun updateDay(day: Day) {
+    fun updateDay(day: Day) {
         viewModelScope.launch {
             dayRepository.updateDay(day)
                 .flowOn(Dispatchers.IO)
@@ -159,43 +139,65 @@ class TrackerViewModel(
                 .collect {
                     val all = mutableListOf<Day>()
                     //sync tracker state list with the updated day.
-                    when (val trackerState = _trackerState.value) {
-                        is TrackerState.TrackerStateAll ->
-                            trackerState.all.forEach { all.add(it) }
-                        else -> {}
+                    val state = _trackerState.value as TrackerState.TrackerStateAll
+
+                    state.all.forEach {
+                        all.add(it)
                     }
+
+
                     val filtered = all.filterDay(day)
                     if (filtered.isNotEmpty()) {
                         all.remove(filtered[0])
                     }
                     all.add(day)
-                    _trackerState.value = TrackerState.TrackerStateAll(day, all)
+                    _trackerState.value =
+                        state.copy(
+                            selectedDay = day,
+                            all = all
+                        )
                 }
         }
     }
 
-    fun getWeekBeginnings(): List<Day> {
-        val days = when(val trackerState = _trackerState.value) {
-            is TrackerState.TrackerStateAll -> trackerState.all
-            else -> return listOf()
-        }
-        return days.filter {
+    private fun getWeekBeginnings(): List<Day> {
+        val beginnings = mutableListOf<Day>()
+        val days = (_trackerState.value as TrackerState.TrackerStateAll).all
+        beginnings.addAll(days.filter {
             it.id.idToDateTime().dayOfWeek == 1
-        }
+        })
+        return beginnings
     }
 
     //returns a list of Days from the beginning to the end of this week.
-    fun getWeekOf(day: Day): List<Day> {
-        var dt = day.id.idToDateTime()
+    private fun getWeekOf(day: Day): List<Day> {
+        val dt = day.id.idToDateTime()
+        val weekOf = mutableListOf<Day>()
 
-        val days = when(val trackerState = _trackerState.value) {
-            is TrackerState.TrackerStateAll -> trackerState.all
-            else -> return listOf()
-        }
+        val days = (_trackerState.value as TrackerState.TrackerStateAll).all
 
-        return days.filter {
+        weekOf.addAll(days.filter {
             it.id.idToDateTime().weekOfWeekyear == dt.weekOfWeekyear
-        }
+        })
+
+        return weekOf
+    }
+
+    fun updateSelectedDay(selectedDay: Day) {
+        val state = _trackerState.value as TrackerState.TrackerStateAll
+
+        _trackerState.value =
+            state.copy(
+                selectedDay = selectedDay,
+            )
+    }
+
+    fun updateSelectedMonday(index: Int) {
+        val state = _trackerState.value as TrackerState.TrackerStateAll
+        _trackerState.value =
+            state.copy(
+                selectedMonday = state.weekBeginnings[index]
+            )
     }
 }
 

@@ -26,12 +26,14 @@ fun QuickActionView(viewModel: TrackerViewModel) {
     var drinks = 0.0
     var cravings = 0
     var moneySpent = 0.0
+    var planned = 0.0
 
     when (state) {
         is TrackerState.TrackerStateAll -> {
             drinks = state.today.drinks
             cravings = state.today.cravings
             moneySpent = state.today.moneySpent
+            planned = state.today.planned
         }
         else -> {}
     }
@@ -61,7 +63,8 @@ fun QuickActionView(viewModel: TrackerViewModel) {
             onClick = {
                 val newDrinks = drinks + 0.5
                 viewModel.updateDrinksToday(newDrinks)
-                Toast.makeText(context, context.getString(R.string.hra_drinks_today, newDrinks),
+                Toast.makeText(context,
+                    context.getString(R.string.hra_drinks_today, newDrinks, planned),
                     Toast.LENGTH_SHORT).show()
             },
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
@@ -75,7 +78,8 @@ fun QuickActionView(viewModel: TrackerViewModel) {
             onClick = {
                 val newDrinks = ++drinks
                 viewModel.updateDrinksToday(newDrinks)
-                Toast.makeText(context, context.getString(R.string.hra_drinks_today, newDrinks),
+                Toast.makeText(context,
+                    context.getString(R.string.hra_drinks_today, newDrinks, planned),
                     Toast.LENGTH_SHORT).show()
             },
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
