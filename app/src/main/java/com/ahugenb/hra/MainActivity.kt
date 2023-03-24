@@ -11,7 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ahugenb.hra.calculator.CalculatorView
 import com.ahugenb.hra.calculator.CalculatorViewModel
 import com.ahugenb.hra.home.list.MenuItem
-import com.ahugenb.hra.home.list.MenuList
+import com.ahugenb.hra.home.list.MenuListView
 import com.ahugenb.hra.home.list.NavScreen
 import com.ahugenb.hra.home.quickaction.QuickActionView
 import com.ahugenb.hra.tracker.TrackerView
@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController, startDestination = NavScreen.SCREEN_LIST.title) {
                     composable(NavScreen.SCREEN_LIST.title) {
                         Column {
-                            MenuList(navController, menuList)
+                            MenuListView(navController, menuList)
                             QuickActionView(trackerViewModel)
                         }
                     }

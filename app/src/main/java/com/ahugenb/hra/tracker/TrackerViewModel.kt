@@ -4,16 +4,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ahugenb.hra.Format
-import com.ahugenb.hra.Format.Companion.idToDateTime
-import com.ahugenb.hra.Format.Companion.toId
+import com.ahugenb.hra.Utils.Companion.idToDateTime
+import com.ahugenb.hra.Utils.Companion.toId
 import com.ahugenb.hra.tracker.db.DayRepository
 import com.ahugenb.hra.tracker.db.Day
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 
 class TrackerViewModel(
     private val dayRepository: DayRepository
@@ -41,13 +39,13 @@ class TrackerViewModel(
 
                     insertDays(allDays)
 
-                    _trackerState.value = TrackerState.TrackerStateAll(all = allDays,
-                        today = allDays.filterToday()[0])
+                    val today = allDays.filterToday()[0]
+
+                    _trackerState.value = TrackerState.TrackerStateAll(all = allDays, today = today)
                 }
         }
     }
 
-    //TODO include the monday before the earliest, not just the earliest
     //Creates a Day object for each day between the beginning and end of days in `days` (inclusive)
     private fun generateAllDays(days: List<Day>): List<Day> {
         if (days.isEmpty()) return listOf(Day())
@@ -59,7 +57,8 @@ class TrackerViewModel(
         var earliest = days[0]
 
         days.forEach {
-            val earliestDt = earliest.id.idToDateTime()
+            var earliestDt = earliest.id.idToDateTime()
+
             val dt = it.id.idToDateTime()
             if (dt < earliestDt) {
                 earliest = it
@@ -70,11 +69,21 @@ class TrackerViewModel(
         }
 
         val today = newDays.filterToday()[0]
-        val todayDt = today.id.idToDateTime()
-        var nextDt = earliest.id.idToDateTime()
 
-        //Next we iterate from earliest -> today, adding a Day object where one does not exist.
-        while (nextDt < todayDt) {
+        //We fast forward from `today` to the last day of `today`'s week
+        var finalDt = today.id.idToDateTime()
+        while (finalDt.dayOfWeek < 7) {
+            finalDt = finalDt.plusDays(1)
+        }
+
+        //Then we rewind to the first day of `earliest`'s week
+        var nextDt = earliest.id.idToDateTime()
+        while (nextDt.dayOfWeek > 1) {
+            nextDt = nextDt.minusDays(1)
+        }
+
+        //Next we iterate from monday of earliest to sunday of final, adding a Day object where one does not exist.
+        while (nextDt <= finalDt) {
             val isNotInDays = newDays.none {
                 it.id == nextDt.toId()
             }
@@ -164,31 +173,18 @@ class TrackerViewModel(
     }
 
     //returns a list of Days from the beginning to the end of this week.
-    fun getThisWeek(): List<Day> {
+    fun getWeekOf(day: Day): List<Day> {
         val thisWeek = mutableListOf<Day>()
-        var dt = Day().id.idToDateTime()
-
-        while (dt.dayOfWeek > 0) {
-            dt = dt.minusDays(1)
-        }
+        var dt = day.id.idToDateTime()
 
         val days = when(val trackerState = _trackerState.value) {
             is TrackerState.TrackerStateAll -> trackerState.all
             else -> return listOf()
         }
 
-        val endDt = dt.plusDays(7)
-        while (dt < endDt) {
-            val filtered = days.filter {
-                it.id == dt.toId()
-            }
-            if (filtered.isNotEmpty()) {
-                thisWeek.add(filtered[0])
-            } else {
-                thisWeek.add(Day(dt.toId()))
-            }
-            dt = dt.plusDays(1)
-        }
+        thisWeek.addAll(days.filter {
+            it.id.idToDateTime().weekOfWeekyear == dt.weekOfWeekyear
+        })
 
         return thisWeek
     }

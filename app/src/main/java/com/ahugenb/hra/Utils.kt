@@ -4,7 +4,7 @@ import com.ahugenb.hra.tracker.db.Day
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
-class Format {
+class Utils {
     companion object {
         const val DATE_PATTERN_ID = "dd/MM/yyyy"
         const val DATE_PATTERN_DISPLAY = "MM/dd/yyyy"

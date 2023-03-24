@@ -18,11 +18,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.ahugenb.hra.Format.Companion.isSanitized
-import com.ahugenb.hra.Format.Companion.isValidDrinks
-import com.ahugenb.hra.Format.Companion.isValidPercent
-import com.ahugenb.hra.Format.Companion.isValidVolume
-import com.ahugenb.hra.Format.Companion.smartToDouble
+import com.ahugenb.hra.Utils.Companion.isSanitized
+import com.ahugenb.hra.Utils.Companion.isValidDrinks
+import com.ahugenb.hra.Utils.Companion.isValidPercent
+import com.ahugenb.hra.Utils.Companion.isValidVolume
+import com.ahugenb.hra.Utils.Companion.smartToDouble
 import com.ahugenb.hra.R
 
 @Composable

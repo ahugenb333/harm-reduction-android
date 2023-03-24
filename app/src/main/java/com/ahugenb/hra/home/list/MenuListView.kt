@@ -5,11 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 @Composable
-fun MenuList(navController: NavController, menuItems: List<MenuItem>) {
+fun MenuListView(navController: NavController, menuItems: List<MenuItem>) {
     LazyColumn {
         menuItems.forEach {
             item(key = it.id, content = {
-                ListItem(navController = navController, menuItem = it)
+                ListItemView(navController = navController, menuItem = it)
             })
         }
     }

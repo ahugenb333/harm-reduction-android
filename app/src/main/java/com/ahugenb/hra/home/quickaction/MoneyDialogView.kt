@@ -12,10 +12,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import com.ahugenb.hra.Format.Companion.isSanitized
-import com.ahugenb.hra.Format.Companion.isSanitizedDollars
-import com.ahugenb.hra.Format.Companion.isValidDollars
-import com.ahugenb.hra.Format.Companion.smartToDouble
+import com.ahugenb.hra.Utils.Companion.isSanitizedDollars
+import com.ahugenb.hra.Utils.Companion.isValidDollars
+import com.ahugenb.hra.Utils.Companion.smartToDouble
 import com.ahugenb.hra.R
 
 
