@@ -73,7 +73,7 @@ fun TrackerView(viewModel: TrackerViewModel) {
                         DropdownMenuItem(onClick = {
                             selectedIndex.value = i
                             isDropdownExpanded.value = false
-                            viewModel.updateSelectedDay(it)
+                            viewModel.updateSelectedMonday(i)
                             selectedMonday.value = it
                             selectedOptionText.value = it.prettyPrintShort()
                         }) {

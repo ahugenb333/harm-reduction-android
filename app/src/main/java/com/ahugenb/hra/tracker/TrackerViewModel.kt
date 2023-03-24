@@ -194,9 +194,11 @@ class TrackerViewModel(
 
     fun updateSelectedMonday(index: Int) {
         val state = _trackerState.value as TrackerState.TrackerStateAll
+        val beginnings = state.weekBeginnings
         _trackerState.value =
             state.copy(
-                selectedMonday = state.weekBeginnings[index]
+                selectedMonday = beginnings[index],
+                daysOfWeek = getWeekOf(beginnings[index])
             )
     }
 }
