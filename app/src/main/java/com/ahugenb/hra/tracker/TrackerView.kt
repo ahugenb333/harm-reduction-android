@@ -18,12 +18,12 @@ fun TrackerView(viewModel: TrackerViewModel) {
     val trackerState = viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll
     val isDropdownExpanded = remember { mutableStateOf(false) }
 
-    val weekBeginnings = remember { mutableStateOf(trackerState.weekBeginnings) }
+    val weekBeginnings = trackerState.weekBeginnings
     val selectedDay = remember { mutableStateOf(trackerState.selectedDay) }
     val selectedMonday = remember {
         mutableStateOf(trackerState.selectedMonday)
     }
-    val daysOfWeek = remember { mutableStateOf(trackerState.daysOfWeek) }
+    val daysOfWeek = trackerState.daysOfWeek
 
 
     //todo week summary header
@@ -49,7 +49,6 @@ fun TrackerView(viewModel: TrackerViewModel) {
                         .fillMaxWidth()
                         .clickable {
                             isDropdownExpanded.value = !isDropdownExpanded.value
-                            viewModel.updateSelectedMonday(selectedIndex.value)
                                    },
                     trailingIcon = {
                         Icon(
@@ -69,7 +68,7 @@ fun TrackerView(viewModel: TrackerViewModel) {
                     onDismissRequest = { isDropdownExpanded.value = false },
                     modifier = Modifier.fillMaxWidth(0.5f)
                 ) {
-                    weekBeginnings.value.forEachIndexed { i, it ->
+                    weekBeginnings.forEachIndexed { i, it ->
                         DropdownMenuItem(onClick = {
                             selectedIndex.value = i
                             isDropdownExpanded.value = false
@@ -84,7 +83,7 @@ fun TrackerView(viewModel: TrackerViewModel) {
             }
         }
         LazyColumn {
-            daysOfWeek.value.forEachIndexed { i, it ->
+            daysOfWeek.forEachIndexed { i, it ->
                 item(key = i, content = {
                     TrackerItemView(it, viewModel)
                 })

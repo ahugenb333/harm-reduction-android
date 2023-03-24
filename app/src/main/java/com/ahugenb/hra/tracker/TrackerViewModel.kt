@@ -54,7 +54,7 @@ class TrackerViewModel(
         val daysOfWeek = getWeekOf(state.selectedDay)
         _trackerState.value =
             state.copy(
-                weekBeginnings = getWeekBeginnings(),
+                weekBeginnings = getWeekBeginnings().reversed(),
                 daysOfWeek = daysOfWeek,
                 selectedMonday = daysOfWeek.first {
                     it.id.idToDateTime().dayOfWeek == 1
