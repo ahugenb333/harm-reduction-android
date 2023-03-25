@@ -19,17 +19,15 @@ import com.ahugenb.hra.tracker.db.Day
 
 @Composable
 fun TrackerItemView(day: Day, viewModel: TrackerViewModel) {
-    val showExpanded = remember { mutableStateOf(false) }
+    val state = viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll
+
+    val showExpanded = state.selectedDay == day
+
     val text =
         if (day.isToday())
             day.prettyPrintLong().plus(" - Today")
         else
             day.prettyPrintLong()
-
-    val state = viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll
-    if (state.selectedDay.id == day.id) {
-        showExpanded.value = true
-    }
 
     ClickableText(modifier = Modifier
         .padding(vertical = 8.dp, horizontal = 4.dp)
@@ -37,10 +35,13 @@ fun TrackerItemView(day: Day, viewModel: TrackerViewModel) {
         text = AnnotatedString(text),
         style = MaterialTheme.typography.h6,
         onClick = {
-            showExpanded.value = !showExpanded.value
+            if (showExpanded) {
+                viewModel.updateSelectedDay(null)
+            }
+            viewModel.updateSelectedDay(day)
         }
     )
-    if (showExpanded.value) {
+    if (showExpanded) {
         TrackerItemEditableView(day, viewModel)
     }
     Divider(modifier = Modifier.height(2.dp))

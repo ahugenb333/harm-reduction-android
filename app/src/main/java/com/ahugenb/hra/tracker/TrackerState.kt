@@ -6,7 +6,7 @@ sealed class TrackerState {
     class TrackerStateEmpty: TrackerState()
     data class TrackerStateAll(
         val today: Day,
-        val selectedDay: Day = today,
+        val selectedDay: Day? = today,
         val selectedMonday: Day = today,
         val all: List<Day> = listOf(),
         val daysOfWeek: List<Day> = listOf(),

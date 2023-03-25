@@ -38,11 +38,8 @@ class TrackerViewModel(
                         it.id.idToDateTime()
                     }
                     val allDays = generateAllDays(sorted)
-
                     insertDays(allDays)
-
                     val today = allDays.filterToday()[0]
-
                     _trackerState.value = TrackerState.TrackerStateAll(all = allDays, today = today)
                     completeInit()
                 }
@@ -51,7 +48,7 @@ class TrackerViewModel(
 
     private fun completeInit() {
         val state = _trackerState.value as TrackerState.TrackerStateAll
-        val daysOfWeek = getWeekOf(state.selectedDay)
+        val daysOfWeek = getWeekOf(state.selectedDay ?: state.today)
         _trackerState.value =
             state.copy(
                 weekBeginnings = getWeekBeginnings().reversed(),
@@ -183,7 +180,7 @@ class TrackerViewModel(
         return weekOf
     }
 
-    fun updateSelectedDay(selectedDay: Day) {
+    fun updateSelectedDay(selectedDay: Day?) {
         val state = _trackerState.value as TrackerState.TrackerStateAll
 
         _trackerState.value =

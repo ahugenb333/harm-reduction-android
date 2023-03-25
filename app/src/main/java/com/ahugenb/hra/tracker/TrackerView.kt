@@ -17,21 +17,12 @@ import com.ahugenb.hra.Utils.Companion.prettyPrintShort
 fun TrackerView(viewModel: TrackerViewModel) {
     val trackerState = viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll
     val isDropdownExpanded = remember { mutableStateOf(false) }
+    val selectedIndex = remember { mutableStateOf(0) }
 
     val weekBeginnings = trackerState.weekBeginnings
-    val selectedDay = remember { mutableStateOf(trackerState.selectedDay) }
-    val selectedMonday = remember {
-        mutableStateOf(trackerState.selectedMonday)
-    }
+    val selectedMonday = trackerState.selectedMonday
     val daysOfWeek = trackerState.daysOfWeek
-
-
-    //todo week summary header
-
-    val selectedOptionText = remember {
-        mutableStateOf(selectedMonday.value.prettyPrintShort())
-    }
-    val selectedIndex = remember { mutableStateOf(0) }
+    val selectedOptionText = selectedMonday.prettyPrintShort()
 
     Column {
         Row(
@@ -40,7 +31,7 @@ fun TrackerView(viewModel: TrackerViewModel) {
             Spacer(modifier = Modifier.fillMaxWidth(0.5f))
             Column {
                 OutlinedTextField(
-                    value = selectedOptionText.value,
+                    value = selectedOptionText,
                     maxLines = 1,
                     enabled = false,
                     label = { Text(text = "Week Beginning:") },
@@ -70,11 +61,12 @@ fun TrackerView(viewModel: TrackerViewModel) {
                 ) {
                     weekBeginnings.forEachIndexed { i, it ->
                         DropdownMenuItem(onClick = {
-                            selectedIndex.value = i
                             isDropdownExpanded.value = false
                             viewModel.updateSelectedMonday(i)
-                            selectedMonday.value = it
-                            selectedOptionText.value = it.prettyPrintShort()
+                            if (selectedIndex.value != i) {
+                                viewModel.updateSelectedDay(null)
+                                selectedIndex.value = i
+                            }
                         }) {
                             Text(text = it.prettyPrintShort())
                         }
