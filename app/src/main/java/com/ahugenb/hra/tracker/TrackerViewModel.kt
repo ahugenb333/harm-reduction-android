@@ -185,7 +185,7 @@ class TrackerViewModel(
 
         _trackerState.value =
             state.copy(
-                selectedDay = selectedDay,
+                selectedDay = selectedDay
             )
     }
 
