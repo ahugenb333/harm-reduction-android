@@ -24,10 +24,11 @@ class TrackerViewModel(
     val trackerState: StateFlow<TrackerState> = _trackerState
 
     init {
-        fetchDays()
+        initDays()
     }
 
-    private fun fetchDays() {
+    //fetches Day objects, filling in any gaps with empty Days
+    private fun initDays() {
         viewModelScope.launch {
             dayRepository.getDays()
                 .flowOn(Dispatchers.IO)
@@ -152,12 +153,10 @@ class TrackerViewModel(
                     _trackerState.value = if (day.isToday()) {
                         state.copy(
                             today = day,
-                            selectedDay = day,
                             all = all
                         )
                     } else {
                         state.copy(
-                            selectedDay = day,
                             all = all
                         )
                     }

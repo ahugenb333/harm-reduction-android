@@ -9,20 +9,26 @@ class Utils {
         const val DATE_PATTERN_ID = "dd/MM/yyyy"
         private const val DATE_PATTERN_DISPLAY_LONG = "M/d/yyyy (E) "
         private const val DATE_PATTERN_DISPLAY_SHORT = "M/d/yyyy"
-        private const val VALID_INPUT = "1234567890."
+        private const val VALID_INPUT_NUMBER = "1234567890"
+        private const val VALID_INPUT_DECIMAL = VALID_INPUT_NUMBER.plus(".")
+
         /*
-        * sanitized input:
+        * sanitized decimals:
         *  -is less than 10 digits in length
         *  -may not contain more than one decimal
         *  -may only contain digits from validInput
         */
-        fun String.isSanitized(): Boolean =
+        fun String.isSanitizedDecimal(): Boolean =
             (this.isEmpty() || this.length < 10 && this.count { ch -> ch == '.' } < 2
-                    && this.all { ch -> VALID_INPUT.contains(ch) })
+                    && this.all { ch -> VALID_INPUT_DECIMAL.contains(ch) })
 
         //money may only have 2 decimal places
         fun String.isSanitizedDollars(): Boolean =
-            this.isSanitized() && countAfterDecimal() < 3
+            this.isSanitizedDecimal() && countAfterDecimal() < 3
+
+        fun String.isSanitizedNumber(): Boolean =
+            (this.isEmpty() || this.length < 10 && this.none { ch -> ch == '.' }
+                    && this.all { ch -> VALID_INPUT_NUMBER.contains(ch) })
 
         private fun String.countAfterDecimal(): Int {
             var startCount = false
@@ -37,6 +43,9 @@ class Utils {
             }
             return count
         }
+
+        fun Int.isValidCravings(): Boolean = this in 0..100
+
         fun Double.isValidPercent(): Boolean = this in 0.0..100.0
 
         fun Double.isValidDrinks(): Boolean = this in 0.0..1000.0

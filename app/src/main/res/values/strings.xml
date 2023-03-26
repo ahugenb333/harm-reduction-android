@@ -15,6 +15,11 @@
     <string name="hra_bought">I Bought Alcohol</string>
     <string name="hra_spent">How much did you spend?</string>
     <string name="hra_update">Update</string>
+    <string name="hra_tracker_drinks">Drinks:</string>
+    <string name="hra_tracker_planned">Planned:</string>
+    <string name="hra_tracker_cravings">Cravings:</string>
+    <string name="hra_tracker_money">Money:</string>
+    <string name="hra_tracker_notes">Notes:</string>
     <string name="hra_oz">fl. Oz</string>
     <string name="hra_ml">mL</string>
 </resources>

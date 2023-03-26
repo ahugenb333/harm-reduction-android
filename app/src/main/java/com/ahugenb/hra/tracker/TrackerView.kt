@@ -27,7 +27,6 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
     val selectedOptionText = selectedMonday.prettyPrintShort()
 
     BackHandler(enabled = true) {
-        viewModel.updateSelectedDay(trackerState.today) //$$$
         viewModel.updateSelectedMonday(0)
         navController.navigateUp()
     }
