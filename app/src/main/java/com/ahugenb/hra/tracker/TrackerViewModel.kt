@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ahugenb.hra.Utils.Companion.filterDay
 import com.ahugenb.hra.Utils.Companion.filterToday
 import com.ahugenb.hra.Utils.Companion.idToDateTime
+import com.ahugenb.hra.Utils.Companion.isToday
 import com.ahugenb.hra.Utils.Companion.toId
 import com.ahugenb.hra.tracker.db.DayRepository
 import com.ahugenb.hra.tracker.db.Day
@@ -148,11 +149,18 @@ class TrackerViewModel(
                         all.remove(filtered[0])
                     }
                     all.add(day)
-                    _trackerState.value =
+                    _trackerState.value = if (day.isToday()) {
+                        state.copy(
+                            today = day,
+                            selectedDay = day,
+                            all = all
+                        )
+                    } else {
                         state.copy(
                             selectedDay = day,
                             all = all
                         )
+                    }
                 }
         }
     }
