@@ -26,7 +26,7 @@ import com.ahugenb.hra.Utils.Companion.smartToDouble
 import com.ahugenb.hra.R
 
 @Composable
-fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel) {
+fun CalculatorView(viewModel: CalculatorViewModel, navController: NavController) {
     val focusManager = LocalFocusManager.current
     val volume = remember { mutableStateOf("") }
     val abv = remember { mutableStateOf("") }

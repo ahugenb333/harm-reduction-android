@@ -1,5 +1,6 @@
 package com.ahugenb.hra.tracker
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,10 +12,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.ahugenb.hra.Utils.Companion.prettyPrintShort
 
 @Composable
-fun TrackerView(viewModel: TrackerViewModel) {
+fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
     val trackerState = viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll
     val isDropdownExpanded = remember { mutableStateOf(false) }
     val selectedIndex = remember { mutableStateOf(0) }
@@ -23,6 +25,12 @@ fun TrackerView(viewModel: TrackerViewModel) {
     val selectedMonday = trackerState.selectedMonday
     val daysOfWeek = trackerState.daysOfWeek
     val selectedOptionText = selectedMonday.prettyPrintShort()
+
+    BackHandler(enabled = true) {
+        viewModel.updateSelectedDay(trackerState.today) //$$$
+        viewModel.updateSelectedMonday(0)
+        navController.navigateUp()
+    }
 
     Column {
         Row(
@@ -40,7 +48,7 @@ fun TrackerView(viewModel: TrackerViewModel) {
                         .fillMaxWidth()
                         .clickable {
                             isDropdownExpanded.value = !isDropdownExpanded.value
-                                   },
+                        },
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Filled.ArrowDropDown,
