@@ -1,5 +1,6 @@
 package com.ahugenb.hra.tracker
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -22,6 +24,7 @@ import com.ahugenb.hra.Utils.Companion.isSanitizedDollars
 import com.ahugenb.hra.Utils.Companion.isValidCravings
 import com.ahugenb.hra.Utils.Companion.isValidDollars
 import com.ahugenb.hra.Utils.Companion.isValidDrinks
+import com.ahugenb.hra.Utils.Companion.prettyPrintShort
 import com.ahugenb.hra.Utils.Companion.smartToDouble
 import com.ahugenb.hra.tracker.db.Day
 
@@ -36,6 +39,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
     val notes = remember { mutableStateOf(selectedDay.notes) }
 
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -194,6 +198,9 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
                         notes = notes.value
                     )
                     viewModel.updateDay(newDay)
+                    focusManager.clearFocus()
+                    Toast.makeText(context,newDay.prettyPrintShort() + " updated",
+                        Toast.LENGTH_SHORT).show()
                     },
                 modifier = Modifier
                     .fillMaxWidth()
