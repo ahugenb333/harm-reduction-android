@@ -4,13 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ahugenb.hra.Utils.Companion.filterDay
 import com.ahugenb.hra.Utils.Companion.filterToday
 import com.ahugenb.hra.Utils.Companion.idToDateTime
 import com.ahugenb.hra.Utils.Companion.isToday
 import com.ahugenb.hra.Utils.Companion.toId
-import com.ahugenb.hra.tracker.db.DayRepository
 import com.ahugenb.hra.tracker.db.Day
+import com.ahugenb.hra.tracker.db.DayRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -137,27 +136,38 @@ class TrackerViewModel(
                 }
                 .collect {
                     val all = mutableListOf<Day>()
+                    val daysOfWeek = mutableListOf<Day>()
                     //sync tracker state list with the updated day.
                     val state = _trackerState.value as TrackerState.TrackerStateAll
 
                     state.all.forEach {
-                        all.add(it)
+                        if (it.id == day.id) {
+                            all.add(day)
+                        } else {
+                            all.add(it)
+                        }
                     }
 
-
-                    val filtered = all.filterDay(day)
-                    if (filtered.isNotEmpty()) {
-                        all.remove(filtered[0])
+                    state.daysOfWeek.forEach {
+                        if (it.id == day.id) {
+                            daysOfWeek.add(day)
+                        } else {
+                            daysOfWeek.add(it)
+                        }
                     }
-                    all.add(day)
+
                     _trackerState.value = if (day.isToday()) {
                         state.copy(
+                            selectedDay = day,
                             today = day,
-                            all = all
+                            all = all,
+                            daysOfWeek = daysOfWeek
                         )
                     } else {
                         state.copy(
-                            all = all
+                            selectedDay = day,
+                            all = all,
+                            daysOfWeek = daysOfWeek
                         )
                     }
                 }
@@ -187,7 +197,7 @@ class TrackerViewModel(
         return weekOf
     }
 
-    fun updateSelectedDay(selectedDay: Day?) {
+    fun setSelectedDay(selectedDay: Day?) {
         val state = _trackerState.value as TrackerState.TrackerStateAll
 
         _trackerState.value =

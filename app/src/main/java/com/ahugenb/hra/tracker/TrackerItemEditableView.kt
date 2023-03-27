@@ -1,29 +1,24 @@
 package com.ahugenb.hra.tracker
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ahugenb.hra.R
 import com.ahugenb.hra.Utils.Companion.isSanitizedDecimal
 import com.ahugenb.hra.Utils.Companion.isSanitizedDollars
-import com.ahugenb.hra.Utils.Companion.isSanitizedNumber
 import com.ahugenb.hra.Utils.Companion.isValidCravings
 import com.ahugenb.hra.Utils.Companion.isValidDollars
 import com.ahugenb.hra.Utils.Companion.isValidDrinks
@@ -32,12 +27,13 @@ import com.ahugenb.hra.tracker.db.Day
 
 @Composable
 fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
-    val updatedDay = remember { mutableStateOf(day) }
-    val drinks = remember { mutableStateOf(updatedDay.value.drinks.toString()) }
-    val planned = remember { mutableStateOf(day.planned.toString()) }
-    val cravings = remember { mutableStateOf(day.cravings.toString()) }
-    val money = remember { mutableStateOf(day.moneySpent.toString()) }
-    val notes = remember { mutableStateOf(day.notes) }
+    val selectedDay = (viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll)
+        .selectedDay ?: return
+    val drinks = remember { mutableStateOf(selectedDay.drinks.toString()) }
+    val planned = remember { mutableStateOf(selectedDay.planned.toString()) }
+    val cravings = remember { mutableStateOf(selectedDay.cravings.toString()) }
+    val money = remember { mutableStateOf(selectedDay.moneySpent.toString()) }
+    val notes = remember { mutableStateOf(selectedDay.notes) }
 
     val focusManager = LocalFocusManager.current
 
@@ -197,7 +193,8 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
                         moneySpent = money.value.smartToDouble(),
                         notes = notes.value
                     )
-                    viewModel.updateDay(newDay) },
+                    viewModel.updateDay(newDay)
+                    },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp, end = 8.dp)

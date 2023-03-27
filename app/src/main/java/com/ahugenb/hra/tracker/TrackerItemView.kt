@@ -3,7 +3,6 @@ package com.ahugenb.hra.tracker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,7 +20,6 @@ import com.ahugenb.hra.tracker.db.Day
 @Composable
 fun TrackerItemView(day: Day, viewModel: TrackerViewModel) {
     val state = viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll
-
     val showExpanded = day.id == state.selectedDay?.id
     val ic = if (showExpanded) R.drawable.ic_caret_down else R.drawable.ic_caret_right
 
@@ -36,9 +34,9 @@ fun TrackerItemView(day: Day, viewModel: TrackerViewModel) {
             indication = null
         ) {
             if (showExpanded) {
-                viewModel.updateSelectedDay(null)
+                viewModel.setSelectedDay(null)
             } else {
-                viewModel.updateSelectedDay(day)
+                viewModel.setSelectedDay(day)
             }
         },
         verticalAlignment = Alignment.CenterVertically,

@@ -71,7 +71,7 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
                             isDropdownExpanded.value = false
                             viewModel.updateSelectedMonday(i)
                             if (selectedIndex.value != i) {
-                                viewModel.updateSelectedDay(null)
+                                viewModel.setSelectedDay(null)
                                 selectedIndex.value = i
                             }
                         }) {
