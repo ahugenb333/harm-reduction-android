@@ -45,7 +45,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.weight(0.25f))
+            Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_drinks),
                 modifier = Modifier.weight(0.25f, true),
@@ -73,7 +73,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.weight(0.25f))
+            Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_planned),
                 modifier = Modifier.weight(0.25f, true),
@@ -102,7 +102,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.weight(0.25f))
+            Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_cravings),
                 modifier = Modifier.weight(0.25f, true),
@@ -131,7 +131,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.weight(0.25f))
+            Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_money),
                 modifier = Modifier.weight(0.25f, true),
@@ -160,7 +160,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.weight(0.25f))
+            Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_notes),
                 modifier = Modifier.weight(0.25f, true),
