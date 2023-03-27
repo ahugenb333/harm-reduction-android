@@ -76,15 +76,6 @@ class Utils {
 
         fun List<Day>.filterToday(): List<Day> = this.filter { it.isToday() }
 
-        fun List<Day>.filterDay(day: Day) = this.filter { day.id == it.id }
-
-        fun List<Day>.getClosestMonday(day: Day): Day {
-            return this.find {
-                it.id.idToDateTime().weekOfWeekyear == day.id.idToDateTime().weekOfWeekyear
-                        && it.id.idToDateTime().dayOfWeek == 1
-            }!!
-        }
-
         fun Day.prettyPrintLong(): String = this.id.idToDateTime().toDisplayLong()
 
         fun Day.prettyPrintShort(): String = this.id.idToDateTime().toDisplayShort()

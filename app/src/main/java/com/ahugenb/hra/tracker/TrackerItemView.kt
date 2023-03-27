@@ -1,5 +1,6 @@
 package com.ahugenb.hra.tracker
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
@@ -57,5 +59,5 @@ fun TrackerItemView(day: Day, viewModel: TrackerViewModel) {
     if (showExpanded) {
         TrackerItemEditableView(day, viewModel)
     }
-    Divider(modifier = Modifier.height(2.dp))
+    Divider(color = Color.LightGray, thickness = 1.dp)
 }

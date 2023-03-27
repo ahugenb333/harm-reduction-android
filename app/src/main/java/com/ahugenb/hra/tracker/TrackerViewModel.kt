@@ -185,14 +185,29 @@ class TrackerViewModel(
 
     //returns a list of Days from the beginning to the end of this week.
     private fun getWeekOf(day: Day): List<Day> {
-        val dt = day.id.idToDateTime()
+        var dt = day.id.idToDateTime()
         val weekOf = mutableListOf<Day>()
 
         val days = (_trackerState.value as TrackerState.TrackerStateAll).all
 
-        weekOf.addAll(days.filter {
-            it.id.idToDateTime().weekOfWeekyear == dt.weekOfWeekyear
-        })
+        while (dt.dayOfWeek > 1) {
+            dt = dt.minusDays(1)
+        }
+
+        val end = dt.plusDays(6)
+
+        while (dt <= end) {
+            val nextDay = days.firstOrNull {
+                it.id == dt.toId()
+            }
+            if (nextDay != null) {
+                weekOf.add(nextDay)
+            } else {
+                weekOf.add(Day(dt.toId()))
+            }
+
+            dt = dt.plusDays(1)
+        }
 
         return weekOf
     }
