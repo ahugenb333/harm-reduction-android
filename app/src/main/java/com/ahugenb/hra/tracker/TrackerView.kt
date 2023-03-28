@@ -81,6 +81,7 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(4.dp).fillMaxWidth(1f))
             }
         }
         Spacer(modifier = Modifier.height(8.dp).fillMaxWidth(1f))
