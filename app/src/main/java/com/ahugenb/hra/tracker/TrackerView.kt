@@ -83,6 +83,7 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
                 }
             }
         }
+        Spacer(modifier = Modifier.height(8.dp).fillMaxWidth(1f))
         LazyColumn {
             daysOfWeek.forEachIndexed { i, it ->
                 item(key = i, content = {
