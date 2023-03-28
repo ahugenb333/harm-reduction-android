@@ -6,6 +6,7 @@
 * Allows the user to plan the current week of drinking.
 * Allows the user to keep track of their drinking, cravings, and money spent over the past weeks.
 ## future ideas / tech challenges
+* Harm Reduction Content
 * Graphing (MPAndroidChart)
 * Theme updates / Dark Mode
 * Wearable support for quick actions
