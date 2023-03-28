@@ -15,3 +15,5 @@
 * Hilt (code cleanliness)
 ## Acknowledgement
 * Inspired by [HAMS](http://hams.cc/)
+## Privacy
+* Does not collect user data, only allows user to save their information to their device
