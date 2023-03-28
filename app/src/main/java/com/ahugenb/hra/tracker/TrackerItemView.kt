@@ -24,12 +24,12 @@ fun TrackerItemView(day: Day, viewModel: TrackerViewModel) {
     val state = viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll
     val showExpanded = day.id == state.selectedDay?.id
     val ic = if (showExpanded) R.drawable.ic_caret_down else R.drawable.ic_caret_right
-
     val text =
         if (day.isToday())
             day.prettyPrintLong().plus(" - Today")
         else
             day.prettyPrintLong()
+
     Row(
         modifier = Modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },

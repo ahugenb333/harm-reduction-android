@@ -24,6 +24,9 @@ import com.ahugenb.hra.Utils.Companion.isValidPercent
 import com.ahugenb.hra.Utils.Companion.isValidVolume
 import com.ahugenb.hra.Utils.Companion.smartToDouble
 import com.ahugenb.hra.R
+import com.ahugenb.hra.Utils.Companion.acceptDrinksText
+import com.ahugenb.hra.Utils.Companion.acceptPercentText
+import com.ahugenb.hra.Utils.Companion.acceptVolumeText
 
 @Composable
 fun CalculatorView(viewModel: CalculatorViewModel, navController: NavController) {
@@ -157,12 +160,3 @@ fun CalculatorView(viewModel: CalculatorViewModel, navController: NavController)
         )
     }
 }
-
-private fun String.acceptPercentText(): Boolean =
-    this.isSanitizedDecimal() && this.smartToDouble().isValidPercent()
-
-private fun String.acceptDrinksText(): Boolean =
-    this.isSanitizedDecimal() && this.smartToDouble().isValidDrinks()
-
-private fun String.acceptVolumeText(): Boolean =
-    this.isSanitizedDecimal() && this.smartToDouble().isValidVolume()

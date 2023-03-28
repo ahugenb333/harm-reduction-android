@@ -19,13 +19,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ahugenb.hra.R
+import com.ahugenb.hra.Utils.Companion.acceptCravingsText
+import com.ahugenb.hra.Utils.Companion.acceptDollarsText
+import com.ahugenb.hra.Utils.Companion.acceptDrinksText
 import com.ahugenb.hra.Utils.Companion.isSanitizedDecimal
-import com.ahugenb.hra.Utils.Companion.isSanitizedDollars
-import com.ahugenb.hra.Utils.Companion.isValidCravings
-import com.ahugenb.hra.Utils.Companion.isValidDollars
 import com.ahugenb.hra.Utils.Companion.isValidDrinks
 import com.ahugenb.hra.Utils.Companion.prettyPrintShort
 import com.ahugenb.hra.Utils.Companion.smartToDouble
+import com.ahugenb.hra.Utils.Companion.smartToInt
 import com.ahugenb.hra.tracker.db.Day
 
 @Composable
@@ -35,7 +36,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
     val drinks = remember { mutableStateOf(selectedDay.drinks.toString()) }
     val planned = remember { mutableStateOf(selectedDay.planned.toString()) }
     val cravings = remember { mutableStateOf(selectedDay.cravings.toString()) }
-    val money = remember { mutableStateOf(selectedDay.moneySpent.toString()) }
+    val money = remember { mutableStateOf(String.format("%.2f", selectedDay.moneySpent)) }
     val notes = remember { mutableStateOf(selectedDay.notes) }
 
     val focusManager = LocalFocusManager.current
@@ -49,6 +50,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
+            //drinks
             Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_drinks),
@@ -77,6 +79,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
+            //planned
             Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_planned),
@@ -92,7 +95,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next),
                 onValueChange = {
-                    if (it.isSanitizedDecimal() && it.smartToDouble().isValidDrinks()) {
+                    if (it.acceptDrinksText()) {
                         planned.value = it
                     }
                 },
@@ -106,6 +109,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
+            //cravings
             Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_cravings),
@@ -121,7 +125,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next),
                 onValueChange = {
-                    if (it.isSanitizedDecimal() && it.toInt().isValidCravings()) {
+                    if (it.acceptCravingsText()) {
                         cravings.value = it
                     }
                 },
@@ -135,6 +139,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
+            //money
             Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_money),
@@ -150,7 +155,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
                 value = money.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
                 onValueChange = {
-                    if (it.isSanitizedDollars() && it.smartToDouble().isValidDollars()) {
+                    if (it.acceptDollarsText()) {
                         money.value = it
                     }
                 },
@@ -164,6 +169,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
+            //notes
             Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_notes),
@@ -193,8 +199,8 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
                     val newDay = day.copy(
                         drinks = drinks.value.smartToDouble(),
                         planned = planned.value.smartToDouble(),
-                        cravings = cravings.value.toInt(),
-                        moneySpent = money.value.smartToDouble(),
+                        cravings = cravings.value.smartToInt(),
+                        moneySpent = money.value.removePrefix("$").smartToDouble(),
                         notes = notes.value
                     )
                     viewModel.updateDay(newDay)

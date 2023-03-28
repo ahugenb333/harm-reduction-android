@@ -9,6 +9,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -33,9 +34,10 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
 
     Column {
         Row(
+            verticalAlignment = Alignment.Bottom,
             modifier = Modifier.padding(end = 8.dp, top = 8.dp)
         ) {
-            Spacer(modifier = Modifier.fillMaxWidth(0.5f))
+            TrackerHeaderView(viewModel = viewModel)
             Column {
                 OutlinedTextField(
                     value = selectedOptionText,

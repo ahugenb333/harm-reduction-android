@@ -61,20 +61,49 @@ class Utils {
                 else -> this.toDouble()
             }
 
+        fun String.smartToInt(): Int =
+            when (this.isEmpty() || this == "") {
+                true -> 0
+                else -> this.toInt()
+            }
+
         fun String.idToDateTime(): DateTime =
             DateTime.parse(this, DateTimeFormat.forPattern(DATE_PATTERN_ID))
 
-        fun DateTime.toDisplayLong(): String = this.toString(DATE_PATTERN_DISPLAY_LONG)
+        private fun DateTime.toDisplayLong(): String = this.toString(DATE_PATTERN_DISPLAY_LONG)
 
-        fun DateTime.toDisplayShort(): String = this.toString(DATE_PATTERN_DISPLAY_SHORT)
+        private fun DateTime.toDisplayShort(): String = this.toString(DATE_PATTERN_DISPLAY_SHORT)
 
         fun DateTime.toId(): String = this.toString(DATE_PATTERN_ID)
 
-        fun todaysId(): String = DateTime.now().toId()
+        private fun todaysId(): String = DateTime.now().toId()
 
         fun Day.isToday(): Boolean = this.id == todaysId()
 
         fun List<Day>.filterToday(): List<Day> = this.filter { it.isToday() }
+
+        fun List<Day>.getDrinksTotal(): Double = this.sumOf { it.drinks }
+
+        fun List<Day>.getMoneySpentTotal(): Double = this.sumOf { it.moneySpent }
+
+        fun List<Day>.getPlannedTotal(): Double = this.sumOf { it.planned }
+
+        fun List<Day>.getCravingsTotal(): Int = this.sumOf { it.cravings }
+
+        fun String.acceptPercentText(): Boolean =
+            this.isSanitizedDecimal() && this.smartToDouble().isValidPercent()
+
+        fun String.acceptDrinksText(): Boolean =
+            this.isSanitizedDecimal() && this.smartToDouble().isValidDrinks()
+
+        fun String.acceptDollarsText(): Boolean =
+            this.isSanitizedDollars() && this.smartToDouble().isValidDollars()
+
+        fun String.acceptVolumeText(): Boolean =
+            this.isSanitizedDecimal() && this.smartToDouble().isValidVolume()
+
+        fun String.acceptCravingsText(): Boolean =
+            this.isSanitizedNumber() && this.smartToInt().isValidCravings()
 
         fun Day.prettyPrintLong(): String = this.id.idToDateTime().toDisplayLong()
 

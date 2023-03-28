@@ -221,6 +221,16 @@ class TrackerViewModel(
             )
     }
 
+    fun getLastWeek(): List<Day> {
+        val state = _trackerState.value as TrackerState.TrackerStateAll
+        val dt = state.daysOfWeek[0].id.idToDateTime()
+        val rewind = dt.minusDays(7)
+        val dayLastWeek = state.all.firstOrNull {
+            it.id == rewind.toId()
+        } ?: Day(rewind.toId())
+        return getWeekOf(dayLastWeek)
+    }
+
     fun updateSelectedMonday(index: Int) {
         val state = _trackerState.value as TrackerState.TrackerStateAll
         val beginnings = state.weekBeginnings
