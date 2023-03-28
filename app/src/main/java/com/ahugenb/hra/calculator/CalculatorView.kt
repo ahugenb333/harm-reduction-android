@@ -18,10 +18,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.ahugenb.hra.Utils.Companion.isSanitizedDecimal
+import com.ahugenb.hra.Utils.Companion.isValidDrinks
+import com.ahugenb.hra.Utils.Companion.isValidPercent
+import com.ahugenb.hra.Utils.Companion.isValidVolume
+import com.ahugenb.hra.Utils.Companion.smartToDouble
 import com.ahugenb.hra.R
+import com.ahugenb.hra.Utils.Companion.acceptDrinksText
+import com.ahugenb.hra.Utils.Companion.acceptPercentText
+import com.ahugenb.hra.Utils.Companion.acceptVolumeText
 
 @Composable
-fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel) {
+fun CalculatorView(viewModel: CalculatorViewModel, navController: NavController) {
     val focusManager = LocalFocusManager.current
     val volume = remember { mutableStateOf("") }
     val abv = remember { mutableStateOf("") }
@@ -29,6 +37,10 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
     val mlChecked = remember { mutableStateOf(false) }
     val labelId = if (mlChecked.value) R.string.hra_ml else R.string.hra_oz
     val ethanolId = if (mlChecked.value) R.string.hra_ethanol_ml else R.string.hra_ethanol_oz
+
+    val state = viewModel.calculatorState.collectAsState().value
+    val units = state.units
+    val pureEthanol = state.ethanol
 
     BackHandler(enabled = true) {
         viewModel.clear()
@@ -39,15 +51,37 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
         modifier = Modifier.fillMaxHeight(),
         horizontalAlignment = Alignment.End
     ) {
+        Card(elevation = 10.dp, modifier = Modifier.padding(8.dp)) {
+            Column {
+                Text(
+                    textAlign = TextAlign.Right,
+                    text = stringResource(R.string.hra_units, units),
+                    style = MaterialTheme.typography.h4,
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .fillMaxWidth(),
+                )
+                Text(
+                    textAlign = TextAlign.Right,
+                    text = stringResource(ethanolId, pureEthanol),
+                    style = MaterialTheme.typography.h4,
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .fillMaxWidth()
+                )
+            }
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedTextField(
                 maxLines = 1,
-                modifier = Modifier.weight(1f, true),
+                modifier = Modifier
+                    .weight(1f, true)
+                    .padding(end = 8.dp),
                 value = volume.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
                 onValueChange = {
@@ -65,7 +99,9 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
             )
             OutlinedTextField(
                 maxLines = 1,
-                modifier = Modifier.weight(1f, true),
+                modifier = Modifier
+                    .weight(1f, true)
+                    .padding(end = 8.dp),
                 value = abv.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
                 onValueChange = {
@@ -85,7 +121,8 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
                 maxLines = 1,
                 modifier = Modifier.weight(1f, true),
                 value = drinks.value,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 onValueChange = {
                     if (it.acceptDrinksText()) {
@@ -101,34 +138,13 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
                 label = { Text(text = "No. of Drinks") },
             )
         }
-        val units = viewModel.calculatorState.collectAsState().value.units
-        val pureEthanol = viewModel.calculatorState.collectAsState().value.ethanol
-        Card(elevation = 10.dp, modifier = Modifier.padding(8.dp)) {
-            Column {
-                Text(
-                    textAlign = TextAlign.Right,
-                    text = stringResource(R.string.hra_units, units), style = MaterialTheme.typography.h4,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .fillMaxWidth(),
-                )
-                Text(
-                    textAlign = TextAlign.Right,
-                    text = stringResource(ethanolId, pureEthanol),
-                    style = MaterialTheme.typography.h4,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .fillMaxWidth()
-                )
-            }
-        }
         Text(
             text = stringResource(labelId),
-            modifier = Modifier.padding(end = 24.dp),
-            textAlign = TextAlign.Center
+            modifier = Modifier.padding(end = 16.dp),
+            textAlign = TextAlign.Left
         )
         Switch(
-            modifier = Modifier.padding(end = 16.dp),
+            modifier = Modifier.padding(end = 12.dp),
             checked = mlChecked.value,
             onCheckedChange = {
                 focusManager.clearFocus()
@@ -144,37 +160,3 @@ fun CalculatorView(navController: NavController, viewModel: CalculatorViewModel)
         )
     }
 }
-
-private fun String.acceptPercentText(): Boolean =
-    this.isSanitized() && this.smartToDouble().isValidPercent()
-
-private fun String.acceptDrinksText(): Boolean =
-    this.isSanitized() && this.smartToDouble().isValidDrinks()
-
-private fun String.acceptVolumeText(): Boolean =
-    this.isSanitized() && this.smartToDouble().isValidVolume()
-
-/*
-* sanitized input:
-*  -is less than 10 digits in length
-*  -may not contain more than one decimal
-*  -may only contain digits from validInput
-*/
-private fun String.isSanitized(): Boolean {
-    val validInput = "1234567890."
-
-    return (this.isEmpty() || this.length < 10 && this.count { ch -> ch == '.' } < 2
-            && this.all { ch -> validInput.contains(ch) })
-}
-
-private fun Double.isValidPercent(): Boolean = this in 0.0..100.0
-
-private fun Double.isValidDrinks(): Boolean = this in 0.0..1000.0
-
-private fun Double.isValidVolume(): Boolean = this in 0.0..100000.0
-
-private fun String.smartToDouble(): Double =
-    when (this.isEmpty() || this == ".") {
-        true -> 0.0
-        else -> this.toDouble()
-    }

@@ -3,6 +3,23 @@
     <string name="hra_units">%.2f Units</string>
     <string name="hra_ethanol_oz">%.2f fl. Oz Ethanol</string>
     <string name="hra_ethanol_ml">%.2f mL Ethanol</string>
+    <string name="hra_drinks">%.1f Drinks</string>
+    <string name="hra_planned">%.1f Planned</string>
+    <string name="hra_cravings">%d Cravings</string>
+    <string name="hra_drinks_today">%.1f Drinks Today (%.1f Planned)</string>
+    <string name="hra_cravings_today">%d Cravings Today</string>
+    <string name="hra_money_spent_today">$%.2f Spent Today</string>
+    <string name="hra_half_drink">I Had <![CDATA[\u00BD]]> Drink</string>
+    <string name="hra_drink">I Had a Drink</string>
+    <string name="hra_craving">I Had a Craving</string>
+    <string name="hra_bought">I Bought Alcohol</string>
+    <string name="hra_spent">How much did you spend?</string>
+    <string name="hra_update">Update</string>
+    <string name="hra_tracker_drinks">Drinks:</string>
+    <string name="hra_tracker_planned">Planned:</string>
+    <string name="hra_tracker_cravings">Cravings:</string>
+    <string name="hra_tracker_money">Money:</string>
+    <string name="hra_tracker_notes">Notes:</string>
     <string name="hra_oz">fl. Oz</string>
     <string name="hra_ml">mL</string>
 </resources>
