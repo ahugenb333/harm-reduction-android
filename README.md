@@ -5,6 +5,7 @@
 ## version 1.0.0
 * Allows the user to plan the current week of drinking.
 * Allows the user to keep track of their drinking, cravings, and money spent over the past weeks.
+* Allows the user to calculate how many drinks they had using the %ABV and volume.
 ## future ideas / tech challenges
 * Harm Reduction Content
 * Graphing (MPAndroidChart)
