@@ -51,22 +51,21 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             horizontalArrangement = Arrangement.Center
         ) {
             //drinks
-            Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_drinks),
-                modifier = Modifier.weight(0.25f, true),
+                modifier = Modifier.weight(0.25f, true)
+                    .padding(start = 24.dp, end = 24.dp, top = 8.dp),
                 style = MaterialTheme.typography.h6
             )
             OutlinedTextField(
                 maxLines = 1,
                 modifier = Modifier
-                    .weight(0.25f, true)
-                    .padding(end = 8.dp),
+                    .weight(0.25f, true),
                 value = drinks.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next),
                 onValueChange = {
-                    if (it.isSanitizedDecimal() && it.smartToDouble().isValidDrinks()) {
+                    if (it.acceptDrinksText()) {
                         drinks.value = it
                     }
                 },
@@ -80,17 +79,15 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             horizontalArrangement = Arrangement.Center
         ) {
             //planned
-            Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_planned),
-                modifier = Modifier.weight(0.25f, true),
+                modifier = Modifier.weight(0.25f, true)
+                    .padding(start = 24.dp, end = 24.dp, top = 8.dp),
                 style = MaterialTheme.typography.h6
             )
             OutlinedTextField(
                 maxLines = 1,
-                modifier = Modifier
-                    .weight(0.25f, true)
-                    .padding(end = 8.dp),
+                modifier = Modifier.weight(0.25f, true),
                 value = planned.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next),
@@ -110,17 +107,16 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             horizontalArrangement = Arrangement.Center
         ) {
             //cravings
-            Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_cravings),
-                modifier = Modifier.weight(0.25f, true),
+                modifier = Modifier.weight(0.25f, true)
+                    .padding(start = 24.dp, end = 24.dp, top = 8.dp),
                 style = MaterialTheme.typography.h6
             )
             OutlinedTextField(
                 maxLines = 1,
                 modifier = Modifier
-                    .weight(0.25f, true)
-                    .padding(end = 8.dp),
+                    .weight(0.25f, true),
                 value = cravings.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next),
@@ -140,18 +136,17 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             horizontalArrangement = Arrangement.Center
         ) {
             //money
-            Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_money),
-                modifier = Modifier.weight(0.25f, true),
+                modifier = Modifier.weight(0.25f, true)
+                    .padding(start = 24.dp, end = 24.dp, top = 8.dp),
                 style = MaterialTheme.typography.h6,
                 maxLines = 1
             )
             OutlinedTextField(
                 maxLines = 1,
                 modifier = Modifier
-                    .weight(0.25f, true)
-                    .padding(end = 8.dp),
+                    .weight(0.25f, true),
                 value = money.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
                 onValueChange = {
@@ -170,17 +165,16 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             horizontalArrangement = Arrangement.Center
         ) {
             //notes
-            Spacer(modifier = Modifier.weight(0.15f))
             Text(
                 text = stringResource(id = R.string.hra_tracker_notes),
-                modifier = Modifier.weight(0.25f, true),
+                modifier = Modifier.weight(0.25f, true)
+                    .padding(start = 24.dp, end = 24.dp, top = 8.dp),
                 style = MaterialTheme.typography.h6,
             )
             OutlinedTextField(
                 maxLines = 3,
                 modifier = Modifier
-                    .weight(0.5f, true)
-                    .padding(end = 8.dp),
+                    .weight(0.5f, true),
                 value = notes.value,
                 onValueChange = {
                     notes.value = it

@@ -12,14 +12,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import com.ahugenb.hra.Utils.Companion.isSanitizedDollars
-import com.ahugenb.hra.Utils.Companion.isValidDollars
 import com.ahugenb.hra.Utils.Companion.smartToDouble
 import com.ahugenb.hra.R
+import com.ahugenb.hra.Utils.Companion.acceptDollarsText
 
 
 @Composable
-fun MoneyDialog(
+fun MoneyDialogView(
     onDismiss: () -> Unit,
     onConfirm: (Double) -> Unit
 ) {
@@ -34,11 +33,11 @@ fun MoneyDialog(
             OutlinedTextField(
                 value = textValue.value,
                 onValueChange = {
-                    if (it.isSanitizedDollars() && it.smartToDouble().isValidDollars()) {
+                    if (it.acceptDollarsText()) {
                         textValue.value = it
                     }
                 },
-                label = { Text(text = "Enter dollar amount") },
+                label = { Text(text = stringResource(R.string.hra_enter_dollar)) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number
                 ),
