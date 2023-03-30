@@ -15,10 +15,10 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = HamsterFur,
+    primary = Mahogany,
     primaryVariant = GoldenHamster,
     secondary = GoldenHamster,
-    background = HamsterFur,
+    background = Mahogany,
     /* Other default colors to override
     background = Color.White,
     surface = Color.White,

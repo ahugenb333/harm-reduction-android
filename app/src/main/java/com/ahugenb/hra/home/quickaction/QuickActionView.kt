@@ -39,7 +39,7 @@ fun QuickActionView(viewModel: TrackerViewModel) {
     }
 
     if (showDialog.value) {
-        MoneyDialog(
+        MoneyDialogView(
             onDismiss = { showDialog.value = false },
             onConfirm = { showDialog.value = false
                 if (it > 0) {

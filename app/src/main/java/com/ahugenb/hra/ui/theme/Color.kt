@@ -8,4 +8,5 @@ val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 
 val HamsterFur = Color(0xFFa6814c)
+val Mahogany = Color(0xFF670A0A)
 val GoldenHamster = Color (0xFFda9e38)

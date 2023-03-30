@@ -50,7 +50,7 @@ fun TrackerItemView(day: Day, viewModel: TrackerViewModel) {
         )
         Box(modifier = Modifier.fillMaxWidth()) {
             Icon(
-                modifier = Modifier.align(Alignment.CenterEnd).padding(end = 128.dp),
+                modifier = Modifier.align(Alignment.CenterEnd).padding(end = 24.dp),
                 painter = painterResource(ic),
                 contentDescription = "Expandable menu icon"
             )
