@@ -23,7 +23,7 @@ class Utils {
                     && this.all { ch -> VALID_INPUT_DECIMAL.contains(ch) })
 
         //money may only have 2 decimal places
-        fun String.isSanitizedDollars(): Boolean =
+        private fun String.isSanitizedDollars(): Boolean =
             this.isSanitizedDecimal() && countAfterDecimal() < 3
 
         fun String.isSanitizedNumber(): Boolean =
