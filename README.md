@@ -8,6 +8,7 @@
 * Allows the user to calculate how many drinks they had using the %ABV and volume.
 ## version 1.0.1
 * Changes to theme and layout spacing
+* Allows the user to save their drinks from the calculator.
 ## future ideas / tech challenges
 * Harm Reduction Content
 * Graphing
