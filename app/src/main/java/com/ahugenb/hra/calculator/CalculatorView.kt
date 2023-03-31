@@ -1,5 +1,6 @@
 package com.ahugenb.hra.calculator
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -11,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -23,10 +25,11 @@ import com.ahugenb.hra.R
 import com.ahugenb.hra.Utils.Companion.acceptDrinksText
 import com.ahugenb.hra.Utils.Companion.acceptPercentText
 import com.ahugenb.hra.Utils.Companion.acceptVolumeText
+import com.ahugenb.hra.tracker.TrackerState
+import com.ahugenb.hra.tracker.TrackerViewModel
 
 @Composable
-fun CalculatorView(viewModel: CalculatorViewModel, navController: NavController) {
-    val focusManager = LocalFocusManager.current
+fun CalculatorView(calculatorViewModel: CalculatorViewModel, trackerViewModel: TrackerViewModel, navController: NavController) {
     val volume = remember { mutableStateOf("") }
     val abv = remember { mutableStateOf("") }
     val drinks = remember { mutableStateOf("1.0") }
@@ -34,12 +37,18 @@ fun CalculatorView(viewModel: CalculatorViewModel, navController: NavController)
     val labelId = if (mlChecked.value) R.string.hra_ml else R.string.hra_oz
     val ethanolId = if (mlChecked.value) R.string.hra_ethanol_ml else R.string.hra_ethanol_oz
 
-    val state = viewModel.calculatorState.collectAsState().value
-    val units = state.units
-    val pureEthanol = state.ethanol
+    val calculatorState = calculatorViewModel.calculatorState.collectAsState().value
+    val units = calculatorState.units
+    val pureEthanol = calculatorState.ethanol
+
+    val trackerState  = trackerViewModel.trackerState.collectAsState().value
+            as TrackerState.TrackerStateAll
+
+    val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
 
     BackHandler(enabled = true) {
-        viewModel.clear()
+        calculatorViewModel.clear()
         navController.navigateUp()
     }
 
@@ -83,7 +92,7 @@ fun CalculatorView(viewModel: CalculatorViewModel, navController: NavController)
                 onValueChange = {
                     if (it.acceptVolumeText()) {
                         volume.value = it
-                        viewModel.updateCalculation(
+                        calculatorViewModel.updateCalculation(
                             abv.value.smartToDouble(),
                             volume.value.smartToDouble(),
                             drinks.value.smartToDouble(),
@@ -103,7 +112,7 @@ fun CalculatorView(viewModel: CalculatorViewModel, navController: NavController)
                 onValueChange = {
                     if (it.acceptPercentText()) {
                         abv.value = it
-                        viewModel.updateCalculation(
+                        calculatorViewModel.updateCalculation(
                             abv.value.smartToDouble(),
                             volume.value.smartToDouble(),
                             drinks.value.smartToDouble(),
@@ -123,7 +132,7 @@ fun CalculatorView(viewModel: CalculatorViewModel, navController: NavController)
                 onValueChange = {
                     if (it.acceptDrinksText()) {
                         drinks.value = it
-                        viewModel.updateCalculation(
+                        calculatorViewModel.updateCalculation(
                             abv.value.smartToDouble(),
                             volume.value.smartToDouble(),
                             drinks.value.smartToDouble(),
@@ -137,7 +146,7 @@ fun CalculatorView(viewModel: CalculatorViewModel, navController: NavController)
         Text(
             text = stringResource(labelId),
             modifier = Modifier.padding(end = 16.dp),
-            textAlign = TextAlign.Left
+            textAlign = TextAlign.Center
         )
         Switch(
             modifier = Modifier.padding(end = 12.dp),
@@ -146,7 +155,7 @@ fun CalculatorView(viewModel: CalculatorViewModel, navController: NavController)
                 focusManager.clearFocus()
                 mlChecked.value = it
 
-                viewModel.updateCalculation(
+                calculatorViewModel.updateCalculation(
                     abv.value.smartToDouble(),
                     volume.value.smartToDouble(),
                     drinks.value.smartToDouble(),
@@ -154,5 +163,19 @@ fun CalculatorView(viewModel: CalculatorViewModel, navController: NavController)
                 )
             }
         )
+        Button(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
+            onClick = {
+                focusManager.clearFocus()
+                trackerViewModel.addDrinksToday(calculatorState.units)
+                Toast.makeText(context, context.getString(R.string.hra_drinks_today,
+                    trackerState.today.drinks, trackerState.today.planned), Toast.LENGTH_SHORT)
+                    .show()
+            },
+        ) {
+            Text(text = stringResource(R.string.hra_add_today))
+        }
     }
 }

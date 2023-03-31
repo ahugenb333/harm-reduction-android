@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(NavScreen.SCREEN_CALCULATOR.title) {
-                        CalculatorView(calculatorViewModel, navController)
+                        CalculatorView(calculatorViewModel, trackerViewModel, navController)
                     }
 
                     composable(NavScreen.SCREEN_TRACKER.title) {

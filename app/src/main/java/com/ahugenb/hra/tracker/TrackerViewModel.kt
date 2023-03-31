@@ -117,6 +117,11 @@ class TrackerViewModel(
         updateDay(currentTrackerState.today.copy(drinks = drinks))
     }
 
+    fun addDrinksToday(drinks: Double) {
+        val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
+        updateDay(currentTrackerState.today.copy(drinks = currentTrackerState.today.drinks + drinks))
+    }
+
     fun updateCravingsToday(cravings: Int) {
         val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
         updateDay(currentTrackerState.today.copy(cravings = cravings))

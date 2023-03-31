@@ -10,6 +10,7 @@
     <string name="hra_cravings_today">%d Cravings Today</string>
     <string name="hra_money_spent_today">$%.2f Spent Today</string>
     <string name="hra_half_drink">I Had <![CDATA[\u00BD]]> Drink</string>
+    <string name="hra_add_today">Add to Today\'s Drinks</string>
     <string name="hra_drink">I Had a Drink</string>
     <string name="hra_craving">I Had a Craving</string>
     <string name="hra_bought">I Bought Alcohol</string>
