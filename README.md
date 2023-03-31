@@ -6,6 +6,8 @@
 * Allows the user to plan the current week of drinking.
 * Allows the user to keep track of their drinking, cravings, and money spent over the past weeks.
 * Allows the user to calculate how many drinks they had using the %ABV and volume.
+## version 1.0.1
+* Changes to theme and layout spacing
 ## future ideas / tech challenges
 * Harm Reduction Content
 * Graphing
