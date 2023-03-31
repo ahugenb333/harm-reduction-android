@@ -22,8 +22,6 @@ import com.ahugenb.hra.R
 import com.ahugenb.hra.Utils.Companion.acceptCravingsText
 import com.ahugenb.hra.Utils.Companion.acceptDollarsText
 import com.ahugenb.hra.Utils.Companion.acceptDrinksText
-import com.ahugenb.hra.Utils.Companion.isSanitizedDecimal
-import com.ahugenb.hra.Utils.Companion.isValidDrinks
 import com.ahugenb.hra.Utils.Companion.prettyPrintShort
 import com.ahugenb.hra.Utils.Companion.smartToDouble
 import com.ahugenb.hra.Utils.Companion.smartToInt

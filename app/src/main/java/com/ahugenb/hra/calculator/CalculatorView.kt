@@ -18,10 +18,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.ahugenb.hra.Utils.Companion.isSanitizedDecimal
-import com.ahugenb.hra.Utils.Companion.isValidDrinks
-import com.ahugenb.hra.Utils.Companion.isValidPercent
-import com.ahugenb.hra.Utils.Companion.isValidVolume
 import com.ahugenb.hra.Utils.Companion.smartToDouble
 import com.ahugenb.hra.R
 import com.ahugenb.hra.Utils.Companion.acceptDrinksText
