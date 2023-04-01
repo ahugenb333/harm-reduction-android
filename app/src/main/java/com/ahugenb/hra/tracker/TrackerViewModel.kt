@@ -117,9 +117,10 @@ class TrackerViewModel(
         updateDay(currentTrackerState.today.copy(drinks = drinks))
     }
 
-    fun addDrinksToday(drinks: Double) {
+    fun addDrinksToday(drinks: Double): Double {
         val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
         updateDay(currentTrackerState.today.copy(drinks = currentTrackerState.today.drinks + drinks))
+        return currentTrackerState.today.drinks + drinks
     }
 
     fun updateCravingsToday(cravings: Int) {
@@ -239,7 +240,7 @@ class TrackerViewModel(
     fun updateSelectedMonday(index: Int) {
         val state = _trackerState.value as TrackerState.TrackerStateAll
         val beginnings = state.weekBeginnings
-        if (beginnings.size >= index) {
+        if (beginnings.size > index) {
             _trackerState.value =
                 state.copy(
                     selectedMonday = beginnings[index],
