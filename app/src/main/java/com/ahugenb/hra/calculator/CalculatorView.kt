@@ -25,6 +25,7 @@ import com.ahugenb.hra.R
 import com.ahugenb.hra.Utils.Companion.acceptDrinksText
 import com.ahugenb.hra.Utils.Companion.acceptPercentText
 import com.ahugenb.hra.Utils.Companion.acceptVolumeText
+import com.ahugenb.hra.Utils.Companion.rounded
 import com.ahugenb.hra.tracker.TrackerState
 import com.ahugenb.hra.tracker.TrackerViewModel
 
@@ -169,9 +170,9 @@ fun CalculatorView(calculatorViewModel: CalculatorViewModel, trackerViewModel: T
                 .fillMaxWidth(),
             onClick = {
                 focusManager.clearFocus()
-                trackerViewModel.addDrinksToday(calculatorState.units)
+                val newDrinks = trackerViewModel.addDrinksToday(calculatorState.units.rounded())
                 Toast.makeText(context, context.getString(R.string.hra_drinks_today,
-                    trackerState.today.drinks, trackerState.today.planned), Toast.LENGTH_SHORT)
+                    newDrinks, trackerState.today.planned), Toast.LENGTH_SHORT)
                     .show()
             },
         ) {

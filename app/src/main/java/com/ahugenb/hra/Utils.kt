@@ -44,16 +44,17 @@ class Utils {
             return count
         }
 
-        fun Int.isValidCravings(): Boolean = this in 0..100
+        private fun Int.isValidCravings(): Boolean = this in 0..100
 
-        fun Double.isValidPercent(): Boolean = this in 0.0..100.0
+        private fun Double.isValidPercent(): Boolean = this in 0.0..100.0
 
-        fun Double.isValidDrinks(): Boolean = this in 0.0..1000.0
+        private fun Double.isValidDrinks(): Boolean = this in 0.0..1000.0
 
-        fun Double.isValidVolume(): Boolean = this in 0.0..100000.0
+        private fun Double.isValidVolume(): Boolean = this in 0.0..100000.0
 
-        //Dr. Evil Voice...
-        fun Double.isValidDollars(): Boolean = this in 0.0..1000000.0
+        private fun Double.isValidDollars(): Boolean = this in 0.0..1000000.0
+
+        fun Double.rounded(): Double = String.format("%.3f", this).toDouble()
 
         fun String.smartToDouble(): Double =
             when (this.isEmpty() || this == ".") {
