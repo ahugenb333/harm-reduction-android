@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.HraTheme" parent="android:Theme.Material.Light.NoActionBar"/>
+    <style name="Theme.HraTheme" parent="android:Theme.Material.NoActionBar"/>
+    <style name="HraTheme.Splash" parent="Theme.HraTheme">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
 </resources>

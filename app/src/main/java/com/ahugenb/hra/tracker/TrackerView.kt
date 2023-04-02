@@ -57,9 +57,10 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
                         )
                     },
                     colors = TextFieldDefaults.textFieldColors(
-                        disabledTextColor = Color.Black,
-                        disabledTrailingIconColor = Color.Black,
-                        disabledLabelColor = Color.Black,
+                        disabledTextColor = MaterialTheme.colors.onSurface,
+                        disabledTrailingIconColor = MaterialTheme.colors.onSurface,
+                        disabledLabelColor = MaterialTheme.colors.onSurface
+                            .copy(alpha = ContentAlpha.high),
                         backgroundColor = MaterialTheme.colors.surface
                     )
                 )
@@ -81,10 +82,14 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(4.dp).fillMaxWidth(1f))
+                Spacer(modifier = Modifier
+                    .height(4.dp)
+                    .fillMaxWidth(1f))
             }
         }
-        Spacer(modifier = Modifier.height(8.dp).fillMaxWidth(1f))
+        Spacer(modifier = Modifier
+            .height(8.dp)
+            .fillMaxWidth(1f))
         LazyColumn {
             daysOfWeek.forEachIndexed { i, it ->
                 item(key = i, content = {

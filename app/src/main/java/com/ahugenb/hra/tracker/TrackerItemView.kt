@@ -59,5 +59,5 @@ fun TrackerItemView(day: Day, viewModel: TrackerViewModel) {
     if (showExpanded) {
         TrackerItemEditableView(day, viewModel)
     }
-    Divider(color = Color.LightGray, thickness = 1.dp)
+    Divider(thickness = 1.dp)
 }
