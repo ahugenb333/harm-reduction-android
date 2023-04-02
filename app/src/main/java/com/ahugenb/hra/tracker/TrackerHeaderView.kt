@@ -31,7 +31,9 @@ fun TrackerHeaderView(viewModel: TrackerViewModel) {
     val moneyLastWeek = lastWeek.getMoneySpentTotal()
 
     Card(elevation = 10.dp, modifier = Modifier.padding(4.dp).fillMaxWidth(0.5f)) {
-        Column {
+        Column(
+            modifier = Modifier.padding(4.dp)
+        ){
             Text(
                 text = "Drinks: $drinks\r\n($drinksLastWeek last week, $planned planned)",
                 style = MaterialTheme.typography.body2
