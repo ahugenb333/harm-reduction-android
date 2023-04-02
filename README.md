@@ -17,10 +17,11 @@
 ## future ideas / tech challenges
 * Harm Reduction Content
 * Graphing
-* Theme updates / Dark Mode
+* Theme updates
 * Wearable support for quick actions
 * Multiplatform (iOS)
-* Sync to server (Realm, Google Sheets)
+* Sync to server (Realm)
+* Export to Google Sheets
 * Hilt (code cleanliness)
 ## Acknowledgement
 * Inspired by [HAMS](http://hams.cc/)
