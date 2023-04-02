@@ -4,7 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -38,20 +43,26 @@ class MainActivity : ComponentActivity() {
 
                 //TODO use Hilt to avoid passing dependencies through
 
-                NavHost(navController, startDestination = NavScreen.SCREEN_LIST.title) {
-                    composable(NavScreen.SCREEN_LIST.title) {
-                        Column {
-                            MenuListView(navController, menuList)
-                            QuickActionView(trackerViewModel)
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colors.surface)
+                ) {
+                    NavHost(navController, startDestination = NavScreen.SCREEN_LIST.title) {
+                        composable(NavScreen.SCREEN_LIST.title) {
+                            Column {
+                                MenuListView(navController, menuList)
+                                QuickActionView(trackerViewModel)
+                            }
                         }
-                    }
 
-                    composable(NavScreen.SCREEN_CALCULATOR.title) {
-                        CalculatorView(calculatorViewModel, trackerViewModel, navController)
-                    }
+                        composable(NavScreen.SCREEN_CALCULATOR.title) {
+                            CalculatorView(calculatorViewModel, trackerViewModel, navController)
+                        }
 
-                    composable(NavScreen.SCREEN_TRACKER.title) {
-                        TrackerView(trackerViewModel, navController)
+                        composable(NavScreen.SCREEN_TRACKER.title) {
+                            TrackerView(trackerViewModel, navController)
+                        }
                     }
                 }
             }
