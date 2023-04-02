@@ -3,56 +3,69 @@ package com.ahugenb.hra
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
+import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.ahugenb.hra.calculator.CalculatorView
+import com.ahugenb.hra.calculator.CalculatorViewModel
+import com.ahugenb.hra.home.list.MenuItem
+import com.ahugenb.hra.home.list.MenuListView
+import com.ahugenb.hra.home.list.NavScreen
+import com.ahugenb.hra.home.quickaction.QuickActionView
+import com.ahugenb.hra.tracker.TrackerView
+import com.ahugenb.hra.tracker.TrackerViewModel
+import com.ahugenb.hra.tracker.TrackerViewModelFactory
 import com.ahugenb.hra.ui.theme.HraTheme
 
 class MainActivity : ComponentActivity() {
+    private val calculatorViewModel: CalculatorViewModel by viewModels()
+    private val trackerViewModel: TrackerViewModel by viewModels {
+        TrackerViewModelFactory((application as HraApplication).dayRepository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             HraTheme {
+                val navController = rememberNavController()
+                val menuList = mutableListOf(
+                    MenuItem(0, "Unit Calculator (USA)"),
+                    MenuItem(1, "Drink Tracker / Planner"),
+                    MenuItem(3, "Quick Actions", showDivider = false)
+                )
+
+                //TODO use Hilt to avoid passing dependencies through
+
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colors.surface)
                 ) {
-                    val menuList = mutableListOf(
-                        MenuItem(0, "Unit Calculator"),
-                        MenuItem(1, "Drink Tracker"),
-                        MenuItem(2, "Harm Reduction Philosophy")
-                    )
-                    MenuList(menuList)
+                    NavHost(navController, startDestination = NavScreen.SCREEN_LIST.title) {
+                        composable(NavScreen.SCREEN_LIST.title) {
+                            Column {
+                                MenuListView(navController, menuList)
+                                QuickActionView(trackerViewModel)
+                            }
+                        }
+
+                        composable(NavScreen.SCREEN_CALCULATOR.title) {
+                            CalculatorView(calculatorViewModel, trackerViewModel, navController)
+                        }
+
+                        composable(NavScreen.SCREEN_TRACKER.title) {
+                            TrackerView(trackerViewModel, navController)
+                        }
+                    }
                 }
             }
         }
     }
 }
-
-@Composable
-fun MenuList(menuItems: List<MenuItem>) {
-    LazyColumn {
-        menuItems.forEach {
-            item(key = it.id, content = { ListItem(menuItem = it) })
-        }
-    }
-}
-
-@Composable
-fun ListItem(menuItem: MenuItem) {
-    Text(modifier= Modifier.padding(vertical = 8.dp, horizontal = 4.dp),
-        text = menuItem.text,
-        style = typography.h6
-    )
-    Divider(modifier = Modifier.height(2.dp))
-}
-
-

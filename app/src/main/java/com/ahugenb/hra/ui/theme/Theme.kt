@@ -1,22 +1,31 @@
 package com.ahugenb.hra.ui.theme
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
+@SuppressLint("ConflictingOnColor")
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primary = LightMahogany,
+    primaryVariant = Mahogany,
+    secondary = Mahogany,
+    surface = Black,
+    background = Black,
+    onSurface = White,
+    onPrimary = White,
+    onSecondary = Black,
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
-
+    primary = Mahogany,
+    primaryVariant = LightMahogany,
+    secondary = LightMahogany,
+    background = Mahogany,
     /* Other default colors to override
     background = Color.White,
     surface = Color.White,
@@ -38,6 +47,9 @@ fun HraTheme(
         LightColorPalette
     }
 
+    val systemUiController = rememberSystemUiController()
+    
+    systemUiController.setSystemBarsColor(colors.primary)
     MaterialTheme(
         colors = colors,
         typography = Typography,
