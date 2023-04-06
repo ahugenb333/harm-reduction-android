@@ -1,6 +1,7 @@
 package com.ahugenb.hra
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -19,15 +20,22 @@ import com.ahugenb.hra.home.list.MenuItem
 import com.ahugenb.hra.home.list.MenuListView
 import com.ahugenb.hra.home.list.NavScreen
 import com.ahugenb.hra.home.quickaction.QuickActionView
+import com.ahugenb.hra.sync.SyncViewModel
+import com.ahugenb.hra.sync.SyncViewModelFactory
+import com.ahugenb.hra.sync.TestIdView
 import com.ahugenb.hra.tracker.TrackerView
 import com.ahugenb.hra.tracker.TrackerViewModel
 import com.ahugenb.hra.tracker.TrackerViewModelFactory
 import com.ahugenb.hra.ui.theme.HraTheme
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
 
 class MainActivity : ComponentActivity() {
     private val calculatorViewModel: CalculatorViewModel by viewModels()
     private val trackerViewModel: TrackerViewModel by viewModels {
         TrackerViewModelFactory((application as HraApplication).dayRepository)
+    }
+    private val syncViewModel: SyncViewModel by viewModels {
+        SyncViewModelFactory((application as HraApplication).syncRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +61,7 @@ class MainActivity : ComponentActivity() {
                             Column {
                                 MenuListView(navController, menuList)
                                 QuickActionView(trackerViewModel)
+                                TestIdView(syncViewModel)
                             }
                         }
 

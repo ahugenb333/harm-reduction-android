@@ -250,11 +250,11 @@ class TrackerViewModel(
     }
 }
 
-class TrackerViewModelFactory(private val dbHelper: DayRepository) : ViewModelProvider.Factory {
+class TrackerViewModelFactory(private val dayRepository: DayRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TrackerViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return TrackerViewModel(dbHelper) as T
+            return TrackerViewModel(dayRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
