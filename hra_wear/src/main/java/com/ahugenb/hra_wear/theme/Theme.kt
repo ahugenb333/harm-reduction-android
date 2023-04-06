@@ -1,15 +1,13 @@
-package com.ahugenb.hra.ui.theme
+package com.ahugenb.hra_wear.theme
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import androidx.wear.compose.material.Colors
+import androidx.wear.compose.material.MaterialTheme
 
 @SuppressLint("ConflictingOnColor")
-private val DarkColorPalette = darkColors(
+private val DarkColorPalette = Colors(
     primary = LightMahogany,
     primaryVariant = Mahogany,
     secondary = Mahogany,
@@ -20,7 +18,7 @@ private val DarkColorPalette = darkColors(
     onSecondary = Black
 )
 
-private val LightColorPalette = lightColors(
+private val LightColorPalette = Colors(
     primary = Mahogany,
     primaryVariant = LightMahogany,
     secondary = LightMahogany,
@@ -28,7 +26,7 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun HraTheme(
+fun HraWearTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
@@ -38,9 +36,6 @@ fun HraTheme(
         LightColorPalette
     }
 
-    val systemUiController = rememberSystemUiController()
-    
-    systemUiController.setSystemBarsColor(colors.primary)
     MaterialTheme(
         colors = colors,
         typography = Typography,

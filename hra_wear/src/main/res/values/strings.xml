@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Harm Reduction for Alcohol</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hra_half_drink">+<![CDATA[\u00BD]]></string>
+    <string name="hra_full_drink">+1</string>
+    <string name="hra_craving">Crave</string>
+    <string name="hra_bought">$</string>
+</resources>
