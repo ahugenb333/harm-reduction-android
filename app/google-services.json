@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1090339974761",
+    "project_id": "harm-reduction-alcohol",
+    "storage_bucket": "harm-reduction-alcohol.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1090339974761:android:42975c1a4b5d8615f93cf8",
+        "android_client_info": {
+          "package_name": "com.ahugenb.hra"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1090339974761-npk9rt6fkl7qumathrs9h755r083dm7d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqNarThJYQE0xZEychV4zqM66OrFdwxqM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1090339974761-f7pa47ro2j4ksikcmbs7n1b2b6oktqgt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

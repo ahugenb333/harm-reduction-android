@@ -2,6 +2,8 @@
 * Drink Tracking Android App
 * Built with Jetpack Compose 🚀
 * Uses a Room Database to persist data to device
+## version 1.0.4
+* Google Play Services support
 ## version 1.0.3
 * Dark Mode support (matches system default)
 ## version 1.0.2
