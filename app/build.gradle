@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -12,8 +13,8 @@ android {
         applicationId "com.ahugenb.hra"
         minSdk 24
         targetSdk 33
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 5
+        versionName "1.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -73,6 +74,9 @@ dependencies {
 
     //change system UI bar programmatically
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.30.0"
+
+    //firebase
+    implementation 'com.google.firebase:firebase-analytics:21.2.1'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
