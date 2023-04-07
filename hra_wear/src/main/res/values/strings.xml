@@ -7,5 +7,5 @@
     <string name="hra_wear_half_drink">+<![CDATA[\u00BD]]></string>
     <string name="hra_wear_full_drink">+1</string>
     <string name="hra_wear_craving">Crave</string>
-    <string name="hra_wear_money">$</string>
+    <string name="hra_wear_money">$10</string>
 </resources>

@@ -48,7 +48,7 @@ fun QuickActionView(viewModel: WearViewModel) {
             Button(
                 onClick = {
                     //todo alertDialog
-                          viewModel.sendMoneySpent(0.33)
+                          viewModel.sendMoneySpent(10.0)
                 }, modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.ahugenb.hra.Utils.Companion.smartToDouble
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 
@@ -22,7 +23,7 @@ class SyncListenerService : WearableListenerService() {
             var message = String(messageEvent.data)
             var moneySpent: Double? = null
             if (message.startsWith("money:")) {
-                moneySpent = message.substring(6).toDouble()
+                moneySpent = message.substring(6).smartToDouble()
                 message = "money"
             }
             intent.action = ACTION_SEND

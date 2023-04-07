@@ -37,7 +37,7 @@ class WearRepositoryImpl(
     }
 
     override fun sendMoney(money: Double): Flow<Unit> = flow {
-        sendMessage(MESSAGE_MONEY.plus(":").plus(String.format("$%.2f", money)).toByteArray())
+        sendMessage(MESSAGE_MONEY.plus(":").plus(String.format("%.2f", money)).toByteArray())
         emit(Unit)
     }
 
