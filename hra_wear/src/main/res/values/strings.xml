@@ -4,8 +4,8 @@
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
-    <string name="hra_half_drink">+<![CDATA[\u00BD]]></string>
-    <string name="hra_full_drink">+1</string>
-    <string name="hra_craving">Crave</string>
-    <string name="hra_bought">$</string>
+    <string name="hra_wear_half_drink">+<![CDATA[\u00BD]]></string>
+    <string name="hra_wear_full_drink">+1</string>
+    <string name="hra_wear_craving">Crave</string>
+    <string name="hra_wear_money">$</string>
 </resources>

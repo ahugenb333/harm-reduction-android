@@ -1,4 +1,4 @@
-package com.ahugenb.hra_wear.theme
+package com.ahugenb.hra.theme
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme

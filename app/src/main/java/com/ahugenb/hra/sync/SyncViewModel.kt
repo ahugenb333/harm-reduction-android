@@ -1,15 +1,11 @@
 package com.ahugenb.hra.sync
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class SyncViewModel(
@@ -24,7 +20,8 @@ class SyncViewModel(
     private val _firebaseInfo = MutableStateFlow<SyncState>(SyncState.SyncStateEmpty())
     val firebaseInfo: StateFlow<SyncState> = _firebaseInfo
 
-    fun getFirebaseInfo() {
+    //Gets firebase info, then attempts to
+    fun getFirebaseId() {
         if (_firebaseInfo.value is SyncState.SyncStateAll) return
         viewModelScope.launch {
             syncRepository.getFirebaseInfo()

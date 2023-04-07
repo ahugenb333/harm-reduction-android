@@ -1,8 +1,11 @@
 package com.ahugenb.hra
 
+import android.content.Intent
+import android.os.Build
 import com.ahugenb.hra.tracker.db.Day
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import java.io.Serializable
 
 class Utils {
     companion object {
@@ -109,5 +112,10 @@ class Utils {
         fun Day.prettyPrintLong(): String = this.id.idToDateTime().toDisplayLong()
 
         fun Day.prettyPrintShort(): String = this.id.idToDateTime().toDisplayShort()
+
+        inline fun <reified T : Serializable> Intent.serializable(key: String): T? = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializableExtra(key, T::class.java)
+            else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
+        }
     }
 }

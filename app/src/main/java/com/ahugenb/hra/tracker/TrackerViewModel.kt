@@ -119,8 +119,9 @@ class TrackerViewModel(
 
     fun addDrinksToday(drinks: Double): Double {
         val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
-        updateDay(currentTrackerState.today.copy(drinks = currentTrackerState.today.drinks + drinks))
-        return currentTrackerState.today.drinks + drinks
+        val newDrinks = currentTrackerState.today.drinks + drinks
+        updateDay(currentTrackerState.today.copy(drinks = newDrinks))
+        return newDrinks
     }
 
     fun updateCravingsToday(cravings: Int) {
@@ -128,9 +129,21 @@ class TrackerViewModel(
         updateDay(currentTrackerState.today.copy(cravings = cravings))
     }
 
+    fun addCravingsToday(cravings: Int) {
+        val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
+        val newCravings = currentTrackerState.today.cravings + cravings
+        updateDay(currentTrackerState.today.copy(cravings = newCravings))
+    }
+
     fun updateMoneySpentToday(moneySpent: Double) {
         val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
         updateDay(currentTrackerState.today.copy(moneySpent = moneySpent))
+    }
+
+    fun addMoneySpentToday(moneySpent: Double) {
+        val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
+        val newMoneySpent = currentTrackerState.today.moneySpent + moneySpent
+        updateDay(currentTrackerState.today.copy(moneySpent = newMoneySpent))
     }
 
     fun updateDay(day: Day) {

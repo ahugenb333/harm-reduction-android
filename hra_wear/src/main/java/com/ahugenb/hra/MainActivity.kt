@@ -4,30 +4,33 @@
  * changes to the libraries and their usages.
  */
 
-package com.ahugenb.hra_wear
+package com.ahugenb.hra
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import com.ahugenb.hra_wear.QuickActionView
-import com.ahugenb.hra_wear.theme.HraWearTheme
+import com.ahugenb.hra.theme.HraWearTheme
 
 class MainActivity : ComponentActivity() {
+    private val wearViewModel: WearViewModel by viewModels {
+        WearViewModelFactory((application as HraWearApplication).wearRepository)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            WearApp()
+            WearApp(wearViewModel)
         }
     }
 }
 
 @Composable
-fun WearApp() {
+fun WearApp(viewModel: WearViewModel) {
     HraWearTheme {
         Surface {
-            QuickActionView()
+            QuickActionView(viewModel)
         }
     }
 }

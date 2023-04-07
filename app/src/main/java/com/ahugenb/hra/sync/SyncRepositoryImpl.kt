@@ -3,6 +3,8 @@ package com.ahugenb.hra.sync
 import android.content.Context
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.ads.identifier.AdvertisingIdClient.Info
+import com.google.android.gms.wearable.DataClient
+import com.google.android.gms.wearable.DataEventBuffer
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

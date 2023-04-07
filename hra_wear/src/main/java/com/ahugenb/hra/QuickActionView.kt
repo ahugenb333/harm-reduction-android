@@ -1,4 +1,4 @@
-package com.ahugenb.hra_wear
+package com.ahugenb.hra
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -9,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun QuickActionView() {
+fun QuickActionView(viewModel: WearViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -19,38 +19,42 @@ fun QuickActionView() {
             modifier = Modifier
                 .padding(horizontal = 10.dp)
         ){
-            Button(onClick = { }, modifier = Modifier
+            Button(onClick = { viewModel.sendHalfDrink() }, modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
                 .padding(end = 4.dp)
             ) {
-                Text(text = stringResource(R.string.hra_half_drink))
+                Text(text = stringResource(R.string.hra_wear_half_drink))
             }
-            Button(onClick = { }, modifier = Modifier
+            Button(onClick = { viewModel.sendWholeDrink() }, modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
                 .padding(start = 4.dp)
             ) {
-                Text(text = stringResource(R.string.hra_full_drink))
+                Text(text = stringResource(R.string.hra_wear_full_drink))
             }
         }
         Row(
             modifier = Modifier
                 .padding(horizontal = 10.dp)
         ) {
-            Button(onClick = { }, modifier = Modifier
+            Button(onClick = { viewModel.sendCraving() }, modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
                 .padding(end = 4.dp)
             ) {
-                Text(text = stringResource(R.string.hra_craving))
+                Text(text = stringResource(R.string.hra_wear_craving))
             }
-            Button(onClick = { }, modifier = Modifier
+            Button(
+                onClick = {
+                    //todo alertDialog
+                          viewModel.sendMoneySpent(0.33)
+                }, modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
                 .padding(start = 4.dp)
             ) {
-                Text(text = stringResource(id = R.string.hra_bought))
+                Text(text = stringResource(id = R.string.hra_wear_money))
             }
         }
     }

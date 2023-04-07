@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.ahugenb.hra_wear'
+    namespace 'com.ahugenb.hra'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.ahugenb.hra_wear"
+        applicationId "com.ahugenb.hra"
         minSdk 30
         targetSdk 30
         versionCode 1
