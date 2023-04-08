@@ -34,21 +34,21 @@ import com.ahugenb.hra.tracker.TrackerView
 import com.ahugenb.hra.tracker.TrackerViewModel
 import com.ahugenb.hra.tracker.TrackerViewModelFactory
 import com.ahugenb.hra.ui.theme.HraTheme
+import com.google.android.gms.wearable.*
 
 class MainActivity : ComponentActivity() {
+    companion object {
+        const val MESSAGE_HALF_DRINK = "half_drink"
+        const val MESSAGE_DRINK = "drink"
+        const val MESSAGE_CRAVING = "craving"
+        const val MESSAGE_MONEY = "money"
+    }
     private val calculatorViewModel: CalculatorViewModel by viewModels()
     private val trackerViewModel: TrackerViewModel by viewModels {
         TrackerViewModelFactory((application as HraApplication).dayRepository)
     }
     private val syncViewModel: SyncViewModel by viewModels {
         SyncViewModelFactory((application as HraApplication).syncRepository)
-    }
-
-    companion object {
-        const val MESSAGE_HALF_DRINK = "half_drink"
-        const val MESSAGE_DRINK = "drink"
-        const val MESSAGE_CRAVING = "craving"
-        const val MESSAGE_MONEY = "money"
     }
 
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -64,7 +64,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        //todo send message back to watch for toast display
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

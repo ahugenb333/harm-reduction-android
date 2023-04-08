@@ -4,6 +4,5 @@ import java.io.Serializable
 
 data class SyncWearableData(
     val message: String,
-    val moneySpent: Double?,
-    val sourceNodeId: String
+    val moneySpent: Double?
 ): Serializable

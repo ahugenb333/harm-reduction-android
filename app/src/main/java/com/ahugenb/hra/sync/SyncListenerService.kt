@@ -4,35 +4,33 @@ import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.ahugenb.hra.Utils.Companion.smartToDouble
-import com.google.android.gms.wearable.MessageEvent
-import com.google.android.gms.wearable.WearableListenerService
+import com.google.android.gms.wearable.*
 
 class SyncListenerService : WearableListenerService() {
-    companion object {
-        private const val MESSAGE_PATH = "/message_path"
-        private const val PHONE_PATH = "/phone"
-    }
 
-    override fun onMessageReceived(messageEvent: MessageEvent) {
-        Log.d("onMessageReceived", messageEvent.toString())
+    override fun onDataChanged(buffer: DataEventBuffer) {
+        Log.d("onDataChanged", buffer.toString())
+        for (event: DataEvent in buffer) {
+            if (event.type == DataEvent.TYPE_CHANGED) {
+                val path = event?.dataItem?.uri?.path
+                if (path == "/message_path") {
+                    val item = DataMapItem.fromDataItem(event.dataItem)
+                    var message = item.dataMap.getString("message") ?: break
+                    Log.d("message", message)
+                    message = message.substring(5)
+                    val intent = Intent()
+                    intent.action = ACTION_SEND
+                    var moneySpent: Double? = null
+                    if (message.startsWith("money:")) {
+                        moneySpent = message.substring(6).toDouble()
+                    }
+                    val payload = SyncWearableData(message, moneySpent)
+                    intent.putExtra("payload", payload)
 
-        if (messageEvent.path == MESSAGE_PATH) {
-            val intent = Intent()
-            val sourceNodeId = messageEvent.sourceNodeId
-            var message = String(messageEvent.data)
-            var moneySpent: Double? = null
-            if (message.startsWith("money:")) {
-                moneySpent = message.substring(6).smartToDouble()
-                message = "money"
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+                }
             }
-            intent.action = ACTION_SEND
-            val payload = SyncWearableData(message, moneySpent, sourceNodeId)
-            intent.putExtra("payload", payload)
-
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
         }
-
-        super.onMessageReceived(messageEvent)
+        super.onDataChanged(buffer)
     }
 }

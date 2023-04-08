@@ -5,10 +5,12 @@ import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.Node
+import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
-import java.util.concurrent.ExecutionException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import org.joda.time.DateTime
+import java.util.concurrent.ExecutionException
 
 class WearRepositoryImpl(
     private val context: Context
@@ -22,39 +24,37 @@ class WearRepositoryImpl(
     }
 
     override fun sendWholeDrink(): Flow<Unit> = flow {
-        sendMessage(MESSAGE_DRINK.toByteArray())
+        sendData(MESSAGE_DRINK)
         emit(Unit)
     }
 
     override fun sendHalfDrink(): Flow<Unit> = flow {
-        sendMessage(MESSAGE_HALF_DRINK.toByteArray())
+        sendData(MESSAGE_HALF_DRINK)
         emit(Unit)
     }
 
     override fun sendCraving(): Flow<Unit> = flow {
-        sendMessage(MESSAGE_CRAVING.toByteArray())
+        sendData(MESSAGE_CRAVING)
         emit(Unit)
     }
 
     override fun sendMoney(money: Double): Flow<Unit> = flow {
-        sendMessage(MESSAGE_MONEY.plus(":").plus(String.format("%.2f", money)).toByteArray())
+        sendData(MESSAGE_MONEY.plus(":").plus(String.format("%.2f", money)))
         emit(Unit)
     }
 
-    private fun sendMessage(message: ByteArray) {
-        try {
-            val nodes = Tasks.await(getNodes())
+    private fun sendData(message: String) {
+        val map = PutDataMapRequest.create("/message_path")
+        val newMessage = DateTime.now().millis.toString().reversed().substring(0,5) + message
+        map.dataMap.putString("message", newMessage)
+        val request = map.asPutDataRequest()
+        request.setUrgent()
 
-            for (node in nodes) {
-                Wearable.getMessageClient(context)
-                    .sendMessage(node.id, MESSAGE_PATH, message)
-            }
-        } catch (e: ExecutionException) {
-            Log.e("Error sending message: $message", e.stackTraceToString())
+        val dataItemTask = Wearable.getDataClient(context).putDataItem(request)
+        dataItemTask.addOnSuccessListener {
+            Log.d("Data sent", "Message: $newMessage")
+        }.addOnFailureListener {
+            Log.e("Data not sent", "Message: $newMessage")
         }
-    }
-
-    private fun getNodes(): Task<List<Node>> {
-        return Wearable.getNodeClient(context.applicationContext).connectedNodes
     }
 }
