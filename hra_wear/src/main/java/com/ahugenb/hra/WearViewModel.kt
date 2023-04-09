@@ -52,9 +52,9 @@ class WearViewModel(
         }
     }
 
-    fun sendMoneySpent(money: Double) {
+    fun sendMoneySpent() {
         viewModelScope.launch {
-            wearRepository.sendMoney(money)
+            wearRepository.sendMoney()
                 .flowOn(Dispatchers.IO)
                 .catch {
                     Log.e("Error sending whole drink", it.toString())

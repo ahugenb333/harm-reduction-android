@@ -12,15 +12,10 @@ class SyncViewModel(
     private val syncRepository: SyncRepository
     ): ViewModel() {
 
-//    private val _trackerState: MutableStateFlow<TrackerState> =
-//        MutableStateFlow(TrackerState.TrackerStateEmpty())
-//    val trackerState: StateFlow<TrackerState> = _trackerState
-
-
     private val _firebaseInfo = MutableStateFlow<SyncState>(SyncState.SyncStateEmpty())
     val firebaseInfo: StateFlow<SyncState> = _firebaseInfo
 
-    //Gets firebase info, then attempts to
+    //Gets firebase info
     fun getFirebaseId() {
         if (_firebaseInfo.value is SyncState.SyncStateAll) return
         viewModelScope.launch {

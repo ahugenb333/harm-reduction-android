@@ -38,7 +38,7 @@ class WearRepositoryImpl(
         emit(Unit)
     }
 
-    override fun sendMoney(money: Double): Flow<Unit> = flow {
+    override fun sendMoney(): Flow<Unit> = flow {
         sendData(MESSAGE_MONEY)
         emit(Unit)
     }

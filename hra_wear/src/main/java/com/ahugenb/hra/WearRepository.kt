@@ -10,5 +10,5 @@ interface WearRepository {
 
     fun sendCraving(): Flow<Unit>
 
-    fun sendMoney(money: Double): Flow<Unit>
+    fun sendMoney(): Flow<Unit>
 }

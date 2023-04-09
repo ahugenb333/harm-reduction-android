@@ -13,6 +13,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 
 class SyncListenerService : WearableListenerService() {
+    companion object {
+        const val MESSAGE_PATH = "/message_path"
+        const val MESSAGE = "message"
+        const val MESSAGE_HALF_DRINK = "half_drink"
+        const val MESSAGE_DRINK = "drink"
+        const val MESSAGE_CRAVING = "craving"
+        const val MESSAGE_MONEY = "money"
+    }
 
     override fun onDataChanged(buffer: DataEventBuffer) {
         val repository = if (application != null) {
@@ -25,10 +33,10 @@ class SyncListenerService : WearableListenerService() {
             for (event: DataEvent in buffer) {
                 if (event.type == DataEvent.TYPE_CHANGED) {
                     val path = event?.dataItem?.uri?.path
-                    if (path == "/message_path") {
+                    if (path == MESSAGE_PATH) {
                         val item = DataMapItem.fromDataItem(event.dataItem)
-                        var message = item.dataMap.getString("message") ?: break
-                        Log.d("message", message)
+                        var message = item.dataMap.getString(MESSAGE) ?: break
+                        Log.d(MESSAGE, message)
                         message = message.substring(5)  //remove timestamp
 
                         CoroutineScope(Dispatchers.IO).launch {
@@ -54,17 +62,17 @@ class SyncListenerService : WearableListenerService() {
                     if (filtered.isNotEmpty()) {
                         var today = filtered[0]
                         when (message) {
-                            "half_drink" -> {
+                            MESSAGE_HALF_DRINK -> {
                                 today = today.copy(drinks = today.drinks + 0.5)
                             }
-                            "drink" -> {
+                            MESSAGE_DRINK -> {
                                 today = today.copy(drinks = today.drinks + 1.0)
 
                             }
-                            "craving" -> {
+                            MESSAGE_CRAVING -> {
                                 today = today.copy(cravings = today.cravings + 1)
                             }
-                            "money" -> {
+                            MESSAGE_MONEY -> {
                                 today = today.copy(moneySpent = today.moneySpent + 10)
                             }
                         }
