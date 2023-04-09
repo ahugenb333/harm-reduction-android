@@ -60,6 +60,32 @@ class TrackerViewModel(
             )
     }
 
+    fun refreshToday() {
+        viewModelScope.launch {
+            dayRepository.getDays()
+                .flowOn(Dispatchers.IO)
+                .catch { e ->
+                    Log.e("Error fetching days", e.toString())
+                }
+                .collect {
+                    val today = it.filterToday()[0]
+                    val state = _trackerState.value as TrackerState.TrackerStateAll
+                    if (state.selectedDay?.id == today.id) {
+                        _trackerState.value = TrackerState.TrackerStateAll(
+                            all = it,
+                            today = today,
+                            selectedDay = today
+                        )
+                    } else {
+                        _trackerState.value = TrackerState.TrackerStateAll(
+                            all = it,
+                            today = today,
+                        )
+                    }
+                }
+        }
+    }
+
     //Creates a Day object for each day between the beginning and end of days in `days` (inclusive)
     private fun generateAllDays(days: List<Day>): List<Day> {
         if (days.isEmpty()) return listOf(Day())

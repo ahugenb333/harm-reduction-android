@@ -76,7 +76,8 @@ class SyncListenerService : WearableListenerService() {
                             .catch {
                             Log.e("updateDatabase - updateDay", it.message ?: "Error")
                         }.collect {
-                            Log.d("updateDatabase - updateDay", "Updated")
+                                Log.d("updateDatabase - updateDay", "Updated")
+                                LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(ACTION_SEND))
                         }
                     }
                 }

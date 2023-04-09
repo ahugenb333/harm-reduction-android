@@ -37,12 +37,6 @@ import com.ahugenb.hra.ui.theme.HraTheme
 import com.google.android.gms.wearable.*
 
 class MainActivity : ComponentActivity() {
-    companion object {
-        const val MESSAGE_HALF_DRINK = "half_drink"
-        const val MESSAGE_DRINK = "drink"
-        const val MESSAGE_CRAVING = "craving"
-        const val MESSAGE_MONEY = "money"
-    }
     private val calculatorViewModel: CalculatorViewModel by viewModels()
     private val trackerViewModel: TrackerViewModel by viewModels {
         TrackerViewModelFactory((application as HraApplication).dayRepository)
@@ -53,16 +47,8 @@ class MainActivity : ComponentActivity() {
 
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val payload = intent?.serializable<SyncWearableData>("payload")
-            Log.d("onReceive", payload.toString())
-            when (payload?.message) {
-                MESSAGE_HALF_DRINK -> trackerViewModel.addDrinksToday(0.5)
-                MESSAGE_DRINK -> trackerViewModel.addDrinksToday(1.0)
-                MESSAGE_CRAVING -> trackerViewModel.addCravingsToday(1)
-                MESSAGE_MONEY -> {
-                    payload.moneySpent?.let { trackerViewModel.addMoneySpentToday(it) }
-                }
-            }
+            Log.d("onReceive", intent?.action ?: "null")
+            trackerViewModel.refreshToday()
         }
     }
 
