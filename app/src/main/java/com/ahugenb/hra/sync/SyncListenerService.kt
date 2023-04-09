@@ -30,12 +30,9 @@ class SyncListenerService : WearableListenerService() {
                         var message = item.dataMap.getString("message") ?: break
                         Log.d("message", message)
                         message = message.substring(5)  //remove timestamp
-                        var moneySpent: Double? = null
-                        if (message.startsWith("money:")) {
-                            moneySpent = message.substring(6).toDouble()
-                        }
+
                         CoroutineScope(Dispatchers.IO).launch {
-                            updateDatabase(repository, message, moneySpent)
+                            updateDatabase(repository, message)
                         }
                     }
                 }
@@ -44,7 +41,7 @@ class SyncListenerService : WearableListenerService() {
         super.onDataChanged(buffer)
     }
 
-    private suspend fun updateDatabase(repository: DayRepository, message: String, moneySpent: Double?) {
+    private suspend fun updateDatabase(repository: DayRepository, message: String) {
         withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
             repository.getDays()
                 .flowOn(Dispatchers.Default)
@@ -68,7 +65,7 @@ class SyncListenerService : WearableListenerService() {
                                 today = today.copy(cravings = today.cravings + 1)
                             }
                             "money" -> {
-                                today = today.copy(moneySpent = today.moneySpent + (moneySpent ?: 0.0))
+                                today = today.copy(moneySpent = today.moneySpent + 10)
                             }
                         }
                         repository.updateDay(today)

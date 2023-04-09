@@ -71,13 +71,13 @@ class TrackerViewModel(
                     val today = it.filterToday()[0]
                     val state = _trackerState.value as TrackerState.TrackerStateAll
                     if (state.selectedDay?.id == today.id) {
-                        _trackerState.value = TrackerState.TrackerStateAll(
+                        _trackerState.value = state.copy(
                             all = it,
                             today = today,
                             selectedDay = today
                         )
                     } else {
-                        _trackerState.value = TrackerState.TrackerStateAll(
+                        _trackerState.value = state.copy(
                             all = it,
                             today = today,
                         )
