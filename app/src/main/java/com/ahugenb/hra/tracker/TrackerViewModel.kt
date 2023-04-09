@@ -70,16 +70,23 @@ class TrackerViewModel(
                 .collect {
                     val today = it.filterToday()[0]
                     val state = _trackerState.value as TrackerState.TrackerStateAll
+                    var daysOfWeek = state.daysOfWeek
+                    if (daysOfWeek.filterToday().isNotEmpty()){
+                        daysOfWeek = state.daysOfWeek.toMutableList()
+                        daysOfWeek[daysOfWeek.indexOfFirst { d -> d.isToday() }] = today
+                    }
                     if (state.selectedDay?.id == today.id) {
                         _trackerState.value = state.copy(
                             all = it,
                             today = today,
-                            selectedDay = today
+                            selectedDay = today,
+                            daysOfWeek = daysOfWeek
                         )
                     } else {
                         _trackerState.value = state.copy(
                             all = it,
                             today = today,
+                            daysOfWeek = daysOfWeek
                         )
                     }
                 }
