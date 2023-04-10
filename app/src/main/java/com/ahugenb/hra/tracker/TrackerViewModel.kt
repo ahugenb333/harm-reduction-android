@@ -39,12 +39,12 @@ class TrackerViewModel(
                         it.id.idToDateTime()
                     }
                     if (days.isEmpty()) {
-                        days = getWeekOf(Day())
+                        days = generateWeekOf(Day())
                     }
                     val allDays = generateAllDays(days)
                     insertDays(allDays)
                     val today = allDays.filterToday()[0]
-                    val daysOfWeek = getWeekOf(today)
+                    val daysOfWeek = getWeekOf(allDays, today)
 
                     _trackerState.value = TrackerState.TrackerStateAll(
                         all = allDays,
@@ -185,8 +185,7 @@ class TrackerViewModel(
         return beginnings
     }
 
-    //returns a list of Days from the beginning to the end of this week.
-    private fun getWeekOf(day: Day): List<Day> {
+    private fun generateWeekOf(day: Day): List<Day> {
         var dt = day.id.idToDateTime()
         val weekOf = mutableListOf<Day>()
 
@@ -198,6 +197,27 @@ class TrackerViewModel(
 
         while (dt <= end) {
             weekOf.add(Day(dt.toId()))
+            dt = dt.plusDays(1)
+        }
+
+        return weekOf
+    }
+
+    private fun getWeekOf(allDays: List<Day>, day: Day): List<Day> {
+        var dt = day.id.idToDateTime()
+        val weekOf = mutableListOf<Day>()
+
+        while (dt.dayOfWeek > 1) {
+            dt = dt.minusDays(1)
+        }
+
+        val end = dt.plusDays(6)
+
+        while (dt <= end) {
+            val nextDay = allDays.firstOrNull {
+                it.id == dt.toId()
+            } ?: Day(dt.toId())
+            weekOf.add(nextDay)
             dt = dt.plusDays(1)
         }
 
@@ -220,7 +240,7 @@ class TrackerViewModel(
         val dayLastWeek = state.all.firstOrNull {
             it.id == rewind.toId()
         } ?: Day(rewind.toId())
-        return getWeekOf(dayLastWeek)
+        return getWeekOf(state.all, dayLastWeek)
     }
 
     fun updateSelectedMonday(index: Int) {
@@ -230,7 +250,7 @@ class TrackerViewModel(
             _trackerState.value =
                 state.copy(
                     selectedMonday = beginnings[index],
-                    daysOfWeek = getWeekOf(beginnings[index])
+                    daysOfWeek = getWeekOf(state.all, beginnings[index])
                 )
         }
     }
