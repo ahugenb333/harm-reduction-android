@@ -25,6 +25,8 @@ import com.ahugenb.hra.home.list.MenuItem
 import com.ahugenb.hra.home.list.MenuListView
 import com.ahugenb.hra.home.list.NavScreen
 import com.ahugenb.hra.home.quickaction.QuickActionView
+import com.ahugenb.hra.sync.SyncViewModel
+import com.ahugenb.hra.sync.SyncViewModelFactory
 import com.ahugenb.hra.tracker.TrackerView
 import com.ahugenb.hra.tracker.TrackerViewModel
 import com.ahugenb.hra.tracker.TrackerViewModelFactory
@@ -34,6 +36,9 @@ class MainActivity : ComponentActivity() {
     private val calculatorViewModel: CalculatorViewModel by viewModels()
     private val trackerViewModel: TrackerViewModel by viewModels {
         TrackerViewModelFactory((application as HraApplication).dayRepository)
+    }
+    private val syncViewModel: SyncViewModel by viewModels {
+        SyncViewModelFactory((application as HraApplication).syncRepository)
     }
 
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {

@@ -21,6 +21,7 @@ class WearRepositoryImpl(
         const val MESSAGE_CRAVING = "craving"
         const val MESSAGE_MONEY = "money"
         const val MESSAGE_PATH = "/message_path"
+        const val MESSAGE = "message"
     }
 
     override fun sendWholeDrink(): Flow<Unit> = flow {
@@ -44,9 +45,9 @@ class WearRepositoryImpl(
     }
 
     private fun sendData(message: String) {
-        val map = PutDataMapRequest.create("/message_path")
+        val map = PutDataMapRequest.create(MESSAGE_PATH)
         val newMessage = DateTime.now().millis.toString().reversed().substring(0,5) + message
-        map.dataMap.putString("message", newMessage)
+        map.dataMap.putString(MESSAGE, newMessage)
         val request = map.asPutDataRequest()
         request.setUrgent()
 
