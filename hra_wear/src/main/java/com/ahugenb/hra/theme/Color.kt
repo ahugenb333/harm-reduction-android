@@ -1,4 +1,4 @@
-package com.ahugenb.hra.ui.theme
+package com.ahugenb.hra.theme
 
 import androidx.compose.ui.graphics.Color
 

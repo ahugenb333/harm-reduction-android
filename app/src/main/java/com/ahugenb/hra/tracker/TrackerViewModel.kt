@@ -59,6 +59,39 @@ class TrackerViewModel(
         }
     }
 
+    fun refreshToday() {
+        viewModelScope.launch {
+            dayRepository.getDays()
+                .flowOn(Dispatchers.IO)
+                .catch { e ->
+                    Log.e("Error fetching days", e.toString())
+                }
+                .collect {
+                    val today = it.filterToday()[0]
+                    val state = _trackerState.value as TrackerState.TrackerStateAll
+                    var daysOfWeek = state.daysOfWeek
+                    if (daysOfWeek.filterToday().isNotEmpty()){
+                        daysOfWeek = state.daysOfWeek.toMutableList()
+                        daysOfWeek[daysOfWeek.indexOfFirst { d -> d.isToday() }] = today
+                    }
+                    if (state.selectedDay?.id == today.id) {
+                        _trackerState.value = state.copy(
+                            all = it,
+                            today = today,
+                            selectedDay = today,
+                            daysOfWeek = daysOfWeek
+                        )
+                    } else {
+                        _trackerState.value = state.copy(
+                            all = it,
+                            today = today,
+                            daysOfWeek = daysOfWeek
+                        )
+                    }
+                }
+        }
+    }
+
     //Creates a Day object for each day between the beginning and end of days in `days` (inclusive)
     private fun generateAllDays(days: List<Day>): List<Day> {
         val allDays = mutableListOf<Day>()
@@ -116,8 +149,9 @@ class TrackerViewModel(
 
     fun addDrinksToday(drinks: Double): Double {
         val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
-        updateDay(currentTrackerState.today.copy(drinks = currentTrackerState.today.drinks + drinks))
-        return currentTrackerState.today.drinks + drinks
+        val newDrinks = currentTrackerState.today.drinks + drinks
+        updateDay(currentTrackerState.today.copy(drinks = newDrinks))
+        return newDrinks
     }
 
     fun updateCravingsToday(cravings: Int) {
@@ -125,9 +159,21 @@ class TrackerViewModel(
         updateDay(currentTrackerState.today.copy(cravings = cravings))
     }
 
+    fun addCravingsToday(cravings: Int) {
+        val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
+        val newCravings = currentTrackerState.today.cravings + cravings
+        updateDay(currentTrackerState.today.copy(cravings = newCravings))
+    }
+
     fun updateMoneySpentToday(moneySpent: Double) {
         val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
         updateDay(currentTrackerState.today.copy(moneySpent = moneySpent))
+    }
+
+    fun addMoneySpentToday(moneySpent: Double) {
+        val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
+        val newMoneySpent = currentTrackerState.today.moneySpent + moneySpent
+        updateDay(currentTrackerState.today.copy(moneySpent = newMoneySpent))
     }
 
     fun updateDay(day: Day) {
@@ -256,11 +302,11 @@ class TrackerViewModel(
     }
 }
 
-class TrackerViewModelFactory(private val dbHelper: DayRepository) : ViewModelProvider.Factory {
+class TrackerViewModelFactory(private val dayRepository: DayRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TrackerViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return TrackerViewModel(dbHelper) as T
+            return TrackerViewModel(dayRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
