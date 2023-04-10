@@ -10,7 +10,10 @@ import com.ahugenb.hra.tracker.db.DayRepository
 import com.google.android.gms.wearable.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import org.joda.time.DateTime
+import java.util.concurrent.Flow
 
 class SyncListenerService : WearableListenerService() {
     companion object {
@@ -20,6 +23,7 @@ class SyncListenerService : WearableListenerService() {
         const val MESSAGE_DRINK = "drink"
         const val MESSAGE_CRAVING = "craving"
         const val MESSAGE_MONEY = "money"
+        const val DATA = "data"
     }
 
     override fun onDataChanged(buffer: DataEventBuffer) {
@@ -59,21 +63,27 @@ class SyncListenerService : WearableListenerService() {
                 .collect {
                     Log.d("updateDatabase - getDays", "days retrieved")
                     val filtered = it.filterToday()
+                    var data: String? = null
                     if (filtered.isNotEmpty()) {
                         var today = filtered[0]
                         when (message) {
                             MESSAGE_HALF_DRINK -> {
                                 today = today.copy(drinks = today.drinks + 0.5)
+                                data = String.format("%.2f Drinks (%.2f Planned)",
+                                    today.drinks, today.planned)
                             }
                             MESSAGE_DRINK -> {
                                 today = today.copy(drinks = today.drinks + 1.0)
-
+                                data = String.format("%.2f Drinks (%.2f Planned)",
+                                    today.drinks, today.planned)
                             }
                             MESSAGE_CRAVING -> {
                                 today = today.copy(cravings = today.cravings + 1)
+                                data = "${today.cravings} Cravings"
                             }
                             MESSAGE_MONEY -> {
                                 today = today.copy(moneySpent = today.moneySpent + 10)
+                                data = String.format("$%.2f Spent", today.moneySpent)
                             }
                         }
                         repository.updateDay(today)
@@ -83,10 +93,27 @@ class SyncListenerService : WearableListenerService() {
                         }.collect {
                                 Log.d("updateDatabase - updateDay", "Updated")
                                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(ACTION_SEND))
+                                data?.let { d -> sendData(d) }
                         }
                     }
                 }
         }
-
     }
+
+    private fun sendData(data: String) {
+        val map = PutDataMapRequest.create(MESSAGE_PATH)
+        val newMessage = DateTime.now().millis.toString().reversed().substring(0,5) + data
+        map.dataMap.putString(DATA, newMessage)
+        val request = map.asPutDataRequest()
+        request.setUrgent()
+
+        val dataItemTask = Wearable.getDataClient(applicationContext).putDataItem(request)
+        dataItemTask.addOnSuccessListener {
+            Log.d("Data sent", "Message: $newMessage")
+        }.addOnFailureListener {
+            Log.e("Data not sent", "Message: $newMessage")
+        }
+    }
+
+
 }
