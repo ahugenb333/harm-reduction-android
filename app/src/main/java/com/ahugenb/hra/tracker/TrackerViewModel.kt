@@ -35,35 +35,32 @@ class TrackerViewModel(
                     Log.e("Error fetching days", e.toString())
                 }
                 .collect { it ->
-                    val sorted = it.sortedBy {
+                    var days = it.sortedBy {
                         it.id.idToDateTime()
                     }
-                    val allDays = generateAllDays(sorted)
+                    if (days.isEmpty()) {
+                        days = getWeekOf(Day())
+                    }
+                    val allDays = generateAllDays(days)
                     insertDays(allDays)
                     val today = allDays.filterToday()[0]
-                    _trackerState.value = TrackerState.TrackerStateAll(all = allDays, today = today)
-                    completeInit()
+                    val daysOfWeek = getWeekOf(today)
+
+                    _trackerState.value = TrackerState.TrackerStateAll(
+                        all = allDays,
+                        today = today,
+                        weekBeginnings = getWeekBeginnings(allDays).reversed(),
+                        daysOfWeek = daysOfWeek,
+                        selectedMonday = daysOfWeek.first {
+                            it.id.idToDateTime().dayOfWeek == 1
+                        }
+                    )
                 }
         }
     }
 
-    private fun completeInit() {
-        val state = _trackerState.value as TrackerState.TrackerStateAll
-        val daysOfWeek = getWeekOf(state.selectedDay ?: state.today)
-        _trackerState.value =
-            state.copy(
-                weekBeginnings = getWeekBeginnings().reversed(),
-                daysOfWeek = daysOfWeek,
-                selectedMonday = daysOfWeek.first {
-                    it.id.idToDateTime().dayOfWeek == 1
-                }
-            )
-    }
-
     //Creates a Day object for each day between the beginning and end of days in `days` (inclusive)
     private fun generateAllDays(days: List<Day>): List<Day> {
-        if (days.isEmpty()) return listOf(Day())
-
         val allDays = mutableListOf<Day>()
         allDays.addAll(days)
 
@@ -180,10 +177,9 @@ class TrackerViewModel(
         }
     }
 
-    private fun getWeekBeginnings(): List<Day> {
+    private fun getWeekBeginnings(allDays: List<Day>): List<Day> {
         val beginnings = mutableListOf<Day>()
-        val days = (_trackerState.value as TrackerState.TrackerStateAll).all
-        beginnings.addAll(days.filter {
+        beginnings.addAll(allDays.filter {
             it.id.idToDateTime().dayOfWeek == 1
         })
         return beginnings
@@ -194,8 +190,6 @@ class TrackerViewModel(
         var dt = day.id.idToDateTime()
         val weekOf = mutableListOf<Day>()
 
-        val days = (_trackerState.value as TrackerState.TrackerStateAll).all
-
         while (dt.dayOfWeek > 1) {
             dt = dt.minusDays(1)
         }
@@ -203,15 +197,7 @@ class TrackerViewModel(
         val end = dt.plusDays(6)
 
         while (dt <= end) {
-            val nextDay = days.firstOrNull {
-                it.id == dt.toId()
-            }
-            if (nextDay != null) {
-                weekOf.add(nextDay)
-            } else {
-                weekOf.add(Day(dt.toId()))
-            }
-
+            weekOf.add(Day(dt.toId()))
             dt = dt.plusDays(1)
         }
 
