@@ -11,8 +11,8 @@ android {
         applicationId "com.ahugenb.hra"
         minSdk 30
         targetSdk 30
-        versionCode 8
-        versionName "2.1.0"
+        versionCode 9
+        versionName "2.1.1"
         vectorDrawables {
             useSupportLibrary true
         }

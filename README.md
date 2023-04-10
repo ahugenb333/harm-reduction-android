@@ -2,6 +2,8 @@
 * Drink Tracking Android App
 * Built with Jetpack Compose 🚀
 * Uses a Room Database to persist data to device
+## version 2.1.1
+* App icon for wearable
 ## version 2.1.0
 * Wearable support for quick actions - Watch app
 ## version 2.0.0
