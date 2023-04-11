@@ -1,7 +1,9 @@
-# harm-reduction-android
+# [Harm Reduction for Alcohol](https://play.google.com/store/apps/details?id=com.ahugenb.hra) on Google Play
 * Drink Tracking Android App
 * Built with Jetpack Compose 🚀
 * Uses a Room Database to persist data to device
+## version 2.1.3
+* Visual touch-up
 ## version 2.1.2
 * Add crashlytics crash reporting
 ## version 2.1.1
@@ -30,7 +32,7 @@
 * Harm Reduction Content
 * Graphing
 * Theme updates
-* Wearable support for quick actions
+* ~~Wearable support for quick actions~~
 * Multiplatform (iOS)
 * Sync to server (Realm)
 * Export to Google Sheets
