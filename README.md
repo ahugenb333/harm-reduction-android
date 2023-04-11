@@ -1,10 +1,21 @@
-# harm-reduction-android 
-## ([Harm Reduction for Alcohol](https://play.google.com/store/apps/details?id=com.ahugenb.hra) on Google Play)
+# [Harm Reduction for Alcohol](https://play.google.com/store/apps/details?id=com.ahugenb.hra) on Google Play
 * Drink Tracking Android App
 * Built with Jetpack Compose 🚀
 * Uses a Room Database to persist data to device
-## version 1.0.4
+## version 2.1.3
+* Visual touch-up
+## version 2.1.2
+* Add crashlytics crash reporting
+## version 2.1.1
+* App icon for wearable
+## version 2.1.0
+* Wearable support for quick actions - Watch app
+## version 2.0.0
+* Wearable support for quick actions - Mobile app
+## version 1.0.5
 * Fixed bug on dropdown menu when first opening the app
+## version 1.0.4
+* Added Google Play services
 ## version 1.0.3
 * Dark Mode support (matches system default)
 ## version 1.0.2
@@ -21,7 +32,7 @@
 * Harm Reduction Content
 * Graphing
 * Theme updates
-* Wearable support for quick actions
+* ~~Wearable support for quick actions~~
 * Multiplatform (iOS)
 * Sync to server (Realm)
 * Export to Google Sheets
