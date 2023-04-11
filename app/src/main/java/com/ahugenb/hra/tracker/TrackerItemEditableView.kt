@@ -108,7 +108,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             Text(
                 text = stringResource(id = R.string.hra_tracker_cravings),
                 modifier = Modifier.weight(0.25f, true)
-                    .padding(start = 24.dp, end = 24.dp, top = 8.dp),
+                    .padding(start = 24.dp, end = 20.dp, top = 8.dp),
                 style = MaterialTheme.typography.h6
             )
             OutlinedTextField(

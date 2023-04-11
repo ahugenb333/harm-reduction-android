@@ -69,12 +69,12 @@ class SyncListenerService : WearableListenerService() {
                         when (message) {
                             MESSAGE_HALF_DRINK -> {
                                 today = today.copy(drinks = today.drinks + 0.5)
-                                data = String.format("%.2f Drinks (%.2f Planned)",
+                                data = String.format("%.2f Drinks\n(%.2f Planned)",
                                     today.drinks, today.planned)
                             }
                             MESSAGE_DRINK -> {
                                 today = today.copy(drinks = today.drinks + 1.0)
-                                data = String.format("%.2f Drinks (%.2f Planned)",
+                                data = String.format("%.2f Drinks\n(%.2f Planned)",
                                     today.drinks, today.planned)
                             }
                             MESSAGE_CRAVING -> {
