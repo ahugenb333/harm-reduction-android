@@ -43,9 +43,8 @@ fun QuickActionView(viewModel: TrackerViewModel) {
             onDismiss = { showDialog.value = false },
             onConfirm = { showDialog.value = false
                 if (it > 0) {
-                    val newMoneySpent = moneySpent + it
-                    viewModel.updateMoneySpentToday(newMoneySpent)
-                    Toast.makeText(context, context.getString(R.string.hra_money_spent_today, newMoneySpent),
+                    viewModel.addMoneySpentToday(it)
+                    Toast.makeText(context, context.getString(R.string.hra_money_spent_today, moneySpent + it),
                         Toast.LENGTH_SHORT).show()
                 }
             }

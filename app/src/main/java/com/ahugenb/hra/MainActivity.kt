@@ -1,6 +1,11 @@
 package com.ahugenb.hra
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -10,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,6 +25,8 @@ import com.ahugenb.hra.home.list.MenuItem
 import com.ahugenb.hra.home.list.MenuListView
 import com.ahugenb.hra.home.list.NavScreen
 import com.ahugenb.hra.home.quickaction.QuickActionView
+import com.ahugenb.hra.sync.SyncViewModel
+import com.ahugenb.hra.sync.SyncViewModelFactory
 import com.ahugenb.hra.tracker.TrackerView
 import com.ahugenb.hra.tracker.TrackerViewModel
 import com.ahugenb.hra.tracker.TrackerViewModelFactory
@@ -29,9 +37,21 @@ class MainActivity : ComponentActivity() {
     private val trackerViewModel: TrackerViewModel by viewModels {
         TrackerViewModelFactory((application as HraApplication).dayRepository)
     }
+    private val syncViewModel: SyncViewModel by viewModels {
+        SyncViewModelFactory((application as HraApplication).syncRepository)
+    }
+
+    private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.d("onReceive", intent?.action ?: "null")
+            trackerViewModel.refreshToday()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
+            IntentFilter(Intent.ACTION_SEND))
         setContent {
             HraTheme {
                 val navController = rememberNavController()
