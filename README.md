@@ -8,7 +8,7 @@
 * Theme updates
 * ~~Wearable support for quick actions~~
 * Multiplatform (iOS)
-* Sync to server (Realm)
+* Sync to server
 * Export to Google Sheets
 * Hilt (code cleanliness)
 ## Acknowledgement
