@@ -1,11 +1,8 @@
 package com.ahugenb.hra
 
-import android.content.Intent
-import android.os.Build
 import com.ahugenb.hra.tracker.db.Day
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import java.io.Serializable
 
 class Utils {
     companion object {
@@ -57,7 +54,7 @@ class Utils {
 
         private fun Double.isValidDollars(): Boolean = this in 0.0..1000000.0
 
-        fun Double.rounded(): Double = String.format("%.3f", this).toDouble()
+        fun Double.roundedToTwo(): Double = String.format("%.2f", this).toDouble()
 
         fun String.smartToDouble(): Double =
             when (this.isEmpty() || this == ".") {
