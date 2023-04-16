@@ -25,7 +25,6 @@ import com.ahugenb.hra.R
 import com.ahugenb.hra.Utils.Companion.acceptDrinksText
 import com.ahugenb.hra.Utils.Companion.acceptPercentText
 import com.ahugenb.hra.Utils.Companion.acceptVolumeText
-import com.ahugenb.hra.Utils.Companion.roundedToThree
 import com.ahugenb.hra.Utils.Companion.roundedToTwo
 import com.ahugenb.hra.tracker.TrackerState
 import com.ahugenb.hra.tracker.TrackerViewModel
