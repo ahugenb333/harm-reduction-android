@@ -1,3 +1,5 @@
+## version 2.1.4
+* Rounding cosmetic fix
 ## version 2.1.3
 * Visual touch-up
 ## version 2.1.2
