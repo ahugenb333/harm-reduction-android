@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1090339974761-bdk6cn7i78cnflctgfhl2sd4bip71v75.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ahugenb.hra",
+            "certificate_hash": "1fa834f3173c9a9f3bd40a60b63a0a26f71da7e1"
+          }
+        },
+        {
           "client_id": "1090339974761-npk9rt6fkl7qumathrs9h755r083dm7d.apps.googleusercontent.com",
           "client_type": 3
         }

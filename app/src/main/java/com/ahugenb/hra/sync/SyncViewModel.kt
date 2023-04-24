@@ -4,39 +4,25 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class SyncViewModel(
-    private val syncRepository: SyncRepository
-    ): ViewModel() {
+class SyncViewModel: ViewModel() {
 
-    private val _firebaseInfo = MutableStateFlow<SyncState>(SyncState.SyncStateEmpty())
-    val firebaseInfo: StateFlow<SyncState> = _firebaseInfo
+    private val _syncState = MutableStateFlow<SyncState>(SyncState.SyncStateEmpty())
+    val syncState: StateFlow<SyncState> = _syncState
 
-    //Gets firebase info
-    fun getFirebaseId() {
-        if (_firebaseInfo.value is SyncState.SyncStateAll) return
-        viewModelScope.launch {
-            syncRepository.getFirebaseInfo()
-                .flowOn(Dispatchers.IO)
-                .catch {
-                    Log.e("Error fetching firebase info", it.toString())
-                }
-                .collect {
-                    _firebaseInfo.value = SyncState.SyncStateAll(it)
-                }
-        }
+    fun setUser(user: FirebaseUser?) {
+        Log.d("SyncViewModel", "setUser: $user")
+        _syncState.value = SyncState.SyncStateAll(user)
     }
-}
 
-class SyncViewModelFactory(private val syncRepository: SyncRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SyncViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return SyncViewModel(syncRepository) as T
+    private fun fetchSheet() {
+        if (_syncState.value is SyncState.SyncStateAll) {
+            val user = (_syncState.value as SyncState.SyncStateAll).firebaseUser
+
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

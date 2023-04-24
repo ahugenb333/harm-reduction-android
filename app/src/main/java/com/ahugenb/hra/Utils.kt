@@ -1,6 +1,7 @@
 package com.ahugenb.hra
 
 import com.ahugenb.hra.tracker.db.Day
+import com.google.android.gms.common.api.Scope
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -11,6 +12,8 @@ class Utils {
         private const val DATE_PATTERN_DISPLAY_SHORT = "M/d/yyyy"
         private const val VALID_INPUT_NUMBER = "1234567890"
         private const val VALID_INPUT_DECIMAL = VALID_INPUT_NUMBER.plus(".")
+
+        val SHEETS_SCOPE = Scope("https://www.googleapis.com/auth/spreadsheets")
 
         /*
         * sanitized decimals:

@@ -1,12 +1,12 @@
 package com.ahugenb.hra.sync
 
-import com.google.android.gms.ads.identifier.AdvertisingIdClient.Info
+import com.google.firebase.auth.FirebaseUser
 
 sealed class SyncState {
 
     class SyncStateEmpty: SyncState()
 
     data class SyncStateAll(
-        val firebaseInfo: Info
+        val firebaseUser: FirebaseUser? = null
     ): SyncState()
 }

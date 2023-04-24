@@ -14,6 +14,7 @@
     <string name="hra_drink">I Had a Drink</string>
     <string name="hra_craving">I Had a Craving</string>
     <string name="hra_bought">I Bought Alcohol</string>
+    <string name="hra_export">Export Google Sheet</string>
     <string name="hra_spent">How much did you spend?</string>
     <string name="hra_enter_dollar">Enter dollar amount</string>
     <string name="hra_update">Update</string>
