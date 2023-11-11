@@ -1,11 +1,8 @@
 package com.ahugenb.hra
 
-import android.content.Intent
-import android.os.Build
 import com.ahugenb.hra.tracker.db.Day
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import java.io.Serializable
 
 class Utils {
     companion object {
@@ -17,11 +14,11 @@ class Utils {
 
         /*
         * sanitized decimals:
-        *  -is less than 10 digits in length
+        *  -are less than 10 digits in length
         *  -may not contain more than one decimal
         *  -may only contain digits from validInput
         */
-        fun String.isSanitizedDecimal(): Boolean =
+        private fun String.isSanitizedDecimal(): Boolean =
             (this.isEmpty() || this.length < 10 && this.count { ch -> ch == '.' } < 2
                     && this.all { ch -> VALID_INPUT_DECIMAL.contains(ch) })
 
@@ -29,7 +26,7 @@ class Utils {
         private fun String.isSanitizedDollars(): Boolean =
             this.isSanitizedDecimal() && countAfterDecimal() < 3
 
-        fun String.isSanitizedNumber(): Boolean =
+        private fun String.isSanitizedNumber(): Boolean =
             (this.isEmpty() || this.length < 10 && this.none { ch -> ch == '.' }
                     && this.all { ch -> VALID_INPUT_NUMBER.contains(ch) })
 
@@ -57,7 +54,7 @@ class Utils {
 
         private fun Double.isValidDollars(): Boolean = this in 0.0..1000000.0
 
-        fun Double.rounded(): Double = String.format("%.3f", this).toDouble()
+        fun Double.roundedToTwo(): Double = String.format("%.2f", this).toDouble()
 
         fun String.smartToDouble(): Double =
             when (this.isEmpty() || this == ".") {

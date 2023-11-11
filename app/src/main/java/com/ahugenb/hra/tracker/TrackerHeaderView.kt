@@ -14,19 +14,20 @@ import com.ahugenb.hra.Utils.Companion.getCravingsTotal
 import com.ahugenb.hra.Utils.Companion.getDrinksTotal
 import com.ahugenb.hra.Utils.Companion.getMoneySpentTotal
 import com.ahugenb.hra.Utils.Companion.getPlannedTotal
+import com.ahugenb.hra.Utils.Companion.roundedToTwo
 
 @Composable
 fun TrackerHeaderView(viewModel: TrackerViewModel) {
     val daysOfWeek = (viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll)
         .daysOfWeek
 
-    val drinks = daysOfWeek.getDrinksTotal()
-    val planned = daysOfWeek.getPlannedTotal()
+    val drinks = daysOfWeek.getDrinksTotal().roundedToTwo()
+    val planned = daysOfWeek.getPlannedTotal().roundedToTwo()
     val cravings = daysOfWeek.getCravingsTotal()
     val money = daysOfWeek.getMoneySpentTotal()
 
     val lastWeek = viewModel.getLastWeek()
-    val drinksLastWeek = lastWeek.getDrinksTotal()
+    val drinksLastWeek = lastWeek.getDrinksTotal().roundedToTwo()
     val cravingsLastWeek = lastWeek.getCravingsTotal()
     val moneyLastWeek = lastWeek.getMoneySpentTotal()
 

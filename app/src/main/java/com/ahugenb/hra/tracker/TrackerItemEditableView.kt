@@ -23,6 +23,7 @@ import com.ahugenb.hra.Utils.Companion.acceptCravingsText
 import com.ahugenb.hra.Utils.Companion.acceptDollarsText
 import com.ahugenb.hra.Utils.Companion.acceptDrinksText
 import com.ahugenb.hra.Utils.Companion.prettyPrintShort
+import com.ahugenb.hra.Utils.Companion.roundedToTwo
 import com.ahugenb.hra.Utils.Companion.smartToDouble
 import com.ahugenb.hra.Utils.Companion.smartToInt
 import com.ahugenb.hra.tracker.db.Day
@@ -31,7 +32,7 @@ import com.ahugenb.hra.tracker.db.Day
 fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
     val selectedDay = (viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll)
         .selectedDay ?: return
-    val drinks = remember { mutableStateOf(selectedDay.drinks.toString()) }
+    val drinks = remember { mutableStateOf(selectedDay.drinks.roundedToTwo().toString()) }
     val planned = remember { mutableStateOf(selectedDay.planned.toString()) }
     val cravings = remember { mutableStateOf(selectedDay.cravings.toString()) }
     val money = remember { mutableStateOf(String.format("%.2f", selectedDay.moneySpent)) }
