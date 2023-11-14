@@ -1,6 +1,7 @@
 package com.ahugenb.hra
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -15,10 +16,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun QuickActionView(viewModel: WearViewModel) {
-    val context = LocalContext.current
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(color = Color(0xFF1E1E1E)),
         verticalArrangement = Arrangement.Center,
     ) {
         Row(
@@ -28,8 +29,8 @@ fun QuickActionView(viewModel: WearViewModel) {
             Button(
                 colors = ButtonDefaults
                     .buttonColors(
-                        backgroundColor = Color(0xFF670A0A),
-                        contentColor = Color(0xFFE5E5E5)
+                        backgroundColor = Color(0xFFD99278),
+                        contentColor = Color(0xFF1E1E1E)
                     ),
                 onClick = { viewModel.sendHalfDrink() }, modifier = Modifier
                 .fillMaxWidth()
@@ -41,8 +42,8 @@ fun QuickActionView(viewModel: WearViewModel) {
             Button(
                 colors = ButtonDefaults
                     .buttonColors(
-                        backgroundColor = Color(0xFF670A0A),
-                        contentColor = Color(0xFFE5E5E5)
+                        backgroundColor = Color(0xFFD99278),
+                        contentColor = Color(0xFF1E1E1E)
                     ),
                 onClick = { viewModel.sendWholeDrink() }, modifier = Modifier
                 .fillMaxWidth()
@@ -59,8 +60,8 @@ fun QuickActionView(viewModel: WearViewModel) {
             Button(
                 colors = ButtonDefaults
                     .buttonColors(
-                        backgroundColor = Color(0xFF670A0A),
-                        contentColor = Color(0xFFE5E5E5)
+                        backgroundColor = Color(0xFFD99278),
+                        contentColor = Color(0xFF1E1E1E)
                     ),
                 onClick = { viewModel.sendCraving() }, modifier = Modifier
                 .fillMaxWidth()
@@ -72,8 +73,8 @@ fun QuickActionView(viewModel: WearViewModel) {
             Button(
                 colors = ButtonDefaults
                     .buttonColors(
-                        backgroundColor = Color(0xFF670A0A),
-                        contentColor = Color(0xFFE5E5E5)
+                        backgroundColor = Color(0xFFD99278),
+                        contentColor = Color(0xFF1E1E1E)
                     ),
                 onClick = {
                     //todo alertDialog
