@@ -80,6 +80,10 @@ class MainActivity : ComponentActivity() {
                             CalculatorView(calculatorViewModel, trackerViewModel, navController)
                         }
 
+                        composable(NavScreen.SCREEN_GOALS.title) {
+                            GoalView(goalViewModel, navController)
+                        }
+
                         composable(NavScreen.SCREEN_TRACKER.title) {
                             TrackerView(trackerViewModel, navController)
                         }
