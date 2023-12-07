@@ -90,7 +90,8 @@ class MainActivity : ComponentActivity() {
 
                         composable(NavScreen.SCREEN_GOALS.title) {
                             val goalState = goalViewModel.goalState.collectAsState().value
-                            GoalView(goalState, navController)
+                            val trackerState = trackerViewModel.trackerState.collectAsState().value
+                            GoalView(goalState, trackerState, navController)
                         }
 
                         composable(NavScreen.SCREEN_TRACKER.title) {

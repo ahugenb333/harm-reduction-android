@@ -1,5 +1,10 @@
 package com.ahugenb.hra
 
+import com.ahugenb.hra.goal.GoalState
+import com.ahugenb.hra.goal.db.GoalPeriod
+import com.ahugenb.hra.goal.db.GoalStatus
+import com.ahugenb.hra.goal.db.GoalType
+import com.ahugenb.hra.tracker.TrackerState
 import com.ahugenb.hra.tracker.db.Day
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -31,6 +36,9 @@ class Utils {
             (this.isEmpty() || this.length < 10 && this.none { ch -> ch == '.' }
                     && this.all { ch -> VALID_INPUT_NUMBER.contains(ch) })
 
+        fun List<Day>.getDrinksTotal(): Double = this.sumOf { it.drinks }
+
+
         private fun String.countAfterDecimal(): Int {
             var startCount = false
             var count = 0
@@ -44,6 +52,54 @@ class Utils {
             }
             return count
         }
+
+        fun returnGoalStatus(trackerState: TrackerState.TrackerStateAll,
+                             goalState: GoalState): GoalStatus =
+            if (goalState.selectedGoal == null) GoalStatus.GREEN
+            else
+                when(goalState.selectedGoal!!.period) {
+                    GoalPeriod.DAILY -> {
+                        when (goalState.selectedGoal!!.type) {
+                            GoalType.RedGreen -> {
+                                when (trackerState.selectedDay!!.drinks) {
+                                    in 0.0..goalState.selectedGoal!!.green -> GoalStatus.GREEN
+                                    in goalState.selectedGoal!!.green..goalState.selectedGoal!!.red -> GoalStatus.YELLOW
+                                    else -> GoalStatus.RED
+                                }
+                            }
+
+                            GoalType.RedYellowGreen -> {
+                                when (trackerState.selectedDay!!.drinks) {
+                                    in 0.0..goalState.selectedGoal!!.green -> GoalStatus.GREEN
+                                    in goalState.selectedGoal!!.green..goalState.selectedGoal!!.yellow -> GoalStatus.YELLOW
+                                    in goalState.selectedGoal!!.yellow..goalState.selectedGoal!!.red -> GoalStatus.RED
+                                    else -> GoalStatus.RED
+                                }
+                            }
+                        }
+                    }
+
+                    GoalPeriod.WEEKLY -> {
+                        when (goalState.selectedGoal!!.type) {
+                            GoalType.RedGreen -> {
+                                when (trackerState.daysOfWeek.getDrinksTotal()) {
+                                    in 0.0..goalState.selectedGoal!!.green -> GoalStatus.GREEN
+                                    in goalState.selectedGoal!!.green..goalState.selectedGoal!!.red -> GoalStatus.YELLOW
+                                    else -> GoalStatus.RED
+                                }
+                            }
+
+                            GoalType.RedYellowGreen -> {
+                                when (trackerState.daysOfWeek.getDrinksTotal()) {
+                                    in 0.0..goalState.selectedGoal!!.green -> GoalStatus.GREEN
+                                    in goalState.selectedGoal!!.green..goalState.selectedGoal!!.yellow -> GoalStatus.YELLOW
+                                    in goalState.selectedGoal!!.yellow..goalState.selectedGoal!!.red -> GoalStatus.RED
+                                    else -> GoalStatus.RED
+                                }
+                            }
+                        }
+                    }
+            }
 
         private fun Int.isValidCravings(): Boolean = this in 0..100
 
@@ -83,8 +139,6 @@ class Utils {
         fun Day.isToday(): Boolean = this.id == todaysId()
 
         fun List<Day>.filterToday(): List<Day> = this.filter { it.isToday() }
-
-        fun List<Day>.getDrinksTotal(): Double = this.sumOf { it.drinks }
 
         fun List<Day>.getMoneySpentTotal(): Double = this.sumOf { it.moneySpent }
 

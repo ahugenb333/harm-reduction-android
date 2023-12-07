@@ -11,29 +11,18 @@ data class Goal(
     @ColumnInfo(name = "yellow") val yellow: Double = 0.0,
     @ColumnInfo(name = "green") val green: Double = 0.0,
     @ColumnInfo(name = "period") val period: GoalPeriod = GoalPeriod.DAILY,
-    @ColumnInfo(name = "unit") val unit: GoalUnit = GoalUnit.DRINKS,
     @ColumnInfo(name = "type") val type: GoalType = GoalType.RedGreen,
-    @ColumnInfo(name = "status") val status: GoalStatus = GoalStatus.PASSING,
 )
 
 enum class GoalPeriod {
     DAILY,
-    WEEKLY,
-    BIWEEKLY,
-    MONTHLY,
-    QUARTERLY,
-    YEARLY
-}
-
-enum class GoalUnit {
-    DRINKS,
-    MONEY,
-    CRAVINGS
+    WEEKLY
 }
 
 enum class GoalStatus {
-    PASSING,
-    FAILING
+    RED,
+    YELLOW,
+    GREEN
 }
 
 enum class GoalType {

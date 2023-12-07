@@ -30,6 +30,7 @@ class GoalViewModel(
                 .collect {
                     it.add(Goal(0))
                     it.add(Goal(1))
+                    _goalState.value.selectedGoal = it[1]
                     _goalState.value = _goalState.value.copy(goals = it.toMutableList())
                 }
         }
@@ -53,7 +54,7 @@ class GoalViewModel(
                 }
                 .collect {
                     Log.d("GoalViewModel", "Saved goals")
-                    _goalState.value = _goalState.value.copy(hasSelectedGoal = false)
+                    _goalState.value = _goalState.value.copy(selectedGoal = goal)
                 }
         }
     }

@@ -1,5 +1,6 @@
 package com.ahugenb.hra.goal
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
@@ -15,25 +17,47 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.ahugenb.hra.Utils
+import com.ahugenb.hra.Utils.Companion.returnGoalStatus
 import com.ahugenb.hra.goal.db.Goal
 import com.ahugenb.hra.goal.db.GoalStatus
+import com.ahugenb.hra.tracker.TrackerState
 
 @Composable
-fun GoalView(goalState: GoalState, navController: NavController) {
+fun GoalView(goalState: GoalState, trackerState: TrackerState, navController: NavController) {
+    if (trackerState is TrackerState.TrackerStateEmpty) {
+        return
+    }
+    val trackerStateAll = trackerState as TrackerState.TrackerStateAll
+
+    val icon = when(returnGoalStatus(trackerState = trackerStateAll, goalState = goalState)) {
+        GoalStatus.RED -> Icons.Default.Warning
+        GoalStatus.YELLOW -> Icons.Default.Warning
+        GoalStatus.GREEN -> Icons.Default.Star
+    }
+
+    val iconColor = when(returnGoalStatus(trackerState = trackerState, goalState = goalState)) {
+        GoalStatus.RED -> Color.Red
+        GoalStatus.YELLOW -> Color.Yellow
+        GoalStatus.GREEN -> Color.Green
+    }
     LazyColumn {
         items(goalState.goals.size) { index ->
-            GoalListItem(goalState.goals[index], index + 1)
+            GoalListItem(goalState.goals[index], icon, iconColor, index + 1)
         }
     }
-    FloatingActionButton(onClick = { /*TODO*/ }) {
-        
+    FloatingActionButton(onClick = {
+        navController.navigate("goalCreate")
+    }) {
+        Icon(Icons.Default.Add, contentDescription = "Create Goal")
     }
 }
 
 @Composable
-fun GoalListItem(goal: Goal, goalNumber: Int) {
+fun GoalListItem(goal: Goal, icon: ImageVector, iconColor: Color, goalNumber: Int) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,14 +77,10 @@ fun GoalListItem(goal: Goal, goalNumber: Int) {
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(getColorForGoalStatus(goal.status)),
+                    .background(iconColor),
                 contentAlignment = Alignment.Center
             ) {
-                // You can customize the content inside the circle, e.g., display an icon
-                when (goal.status) {
-                    GoalStatus.PASSING -> Icon(Icons.Default.Star, contentDescription = null)
-                    GoalStatus.FAILING -> Icon(Icons.Default.Warning, contentDescription = null)
-                }
+                Icon(icon, contentDescription = "Goal Status")
             }
 
             // Goal Number and Text
@@ -71,7 +91,6 @@ fun GoalListItem(goal: Goal, goalNumber: Int) {
             ) {
                 Text("Goal $goalNumber", style = MaterialTheme.typography.h6)
                 Text("Type: ${goal.type.name}")
-                Text("Unit: ${goal.unit.name}")
                 Text("Period: ${goal.period.name}")
             }
 
@@ -84,13 +103,5 @@ fun GoalListItem(goal: Goal, goalNumber: Int) {
                     .padding(8.dp)
             )
         }
-    }
-}
-
-@Composable
-private fun getColorForGoalStatus(status: GoalStatus): Color {
-    return when (status) {
-        GoalStatus.PASSING -> Color.Green
-        GoalStatus.FAILING -> Color.Red
     }
 }
