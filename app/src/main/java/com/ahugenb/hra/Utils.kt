@@ -3,6 +3,7 @@ package com.ahugenb.hra
 import com.ahugenb.hra.tracker.db.Day
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import java.util.Locale
 
 class Utils {
     companion object {
@@ -54,7 +55,7 @@ class Utils {
 
         private fun Double.isValidDollars(): Boolean = this in 0.0..1000000.0
 
-        fun Double.roundedToTwo(): Double = String.format("%.2f", this).toDouble()
+        fun Double.roundedToTwo(): Double = String.format("%.2f", this, Locale.ENGLISH).toDouble()
 
         fun String.smartToDouble(): Double =
             when (this.isEmpty() || this == ".") {
