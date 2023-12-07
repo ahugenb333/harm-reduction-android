@@ -65,6 +65,7 @@ class MainActivity : ComponentActivity() {
                 val menuList = mutableListOf(
                     MenuItem(0, "Unit Calculator (USA)"),
                     MenuItem(1, "Drink Tracker / Planner"),
+                    MenuItem(2, "Goals"),
                     MenuItem(3, "Quick Actions", showDivider = false)
                 )
 
