@@ -18,7 +18,15 @@ import com.ahugenb.hra.Utils.Companion.prettyPrintShort
 
 @Composable
 fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
-    val trackerState = viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll
+    var trackerState = viewModel.trackerState.collectAsState().value
+    when (trackerState) {
+        is TrackerState.TrackerStateEmpty -> {
+            return
+        }
+        else -> {
+            trackerState = trackerState as TrackerState.TrackerStateAll
+        }
+    }
     val isDropdownExpanded = remember { mutableStateOf(false) }
     val selectedIndex = remember { mutableStateOf(0) }
 
