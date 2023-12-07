@@ -10,6 +10,4 @@ interface GoalRepository {
     fun insertGoal(goal: Goal): Flow<Unit>
 
     fun updateGoals(goal: Goal): Flow<Unit>
-
-
 }
