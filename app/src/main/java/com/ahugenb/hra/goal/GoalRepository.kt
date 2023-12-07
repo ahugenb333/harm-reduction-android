@@ -7,7 +7,5 @@ interface GoalRepository {
 
     fun getGoals(): Flow<List<Goal>>
 
-    fun insertGoal(goal: Goal): Flow<Unit>
-
-    fun updateGoals(goal: Goal): Flow<Unit>
+    fun insertGoals(goals: List<Goal>): Flow<Unit>
 }
