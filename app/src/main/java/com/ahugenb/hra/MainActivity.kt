@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.compose.NavHost
@@ -21,6 +22,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ahugenb.hra.calculator.CalculatorView
 import com.ahugenb.hra.calculator.CalculatorViewModel
+import com.ahugenb.hra.goal.GoalView
+import com.ahugenb.hra.goal.GoalViewModel
+import com.ahugenb.hra.goal.GoalViewModelFactory
 import com.ahugenb.hra.home.list.MenuItem
 import com.ahugenb.hra.home.list.MenuListView
 import com.ahugenb.hra.home.list.NavScreen
@@ -36,6 +40,9 @@ class MainActivity : ComponentActivity() {
     private val calculatorViewModel: CalculatorViewModel by viewModels()
     private val trackerViewModel: TrackerViewModel by viewModels {
         TrackerViewModelFactory((application as HraApplication).dayRepository)
+    }
+    private val goalViewModel: GoalViewModel by viewModels {
+        GoalViewModelFactory((application as HraApplication).goalRepository)
     }
     private val syncViewModel: SyncViewModel by viewModels {
         SyncViewModelFactory((application as HraApplication).syncRepository)
@@ -81,7 +88,8 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(NavScreen.SCREEN_GOALS.title) {
-                            GoalView(goalViewModel, navController)
+                            val goalState = goalViewModel.goalState.collectAsState().value
+                            GoalView(goalState, navController)
                         }
 
                         composable(NavScreen.SCREEN_TRACKER.title) {

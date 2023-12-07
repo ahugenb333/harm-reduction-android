@@ -2,9 +2,8 @@ package com.ahugenb.hra.tracker.db
 
 import android.content.Context
 import androidx.room.Room
-import com.ahugenb.hra.HraApplication
 
-object DatabaseBuilder {
+object TrackerDatabaseBuilder {
 
     private var INSTANCE: TrackerDatabase? = null
 

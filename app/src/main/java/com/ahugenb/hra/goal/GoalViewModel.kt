@@ -2,8 +2,10 @@ package com.ahugenb.hra.goal
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ahugenb.hra.goal.db.Goal
+import com.ahugenb.hra.goal.db.GoalRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +28,9 @@ class GoalViewModel(
                     Log.e("Error fetching goals", e.toString())
                 }
                 .collect {
-                _goalState.value = _goalState.value.copy(goals = it.toMutableList())
+                    it.add(Goal(0))
+                    it.add(Goal(1))
+                    _goalState.value = _goalState.value.copy(goals = it.toMutableList())
                 }
         }
     }
@@ -55,4 +59,15 @@ class GoalViewModel(
     }
 }
 
+class GoalViewModelFactory(
+    private val goalRepository: GoalRepository
+): ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(GoalViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return GoalViewModel(goalRepository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
 
