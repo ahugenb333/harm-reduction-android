@@ -1,11 +1,10 @@
 package com.ahugenb.hra.goal.db
 
-import com.ahugenb.hra.goal.db.Goal
 import kotlinx.coroutines.flow.Flow
 
 interface GoalRepository {
 
-    fun getGoals(): Flow<MutableList<Goal>>
+    fun getGoals(): Flow<MutableList<GoalEntity>>
 
-    fun insertGoals(goals: List<Goal>): Flow<Unit>
+    fun insertGoals(goals: List<GoalEntity>): Flow<Unit>
 }

@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ahugenb.hra.goal.db.Goal
+import com.ahugenb.hra.goal.db.GoalEntity
 import com.ahugenb.hra.goal.db.GoalRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +17,8 @@ class GoalViewModel(
     private val goalRepository: GoalRepository
 ): ViewModel() {
 
-    private val _goalState: MutableStateFlow<GoalState> = MutableStateFlow(GoalState())
-    val goalState: StateFlow<GoalState> = _goalState
+    private val _goalList: MutableStateFlow<MutableList<GoalEntity>> = MutableStateFlow(mutableListOf())
+    val goalList: StateFlow<MutableList<GoalEntity>> = _goalList
 
     init {
         viewModelScope.launch {
@@ -28,23 +28,20 @@ class GoalViewModel(
                     Log.e("Error fetching goals", e.toString())
                 }
                 .collect {
-                    it.add(Goal(0))
-                    it.add(Goal(1))
-                    _goalState.value = _goalState.value.copy(goals = it.toMutableList())
+                    it.add(GoalEntity())
+                    it.add(GoalEntity())
+                    _goalList.value = it
                 }
         }
     }
 
-    fun saveGoal(goal: Goal, index: Int) {
-        val goals = _goalState.value.goals
+    fun saveGoal(goal: GoalEntity, index: Int) {
+        val goals = _goalList.value
         if (index >= goals.size) {
             goals.add(goal)
         } else {
             goals[index] = goal
         }
-        _goalState.value.goals.clear()
-        _goalState.value.goals.addAll(goals)
-
         viewModelScope.launch {
             goalRepository.insertGoals(goals)
                 .flowOn(Dispatchers.IO)
@@ -53,7 +50,7 @@ class GoalViewModel(
                 }
                 .collect {
                     Log.d("GoalViewModel", "Saved goals")
-                    _goalState.value = _goalState.value.copy(hasSelectedGoal = false)
+                    _goalList.value = goals
                 }
         }
     }

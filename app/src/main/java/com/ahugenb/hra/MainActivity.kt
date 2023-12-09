@@ -31,6 +31,7 @@ import com.ahugenb.hra.home.list.NavScreen
 import com.ahugenb.hra.home.quickaction.QuickActionView
 import com.ahugenb.hra.sync.SyncViewModel
 import com.ahugenb.hra.sync.SyncViewModelFactory
+import com.ahugenb.hra.tracker.TrackerState
 import com.ahugenb.hra.tracker.TrackerView
 import com.ahugenb.hra.tracker.TrackerViewModel
 import com.ahugenb.hra.tracker.TrackerViewModelFactory
@@ -43,9 +44,6 @@ class MainActivity : ComponentActivity() {
     }
     private val goalViewModel: GoalViewModel by viewModels {
         GoalViewModelFactory((application as HraApplication).goalRepository)
-    }
-    private val syncViewModel: SyncViewModel by viewModels {
-        SyncViewModelFactory((application as HraApplication).syncRepository)
     }
 
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -89,8 +87,11 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(NavScreen.SCREEN_GOALS.title) {
-                            val goalState = goalViewModel.goalState.collectAsState().value
-                            GoalView(goalState, navController)
+                            val goalList = goalViewModel.goalList.collectAsState().value
+                            val trackerState = trackerViewModel.trackerState.collectAsState().value
+                            if (trackerState is TrackerState.TrackerStateAll) {
+                                GoalView(goalList, trackerState, navController)
+                            }
                         }
 
                         composable(NavScreen.SCREEN_TRACKER.title) {

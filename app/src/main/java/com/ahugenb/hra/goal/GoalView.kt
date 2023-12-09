@@ -8,8 +8,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,13 +16,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ahugenb.hra.goal.db.Goal
+import com.ahugenb.hra.goal.db.GoalEntity
 import com.ahugenb.hra.goal.db.GoalStatus
+import com.ahugenb.hra.tracker.TrackerState
+import com.ahugenb.hra.tracker.getActualValue
 
 @Composable
-fun GoalView(goalState: GoalState, navController: NavController) {
+fun GoalView(goalList: MutableList<GoalEntity>, trackerState: TrackerState.TrackerStateAll, navController: NavController) {
     LazyColumn {
-        items(goalState.goals.size) { index ->
-            GoalListItem(goalState.goals[index], index + 1)
+        items(goalList.size) { index ->
+            GoalListItem(goalList[index], trackerState, index + 1)
         }
     }
     FloatingActionButton(onClick = { /*TODO*/ }) {
@@ -33,7 +34,10 @@ fun GoalView(goalState: GoalState, navController: NavController) {
 }
 
 @Composable
-fun GoalListItem(goal: Goal, goalNumber: Int) {
+fun GoalListItem(goal: GoalEntity, trackerState: TrackerState.TrackerStateAll, goalNumber: Int) {
+    val actualValue =
+        trackerState.getActualValue(goal)
+    val goalStatus = goal.getGoalStatus(actualValue)
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,14 +57,11 @@ fun GoalListItem(goal: Goal, goalNumber: Int) {
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(getColorForGoalStatus(goal.status)),
+                    .background(getColorForGoalStatus(goalStatus)),
                 contentAlignment = Alignment.Center
             ) {
                 // You can customize the content inside the circle, e.g., display an icon
-                when (goal.status) {
-                    GoalStatus.PASSING -> Icon(Icons.Default.Star, contentDescription = null)
-                    GoalStatus.FAILING -> Icon(Icons.Default.Warning, contentDescription = null)
-                }
+
             }
 
             // Goal Number and Text
@@ -70,7 +71,6 @@ fun GoalListItem(goal: Goal, goalNumber: Int) {
                     .padding(start = 16.dp)
             ) {
                 Text("Goal $goalNumber", style = MaterialTheme.typography.h6)
-                Text("Type: ${goal.type.name}")
                 Text("Unit: ${goal.unit.name}")
                 Text("Period: ${goal.period.name}")
             }
@@ -90,7 +90,8 @@ fun GoalListItem(goal: Goal, goalNumber: Int) {
 @Composable
 private fun getColorForGoalStatus(status: GoalStatus): Color {
     return when (status) {
-        GoalStatus.PASSING -> Color.Green
-        GoalStatus.FAILING -> Color.Red
+        GoalStatus.GREEN -> Color.Green
+        GoalStatus.RED -> Color.Red
+        GoalStatus.YELLOW -> Color.Yellow
     }
 }
