@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ahugenb.hra.goal.db.Goal
 import com.ahugenb.hra.goal.db.GoalImpl
+import com.ahugenb.hra.goal.db.GoalPeriod
 import com.ahugenb.hra.goal.db.GoalRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,8 +30,18 @@ class GoalViewModel(
                     Log.e("Error fetching goals", e.toString())
                 }
                 .collect {
-                    it.add(GoalImpl())
-                    it.add(GoalImpl())
+                    it.add(GoalImpl(
+                        red = 3.0,
+                        yellow = 2.0,
+                        green = 1.0,
+                        period = GoalPeriod.DAILY,
+                    ))
+                    it.add(GoalImpl(
+                        red = 3.0,
+                        yellow = 2.0,
+                        green = 1.0,
+                        period = GoalPeriod.WEEKLY,
+                    ))
                     _goalList.value = it
                 }
         }

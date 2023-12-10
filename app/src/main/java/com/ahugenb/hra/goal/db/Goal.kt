@@ -34,9 +34,9 @@ data class GoalImpl(
             this.red > this.green
         }
     override fun getGoalStatus(actualValue: Double): GoalStatus {
-        if (!this.isYellowType()) {
-            if (actualValue >= this.red) return GoalStatus.RED
-        } else if (actualValue < this.red && actualValue >= this.yellow) {
+        if (actualValue >= this.red) {
+            return GoalStatus.RED
+        } else if (isYellowType() && actualValue < this.red && actualValue >= this.yellow) {
             return GoalStatus.YELLOW
         }
         return GoalStatus.GREEN

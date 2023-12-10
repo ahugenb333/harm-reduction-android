@@ -88,10 +88,9 @@ fun GoalListItem(goal: Goal, trackerState: TrackerState.TrackerStateAll, goalNum
 }
 
 @Composable
-private fun getColorForGoalStatus(status: GoalStatus): Color {
-    return when (status) {
+private fun getColorForGoalStatus(status: GoalStatus): Color =
+    when (status) {
         GoalStatus.GREEN -> Color.Green
         GoalStatus.RED -> Color.Red
         GoalStatus.YELLOW -> Color.Yellow
     }
-}
