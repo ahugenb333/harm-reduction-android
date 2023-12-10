@@ -16,13 +16,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ahugenb.hra.goal.db.Goal
-import com.ahugenb.hra.goal.db.GoalEntity
+import com.ahugenb.hra.goal.db.GoalImpl
 import com.ahugenb.hra.goal.db.GoalStatus
 import com.ahugenb.hra.tracker.TrackerState
 import com.ahugenb.hra.tracker.getActualValue
 
 @Composable
-fun GoalView(goalList: MutableList<GoalEntity>, trackerState: TrackerState.TrackerStateAll, navController: NavController) {
+fun GoalView(goalList: MutableList<Goal>, trackerState: TrackerState.TrackerStateAll, navController: NavController) {
     LazyColumn {
         items(goalList.size) { index ->
             GoalListItem(goalList[index], trackerState, index + 1)
@@ -34,7 +34,7 @@ fun GoalView(goalList: MutableList<GoalEntity>, trackerState: TrackerState.Track
 }
 
 @Composable
-fun GoalListItem(goal: GoalEntity, trackerState: TrackerState.TrackerStateAll, goalNumber: Int) {
+fun GoalListItem(goal: Goal, trackerState: TrackerState.TrackerStateAll, goalNumber: Int) {
     val actualValue =
         trackerState.getActualValue(goal)
     val goalStatus = goal.getGoalStatus(actualValue)

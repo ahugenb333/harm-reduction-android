@@ -8,8 +8,8 @@ import androidx.room.Query
 @Dao
 interface GoalDao {
     @Query("SELECT * FROM Goals")
-    fun getGoals(): List<GoalEntity>
+    fun getGoals(): List<GoalImpl>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertGoals(goals: List<GoalEntity>)
+    fun insertGoals(goals: List<GoalImpl>)
 }

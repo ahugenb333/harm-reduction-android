@@ -4,7 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ahugenb.hra.goal.db.GoalEntity
+import com.ahugenb.hra.goal.db.Goal
+import com.ahugenb.hra.goal.db.GoalImpl
 import com.ahugenb.hra.goal.db.GoalRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +18,8 @@ class GoalViewModel(
     private val goalRepository: GoalRepository
 ): ViewModel() {
 
-    private val _goalList: MutableStateFlow<MutableList<GoalEntity>> = MutableStateFlow(mutableListOf())
-    val goalList: StateFlow<MutableList<GoalEntity>> = _goalList
+    private val _goalList: MutableStateFlow<MutableList<Goal>> = MutableStateFlow(mutableListOf())
+    val goalList: StateFlow<MutableList<Goal>> = _goalList
 
     init {
         viewModelScope.launch {
@@ -28,14 +29,14 @@ class GoalViewModel(
                     Log.e("Error fetching goals", e.toString())
                 }
                 .collect {
-                    it.add(GoalEntity())
-                    it.add(GoalEntity())
+                    it.add(GoalImpl())
+                    it.add(GoalImpl())
                     _goalList.value = it
                 }
         }
     }
 
-    fun saveGoal(goal: GoalEntity, index: Int) {
+    fun saveGoal(goal: Goal, index: Int) {
         val goals = _goalList.value
         if (index >= goals.size) {
             goals.add(goal)

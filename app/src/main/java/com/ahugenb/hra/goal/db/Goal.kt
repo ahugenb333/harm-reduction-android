@@ -1,7 +1,6 @@
 package com.ahugenb.hra.goal.db
 
 import androidx.room.ColumnInfo
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.UUID
@@ -20,7 +19,7 @@ interface Goal {
 }
 
 @Entity(tableName = "goals")
-data class GoalEntity(
+data class GoalImpl(
     @PrimaryKey override val goalId : UUID = UUID.randomUUID(),
     @ColumnInfo(name = "red") override val red: Double = 0.0,
     @ColumnInfo(name = "yellow") override val yellow: Double = 0.0,

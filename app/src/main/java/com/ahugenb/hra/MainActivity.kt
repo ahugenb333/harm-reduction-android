@@ -29,8 +29,6 @@ import com.ahugenb.hra.home.list.MenuItem
 import com.ahugenb.hra.home.list.MenuListView
 import com.ahugenb.hra.home.list.NavScreen
 import com.ahugenb.hra.home.quickaction.QuickActionView
-import com.ahugenb.hra.sync.SyncViewModel
-import com.ahugenb.hra.sync.SyncViewModelFactory
 import com.ahugenb.hra.tracker.TrackerState
 import com.ahugenb.hra.tracker.TrackerView
 import com.ahugenb.hra.tracker.TrackerViewModel

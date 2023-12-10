@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GoalRepository {
 
-    fun getGoals(): Flow<MutableList<GoalEntity>>
+    fun getGoals(): Flow<MutableList<Goal>>
 
-    fun insertGoals(goals: List<GoalEntity>): Flow<Unit>
+    fun insertGoals(goals: List<Goal>): Flow<Unit>
 }
