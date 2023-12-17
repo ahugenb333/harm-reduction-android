@@ -5,4 +5,5 @@ enum class NavScreen(val title: String) {
     SCREEN_CALCULATOR("screenCalculator"),
     SCREEN_GOALS("screenGoals"),
     SCREEN_TRACKER("screenTracker"),
+    SCREEN_GOAL_DETAIL("screenGoalDetail"),
 }

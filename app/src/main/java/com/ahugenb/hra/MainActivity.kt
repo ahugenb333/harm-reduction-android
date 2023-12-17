@@ -22,6 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ahugenb.hra.calculator.CalculatorView
 import com.ahugenb.hra.calculator.CalculatorViewModel
+import com.ahugenb.hra.goal.GoalDetailScreen
 import com.ahugenb.hra.goal.GoalView
 import com.ahugenb.hra.goal.GoalViewModel
 import com.ahugenb.hra.goal.GoalViewModelFactory
@@ -90,6 +91,10 @@ class MainActivity : ComponentActivity() {
                             if (trackerState is TrackerState.TrackerStateAll) {
                                 GoalView(goalList, trackerState, navController)
                             }
+                        }
+
+                        composable(NavScreen.SCREEN_GOAL_DETAIL.title) {
+                            GoalDetailScreen()
                         }
 
                         composable(NavScreen.SCREEN_TRACKER.title) {

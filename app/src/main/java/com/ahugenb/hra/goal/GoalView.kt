@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,20 +17,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ahugenb.hra.goal.db.Goal
-import com.ahugenb.hra.goal.db.GoalImpl
 import com.ahugenb.hra.goal.db.GoalStatus
+import com.ahugenb.hra.home.list.NavScreen
 import com.ahugenb.hra.tracker.TrackerState
 import com.ahugenb.hra.tracker.getActualValue
 
 @Composable
 fun GoalView(goalList: MutableList<Goal>, trackerState: TrackerState.TrackerStateAll, navController: NavController) {
-    LazyColumn {
-        items(goalList.size) { index ->
-            GoalListItem(goalList[index], trackerState, index + 1)
+    Box(modifier = Modifier.fillMaxSize()){
+        LazyColumn {
+            items(goalList.size) { index ->
+                GoalListItem(goalList[index], trackerState, index + 1)
+            }
         }
-    }
-    FloatingActionButton(onClick = { /*TODO*/ }) {
-        
+        FloatingActionButton(modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp),
+            onClick = { navController.navigate(NavScreen.SCREEN_GOAL_DETAIL.title) }) {
+            Icon(Icons.Default.Add, contentDescription = "Add Goal")
+        }
     }
 }
 
@@ -71,8 +75,8 @@ fun GoalListItem(goal: Goal, trackerState: TrackerState.TrackerStateAll, goalNum
                     .padding(start = 16.dp)
             ) {
                 Text("Goal $goalNumber", style = MaterialTheme.typography.h6)
-                Text("Unit: ${goal.unit.name}")
-                Text("Period: ${goal.period.name}")
+                Text("Unit: ${goal.unit.unitName}")
+                Text("Period: ${goal.period.periodName}")
             }
 
             // Edit Button
@@ -80,7 +84,7 @@ fun GoalListItem(goal: Goal, trackerState: TrackerState.TrackerStateAll, goalNum
                 Icons.Default.Edit,
                 contentDescription = "Edit",
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(48.dp)
                     .padding(8.dp)
             )
         }

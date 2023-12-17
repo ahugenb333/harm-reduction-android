@@ -12,6 +12,7 @@ interface Goal {
     val green: Double
     val period: GoalPeriod
     val unit: GoalUnit
+    val consecutiveSuccesses: Int
     fun getGoalStatus(actualValue: Double): GoalStatus
     fun isSavable(): Boolean
 
@@ -26,6 +27,7 @@ data class GoalImpl(
     @ColumnInfo(name = "green") override val green: Double = 0.0,
     @ColumnInfo(name = "period") override val period: GoalPeriod = GoalPeriod.DAILY,
     @ColumnInfo(name = "unit") override val unit: GoalUnit = GoalUnit.DRINKS,
+    @ColumnInfo(name = "consecutive_successes") override val consecutiveSuccesses: Int = 0
 ): Goal {
     override fun isSavable(): Boolean =
         if (this.isYellowType()) {
@@ -47,19 +49,19 @@ data class GoalImpl(
     }
 }
 
-enum class GoalPeriod {
-    DAILY,
-    WEEKLY,
-    BIWEEKLY,
-    MONTHLY,
-    QUARTERLY,
-    YEARLY
+enum class GoalPeriod(val periodName: String? = null) {
+    DAILY("Daily"),
+    WEEKLY("Weekly"),
+    BIWEEKLY("Biweekly"),
+    MONTHLY("Monthly"),
+    QUARTERLY("Quarterly"),
+    YEARLY("Yearly")
 }
 
-enum class GoalUnit {
-    DRINKS,
-    MONEY,
-    CRAVINGS
+enum class GoalUnit(val unitName: String? = null) {
+    DRINKS("Drinks"),
+    MONEY("Money"),
+    CRAVINGS("Cravings")
 }
 
 enum class GoalStatus {
