@@ -40,95 +40,28 @@ fun GoalDetailScreen(goalToEdit: Goal? = null) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        OutlinedTextField(
-            value = red,
-            onValueChange = {
-                if (it.acceptDrinksText()) {
-                    red = it
-                }
-            },
-            label = { Text("Red") },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = { /* Handle Next button press if needed */ }
-            )
-        )
-
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text("Enable Yellow Field")
-            Switch(
-                checked = enableYellowField,
-                onCheckedChange = { enableYellowField = it },
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-        }
-
-        if (enableYellowField) {
-            OutlinedTextField(
-                value = yellow,
-                onValueChange = {
-                    if (it.acceptDrinksText()) {
-                        yellow = it
-                    }
-                },
-                label = { Text("Yellow") },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { /* Handle Next button press if needed */ }
-                )
-            )
-        }
-
-        OutlinedTextField(
-            value = green,
-            onValueChange = {
-                if (it.acceptDrinksText()) {
-                    green = it
-                }
-            },
-            label = { Text("Green") },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = { /* Handle Next button press if needed */ }
-            )
-        )
-
-
-
-        Button(
-            onClick = {
-                val editedGoal = GoalImpl(
-                    goalId = goalToEdit?.goalId ?: UUID.randomUUID(),
-                    red = red.smartToDouble(),
-                    yellow = yellow.smartToDouble(),
-                    green = green.smartToDouble(),
-                    period = period,
-                    unit = unit
-                )
-
-                if (editedGoal.isSavable()) {
-                    // Handle saving the edited goal, e.g., update the goal in the database
-                } else {
-                    // Handle case where the edited goal is not savable
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-        ) {
-            Text(if (goalToEdit != null) "Save Changes" else "Save Goal")
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Drinks", style = MaterialTheme.typography.h6)
+                RadioButton(selected = unit == GoalUnit.DRINKS, onClick = { unit = GoalUnit.DRINKS })
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Cravings", style = MaterialTheme.typography.h6)
+                RadioButton(selected = unit == GoalUnit.CRAVINGS, onClick = { unit = GoalUnit.CRAVINGS })
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Money", style = MaterialTheme.typography.h6)
+                RadioButton(selected = unit == GoalUnit.MONEY, onClick = { unit = GoalUnit.MONEY })
+            }
         }
     }
 }
