@@ -14,4 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "harm-reduction-android"
 include ':app'
-include ':hra_wear'

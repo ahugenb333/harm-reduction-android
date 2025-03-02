@@ -4,18 +4,19 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 android {
     namespace 'com.ahugenb.hra'
-    compileSdk 33
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.ahugenb.hra"
         minSdk 24
-        targetSdk 33
-        versionCode 13
-        versionName "2.1.5"
+        targetSdk 35
+        versionCode 16
+        versionName "2.1.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
