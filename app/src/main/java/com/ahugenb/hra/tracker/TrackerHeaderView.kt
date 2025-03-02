@@ -15,6 +15,7 @@ import com.ahugenb.hra.Utils.Companion.getDrinksTotal
 import com.ahugenb.hra.Utils.Companion.getMoneySpentTotal
 import com.ahugenb.hra.Utils.Companion.getPlannedTotal
 import com.ahugenb.hra.Utils.Companion.roundedToTwo
+import java.util.Locale
 
 @Composable
 fun TrackerHeaderView(viewModel: TrackerViewModel) {
@@ -44,7 +45,7 @@ fun TrackerHeaderView(viewModel: TrackerViewModel) {
                 style = MaterialTheme.typography.body2
             )
             Text(
-                text = String.format("Money: $%.2f\r\n($%.2f last week)", money, moneyLastWeek),
+                text = String.format(Locale.getDefault(), "Money: $%.2f\r\n($%.2f last week)", money, moneyLastWeek),
                 style = MaterialTheme.typography.body2
             )
         }

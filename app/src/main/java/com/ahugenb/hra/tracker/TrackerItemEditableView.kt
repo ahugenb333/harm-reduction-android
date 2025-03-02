@@ -27,6 +27,7 @@ import com.ahugenb.hra.Utils.Companion.roundedToTwo
 import com.ahugenb.hra.Utils.Companion.smartToDouble
 import com.ahugenb.hra.Utils.Companion.smartToInt
 import com.ahugenb.hra.tracker.db.Day
+import java.util.Locale
 
 @Composable
 fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
@@ -35,7 +36,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
     val drinks = remember { mutableStateOf(selectedDay.drinks.roundedToTwo().toString()) }
     val planned = remember { mutableStateOf(selectedDay.planned.toString()) }
     val cravings = remember { mutableStateOf(selectedDay.cravings.toString()) }
-    val money = remember { mutableStateOf(String.format("%.2f", selectedDay.moneySpent)) }
+    val money = remember { mutableStateOf(String.format(Locale.getDefault(),"%.2f", selectedDay.moneySpent)) }
     val notes = remember { mutableStateOf(selectedDay.notes) }
 
     val focusManager = LocalFocusManager.current
@@ -52,14 +53,15 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             //drinks
             Text(
                 text = stringResource(id = R.string.hra_tracker_drinks),
-                modifier = Modifier.weight(0.25f, true)
+                modifier = Modifier.weight(0.5f, true)
                     .padding(start = 24.dp, end = 24.dp, top = 8.dp),
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.h6,
+                maxLines = 1
             )
             OutlinedTextField(
                 maxLines = 1,
                 modifier = Modifier
-                    .weight(0.25f, true),
+                    .weight(0.3f, true),
                 value = drinks.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next),
@@ -71,7 +73,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
                 label = { },
                 textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
             )
-            Spacer(modifier = Modifier.weight(0.25f))
+            Spacer(modifier = Modifier.weight(0.2f))
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -80,13 +82,14 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             //planned
             Text(
                 text = stringResource(id = R.string.hra_tracker_planned),
-                modifier = Modifier.weight(0.25f, true)
+                modifier = Modifier.weight(0.5f, true)
                     .padding(start = 24.dp, end = 24.dp, top = 8.dp),
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.h6,
+                maxLines = 1
             )
             OutlinedTextField(
                 maxLines = 1,
-                modifier = Modifier.weight(0.25f, true),
+                modifier = Modifier.weight(0.3f, true),
                 value = planned.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next),
@@ -99,7 +102,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
                 textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
 
             )
-            Spacer(modifier = Modifier.weight(0.25f))
+            Spacer(modifier = Modifier.weight(0.2f))
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -108,14 +111,15 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             //cravings
             Text(
                 text = stringResource(id = R.string.hra_tracker_cravings),
-                modifier = Modifier.weight(0.25f, true)
+                modifier = Modifier.weight(0.5f, true)
                     .padding(start = 24.dp, end = 20.dp, top = 8.dp),
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.h6,
+                maxLines = 1
             )
             OutlinedTextField(
                 maxLines = 1,
                 modifier = Modifier
-                    .weight(0.25f, true),
+                    .weight(0.3f, true),
                 value = cravings.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next),
@@ -128,7 +132,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
                 textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
 
             )
-            Spacer(modifier = Modifier.weight(0.25f))
+            Spacer(modifier = Modifier.weight(0.2f))
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -137,7 +141,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             //money
             Text(
                 text = stringResource(id = R.string.hra_tracker_money),
-                modifier = Modifier.weight(0.25f, true)
+                modifier = Modifier.weight(0.5f, true)
                     .padding(start = 24.dp, end = 24.dp, top = 8.dp),
                 style = MaterialTheme.typography.h6,
                 maxLines = 1
@@ -145,7 +149,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             OutlinedTextField(
                 maxLines = 1,
                 modifier = Modifier
-                    .weight(0.25f, true),
+                    .weight(0.3f, true),
                 value = money.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
                 onValueChange = {
@@ -157,7 +161,7 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
                 textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
 
             )
-            Spacer(modifier = Modifier.weight(0.25f))
+            Spacer(modifier = Modifier.weight(0.2f))
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -166,13 +170,15 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
             //notes
             Text(
                 text = stringResource(id = R.string.hra_tracker_notes),
-                modifier = Modifier.weight(0.25f, true)
+                modifier = Modifier.weight(0.5f, true)
                     .padding(start = 24.dp, end = 24.dp, top = 8.dp),
                 style = MaterialTheme.typography.h6,
+                maxLines = 1,
             )
             OutlinedTextField(
                 maxLines = 3,
                 modifier = Modifier
+                    .padding(end = 8.dp)
                     .weight(0.5f, true),
                 value = notes.value,
                 onValueChange = {

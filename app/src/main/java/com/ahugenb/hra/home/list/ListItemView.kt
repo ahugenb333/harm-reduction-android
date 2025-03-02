@@ -28,6 +28,7 @@ fun ListItemView(navController: NavController, menuItem: MenuItem) {
             }
         }
     )
+
     if (menuItem.showDivider) {
         Divider(thickness = 1.dp)
     }
