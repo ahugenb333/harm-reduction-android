@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.joda.time.DateTime
+import java.util.Locale
 import java.util.concurrent.Flow
 
 class SyncListenerService : WearableListenerService() {
@@ -69,12 +70,13 @@ class SyncListenerService : WearableListenerService() {
                         when (message) {
                             MESSAGE_HALF_DRINK -> {
                                 today = today.copy(drinks = today.drinks + 0.5)
-                                data = String.format("%.2f Drinks\n(%.2f Planned)",
+                                data = String.format(
+                                    Locale.getDefault(), "%.2f Drinks\n(%.2f Planned)",
                                     today.drinks, today.planned)
                             }
                             MESSAGE_DRINK -> {
                                 today = today.copy(drinks = today.drinks + 1.0)
-                                data = String.format("%.2f Drinks\n(%.2f Planned)",
+                                data = String.format(Locale.getDefault(), "%.2f Drinks\n(%.2f Planned)",
                                     today.drinks, today.planned)
                             }
                             MESSAGE_CRAVING -> {
@@ -83,7 +85,7 @@ class SyncListenerService : WearableListenerService() {
                             }
                             MESSAGE_MONEY -> {
                                 today = today.copy(moneySpent = today.moneySpent + 10)
-                                data = String.format("$%.2f Spent", today.moneySpent)
+                                data = String.format(Locale.getDefault(),"$%.2f Spent", today.moneySpent)
                             }
                         }
                         repository.updateDay(today)
