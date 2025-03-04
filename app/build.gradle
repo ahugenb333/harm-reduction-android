@@ -4,18 +4,19 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 android {
     namespace 'com.ahugenb.hra'
-    compileSdk 33
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.ahugenb.hra"
         minSdk 24
-        targetSdk 33
-        versionCode 13
-        versionName "2.1.5"
+        targetSdk 35
+        versionCode 17
+        versionName "2.1.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -55,14 +56,15 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
 
     //compose
-    implementation 'androidx.activity:activity-compose:1.7.0'
+    implementation 'androidx.activity:activity-compose:1.10.1'
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
-    implementation 'androidx.compose.material:material:1.4.0'
+    implementation 'androidx.compose.material:material:1.7.8'
+    implementation "androidx.compose.material:material-icons-extended:1.7.8"
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
     //room
