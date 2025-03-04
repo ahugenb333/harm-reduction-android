@@ -15,8 +15,8 @@ android {
         applicationId "com.ahugenb.hra"
         minSdk 24
         targetSdk 35
-        versionCode 16
-        versionName "2.1.7"
+        versionCode 17
+        versionName "2.1.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
