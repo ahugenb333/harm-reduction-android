@@ -11,8 +11,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -50,8 +54,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
-            IntentFilter(Intent.ACTION_SEND))
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            broadcastReceiver,
+            IntentFilter(Intent.ACTION_SEND)
+        )
         setContent {
             HraTheme {
                 val navController = rememberNavController()
@@ -61,27 +67,30 @@ class MainActivity : ComponentActivity() {
                     MenuItem(3, "Quick Actions", showDivider = false)
                 )
 
-                //TODO use Hilt to avoid passing dependencies through
-
-                Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colors.surface)
-                ) {
-                    NavHost(navController, startDestination = NavScreen.SCREEN_LIST.title) {
-                        composable(NavScreen.SCREEN_LIST.title) {
-                            Column {
-                                MenuListView(navController, menuList)
-                                QuickActionView(trackerViewModel)
+                Scaffold(
+                    contentWindowInsets = WindowInsets.safeDrawing
+                ) { innerPadding ->
+                    Surface(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .fillMaxSize()
+                            .background(MaterialTheme.colors.surface)
+                    ) {
+                        NavHost(navController, startDestination = NavScreen.SCREEN_LIST.title) {
+                            composable(NavScreen.SCREEN_LIST.title) {
+                                Column {
+                                    MenuListView(navController, menuList)
+                                    QuickActionView(trackerViewModel)
+                                }
                             }
-                        }
 
-                        composable(NavScreen.SCREEN_CALCULATOR.title) {
-                            CalculatorView(calculatorViewModel, trackerViewModel, navController)
-                        }
+                            composable(NavScreen.SCREEN_CALCULATOR.title) {
+                                CalculatorView(calculatorViewModel, trackerViewModel, navController)
+                            }
 
-                        composable(NavScreen.SCREEN_TRACKER.title) {
-                            TrackerView(trackerViewModel, navController)
+                            composable(NavScreen.SCREEN_TRACKER.title) {
+                                TrackerView(trackerViewModel, navController)
+                            }
                         }
                     }
                 }

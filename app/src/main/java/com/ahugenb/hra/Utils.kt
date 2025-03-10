@@ -55,7 +55,7 @@ class Utils {
 
         private fun Double.isValidDollars(): Boolean = this in 0.0..1000000.0
 
-        fun Double.roundedToTwo(): Double = String.format(Locale.getDefault(), "%.2f", this, Locale.ENGLISH).toDouble()
+        fun Double.roundedToTwo(): Double = String.format(Locale.getDefault(), "%.2f", this).toDouble()
 
         fun String.smartToDouble(): Double =
             when (this.isEmpty() || this == ".") {

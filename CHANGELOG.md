@@ -1,3 +1,5 @@
+## version 2.14 & 2.15
+* Cosmetics fixes and locale fix
 ## version 2.1.4
 * Rounding cosmetic fix
 ## version 2.1.3
