@@ -142,9 +142,11 @@ class TrackerViewModel(
         }
     }
 
-    fun updateDrinksToday(drinks: Double) {
+    fun updateDrinksToday(drinks: Double): Double {
         val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
-        updateDay(currentTrackerState.today.copy(drinks = drinks))
+        val updatedDay = currentTrackerState.today.copy(drinks = drinks)
+        updateDay(updatedDay)
+        return updatedDay.drinks
     }
 
     fun addDrinksToday(drinks: Double): Double {
@@ -154,26 +156,34 @@ class TrackerViewModel(
         return newDrinks
     }
 
-    fun updateCravingsToday(cravings: Int) {
+    fun updateCravingsToday(cravings: Int): Int {
         val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
-        updateDay(currentTrackerState.today.copy(cravings = cravings))
+        val updatedDay = currentTrackerState.today.copy(cravings = cravings)
+        updateDay(updatedDay)
+        return updatedDay.cravings
     }
 
-    fun addCravingsToday(cravings: Int) {
+    fun addCravingsToday(cravings: Int): Int {
         val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
         val newCravings = currentTrackerState.today.cravings + cravings
-        updateDay(currentTrackerState.today.copy(cravings = newCravings))
+        val updatedDay = currentTrackerState.today.copy(cravings = newCravings)
+        updateDay(updatedDay)
+        return updatedDay.cravings
     }
 
-    fun updateMoneySpentToday(moneySpent: Double) {
+    fun updateMoneySpentToday(moneySpent: Double): Double {
         val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
-        updateDay(currentTrackerState.today.copy(moneySpent = moneySpent))
+        val updatedDay = currentTrackerState.today.copy(moneySpent = moneySpent)
+        updateDay(updatedDay)
+        return updatedDay.moneySpent
     }
 
-    fun addMoneySpentToday(moneySpent: Double) {
+    fun addMoneySpentToday(moneySpent: Double): Double {
         val currentTrackerState = _trackerState.value as TrackerState.TrackerStateAll
         val newMoneySpent = currentTrackerState.today.moneySpent + moneySpent
-        updateDay(currentTrackerState.today.copy(moneySpent = newMoneySpent))
+        val updatedDay = currentTrackerState.today.copy(moneySpent = newMoneySpent)
+        updateDay(updatedDay)
+        return updatedDay.moneySpent
     }
 
     fun updateDay(day: Day) {
@@ -270,33 +280,79 @@ class TrackerViewModel(
         return weekOf
     }
 
-    fun setSelectedDay(selectedDay: Day?) {
-        val state = _trackerState.value as TrackerState.TrackerStateAll
-
-        _trackerState.value =
-            state.copy(
-                selectedDay = selectedDay
-            )
+    // Public event handlers as lambdas
+    val onSetSelectedDay: (Day?) -> Unit = { day ->
+        val state = _trackerState.value
+        if (state is TrackerState.TrackerStateAll) {
+            _trackerState.value = state.copy(selectedDay = day)
+        }
     }
 
+    val onUpdateSelectedMonday: (Int) -> Unit = { index ->
+        val state = _trackerState.value
+        if (state is TrackerState.TrackerStateAll) {
+            val beginnings = state.weekBeginnings
+            if (beginnings.size > index) {
+                _trackerState.value =
+                    state.copy(
+                        selectedMonday = beginnings[index],
+                        daysOfWeek = getWeekOf(state.all, beginnings[index]),
+                        selectedDay = null // Reset selected day when changing week
+                    )
+            }
+        }
+    }
+
+    // This lambda will handle the logic currently in TrackerView's BackHandler
+    val onNavigateBack: () -> Boolean = {
+        val state = _trackerState.value
+        if (state is TrackerState.TrackerStateAll) {
+            val currentWeekMondayId = state.today.id.idToDateTime().withDayOfWeek(1).toId()
+            if (state.selectedMonday.id != currentWeekMondayId) {
+                // If not on the current week, navigate back to the current week's Monday
+                val currentWeekMondayIndex = state.weekBeginnings.indexOfFirst { it.id == currentWeekMondayId }
+                if (currentWeekMondayIndex != -1) {
+                    onUpdateSelectedMonday(currentWeekMondayIndex)
+                }
+                true // Event handled: week selection was reset
+            } else {
+                false // Event not handled: already on current week, allow normal back navigation
+            }
+        } else {
+            false // Should not happen in normal operation
+        }
+    }
+
+
+    // Keep this public for now, might be used by other parts or could be refactored
     fun getLastWeek(): List<Day> {
-        val state = _trackerState.value as TrackerState.TrackerStateAll
-        val dt = state.daysOfWeek[0].id.idToDateTime()
-        val rewind = dt.minusDays(7)
-        val dayLastWeek = state.all.firstOrNull {
-            it.id == rewind.toId()
-        } ?: Day(rewind.toId())
-        return getWeekOf(state.all, dayLastWeek)
+        val state = _trackerState.value
+        if (state is TrackerState.TrackerStateAll) {
+            val dt = state.daysOfWeek[0].id.idToDateTime()
+            val rewind = dt.minusDays(7)
+            val dayLastWeek = state.all.firstOrNull {
+                it.id == rewind.toId()
+            } ?: Day(rewind.toId())
+            return getWeekOf(state.all, dayLastWeek)
+        }
+        return emptyList()
     }
 
-    fun updateSelectedMonday(index: Int) {
+    // Original methods can be made private if only used by lambdas or internally
+    private fun setSelectedDayInternal(selectedDay: Day?) {
+        val state = _trackerState.value as TrackerState.TrackerStateAll
+         _trackerState.value = state.copy(selectedDay = selectedDay)
+    }
+
+    private fun updateSelectedMondayInternal(index: Int) {
         val state = _trackerState.value as TrackerState.TrackerStateAll
         val beginnings = state.weekBeginnings
         if (beginnings.size > index) {
             _trackerState.value =
                 state.copy(
                     selectedMonday = beginnings[index],
-                    daysOfWeek = getWeekOf(state.all, beginnings[index])
+                    daysOfWeek = getWeekOf(state.all, beginnings[index]),
+                    selectedDay = null // Reset selected day when changing week
                 )
         }
     }

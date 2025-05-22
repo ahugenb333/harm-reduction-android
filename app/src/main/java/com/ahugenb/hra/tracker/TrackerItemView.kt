@@ -6,7 +6,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,10 +19,13 @@ import com.ahugenb.hra.Utils.Companion.prettyPrintLong
 import com.ahugenb.hra.tracker.db.Day
 
 @Composable
-fun TrackerItemView(day: Day, viewModel: TrackerViewModel) {
-    val state = viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll
-    val showExpanded = day.id == state.selectedDay?.id
-    val ic = if (showExpanded) R.drawable.ic_caret_down else R.drawable.ic_caret_right
+fun TrackerItemView(
+    day: Day,
+    isSelected: Boolean,
+    onToggleSelected: () -> Unit,
+    editableContent: @Composable () -> Unit // Slot for TrackerItemEditableView
+) {
+    val ic = if (isSelected) R.drawable.ic_caret_down else R.drawable.ic_caret_right
     val text =
         if (day.isToday())
             day.prettyPrintLong().plus(" - Today")
@@ -33,14 +35,9 @@ fun TrackerItemView(day: Day, viewModel: TrackerViewModel) {
     Row(
         modifier = Modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
-            indication = null
-        ) {
-            if (showExpanded) {
-                viewModel.setSelectedDay(null)
-            } else {
-                viewModel.setSelectedDay(day)
-            }
-        },
+            indication = null,
+            onClick = onToggleSelected // Use the passed lambda
+        ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(modifier = Modifier
@@ -56,8 +53,8 @@ fun TrackerItemView(day: Day, viewModel: TrackerViewModel) {
             )
         }
     }
-    if (showExpanded) {
-        TrackerItemEditableView(day, viewModel)
+    if (isSelected) {
+        editableContent() // Render the editable content if selected
     }
     Divider(thickness = 1.dp)
 }

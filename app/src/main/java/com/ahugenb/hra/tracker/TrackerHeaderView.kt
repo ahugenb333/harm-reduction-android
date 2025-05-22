@@ -7,9 +7,9 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ahugenb.hra.tracker.db.Day // Added import for Day
 import com.ahugenb.hra.Utils.Companion.getCravingsTotal
 import com.ahugenb.hra.Utils.Companion.getDrinksTotal
 import com.ahugenb.hra.Utils.Companion.getMoneySpentTotal
@@ -18,19 +18,18 @@ import com.ahugenb.hra.Utils.Companion.roundedToTwo
 import java.util.Locale
 
 @Composable
-fun TrackerHeaderView(viewModel: TrackerViewModel) {
-    val daysOfWeek = (viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll)
-        .daysOfWeek
+fun TrackerHeaderView(
+    currentDaysOfWeek: List<Day>,
+    lastWeekDays: List<Day>
+) {
+    val drinks = currentDaysOfWeek.getDrinksTotal().roundedToTwo()
+    val planned = currentDaysOfWeek.getPlannedTotal().roundedToTwo()
+    val cravings = currentDaysOfWeek.getCravingsTotal()
+    val money = currentDaysOfWeek.getMoneySpentTotal()
 
-    val drinks = daysOfWeek.getDrinksTotal().roundedToTwo()
-    val planned = daysOfWeek.getPlannedTotal().roundedToTwo()
-    val cravings = daysOfWeek.getCravingsTotal()
-    val money = daysOfWeek.getMoneySpentTotal()
-
-    val lastWeek = viewModel.getLastWeek()
-    val drinksLastWeek = lastWeek.getDrinksTotal().roundedToTwo()
-    val cravingsLastWeek = lastWeek.getCravingsTotal()
-    val moneyLastWeek = lastWeek.getMoneySpentTotal()
+    val drinksLastWeek = lastWeekDays.getDrinksTotal().roundedToTwo()
+    val cravingsLastWeek = lastWeekDays.getCravingsTotal()
+    val moneyLastWeek = lastWeekDays.getMoneySpentTotal()
 
     Card(elevation = 10.dp, modifier = Modifier.padding(4.dp).fillMaxWidth(0.5f)) {
         Column(

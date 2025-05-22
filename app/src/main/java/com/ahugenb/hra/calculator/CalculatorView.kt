@@ -26,11 +26,15 @@ import com.ahugenb.hra.Utils.Companion.acceptDrinksText
 import com.ahugenb.hra.Utils.Companion.acceptPercentText
 import com.ahugenb.hra.Utils.Companion.acceptVolumeText
 import com.ahugenb.hra.Utils.Companion.roundedToTwo
-import com.ahugenb.hra.tracker.TrackerState
-import com.ahugenb.hra.tracker.TrackerViewModel
+// TrackerViewModel and TrackerState are no longer directly needed here for this specific part.
 
 @Composable
-fun CalculatorView(calculatorViewModel: CalculatorViewModel, trackerViewModel: TrackerViewModel, navController: NavController) {
+fun CalculatorView(
+    calculatorViewModel: CalculatorViewModel,
+    navController: NavController,
+    onAddCalculatedUnitsToDay: (units: Double) -> Double, // Returns new total drinks
+    plannedDrinksToday: Double // To keep Toast message detailed
+) {
     val volume = remember { mutableStateOf("") }
     val abv = remember { mutableStateOf("") }
     val drinks = remember { mutableStateOf("1.0") }
@@ -42,14 +46,14 @@ fun CalculatorView(calculatorViewModel: CalculatorViewModel, trackerViewModel: T
     val units = calculatorState.units
     val pureEthanol = calculatorState.ethanol
 
-    val trackerState  = trackerViewModel.trackerState.collectAsState().value
-            as TrackerState.TrackerStateAll
+    // trackerState is no longer collected here directly for this view's primary purpose.
+    // Information needed from it (like plannedDrinksToday) is passed in.
 
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
     BackHandler(enabled = true) {
-        calculatorViewModel.clear()
+        calculatorViewModel.onClear() // Use lambda
         navController.navigateUp()
     }
 
@@ -93,7 +97,7 @@ fun CalculatorView(calculatorViewModel: CalculatorViewModel, trackerViewModel: T
                 onValueChange = {
                     if (it.acceptVolumeText()) {
                         volume.value = it
-                        calculatorViewModel.updateCalculation(
+                        calculatorViewModel.onUpdateCalculation( // Use lambda
                             abv.value.smartToDouble(),
                             volume.value.smartToDouble(),
                             drinks.value.smartToDouble(),
@@ -113,7 +117,7 @@ fun CalculatorView(calculatorViewModel: CalculatorViewModel, trackerViewModel: T
                 onValueChange = {
                     if (it.acceptPercentText()) {
                         abv.value = it
-                        calculatorViewModel.updateCalculation(
+                        calculatorViewModel.onUpdateCalculation( // Use lambda
                             abv.value.smartToDouble(),
                             volume.value.smartToDouble(),
                             drinks.value.smartToDouble(),
@@ -133,7 +137,7 @@ fun CalculatorView(calculatorViewModel: CalculatorViewModel, trackerViewModel: T
                 onValueChange = {
                     if (it.acceptDrinksText()) {
                         drinks.value = it
-                        calculatorViewModel.updateCalculation(
+                        calculatorViewModel.onUpdateCalculation( // Use lambda
                             abv.value.smartToDouble(),
                             volume.value.smartToDouble(),
                             drinks.value.smartToDouble(),
@@ -156,7 +160,7 @@ fun CalculatorView(calculatorViewModel: CalculatorViewModel, trackerViewModel: T
                 focusManager.clearFocus()
                 mlChecked.value = it
 
-                calculatorViewModel.updateCalculation(
+                calculatorViewModel.onUpdateCalculation( // Use lambda
                     abv.value.smartToDouble(),
                     volume.value.smartToDouble(),
                     drinks.value.smartToDouble(),
@@ -170,9 +174,10 @@ fun CalculatorView(calculatorViewModel: CalculatorViewModel, trackerViewModel: T
                 .fillMaxWidth(),
             onClick = {
                 focusManager.clearFocus()
-                val newDrinks = trackerViewModel.addDrinksToday(calculatorState.units.roundedToTwo())
+                val currentUnits = calculatorState.units.roundedToTwo()
+                val newTotalDrinks = onAddCalculatedUnitsToDay(currentUnits)
                 Toast.makeText(context, context.getString(R.string.hra_drinks_today,
-                    newDrinks, trackerState.today.planned), Toast.LENGTH_SHORT)
+                    newTotalDrinks, plannedDrinksToday), Toast.LENGTH_SHORT)
                     .show()
             },
         ) {

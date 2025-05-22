@@ -6,7 +6,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,17 +29,19 @@ import com.ahugenb.hra.tracker.db.Day
 import java.util.Locale
 
 @Composable
-fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
-    val selectedDay = (viewModel.trackerState.collectAsState().value as TrackerState.TrackerStateAll)
-        .selectedDay ?: return
-    val drinks = remember { mutableStateOf(selectedDay.drinks.roundedToTwo().toString()) }
-    val planned = remember { mutableStateOf(selectedDay.planned.toString()) }
-    val cravings = remember { mutableStateOf(selectedDay.cravings.toString()) }
-    val money = remember { mutableStateOf(String.format(Locale.getDefault(),"%.2f", selectedDay.moneySpent)) }
-    val notes = remember { mutableStateOf(selectedDay.notes) }
+fun TrackerItemEditableView(
+    day: Day, // Use the passed 'day' directly
+    onUpdateDay: (Day) -> Unit // Callback to update the day
+) {
+    // Initialize states from the passed 'day'
+    val drinks = remember(day.id) { mutableStateOf(day.drinks.roundedToTwo().toString()) }
+    val planned = remember(day.id) { mutableStateOf(day.planned.toString()) }
+    val cravings = remember(day.id) { mutableStateOf(day.cravings.toString()) }
+    val money = remember(day.id) { mutableStateOf(String.format(Locale.getDefault(), "%.2f", day.moneySpent)) }
+    val notes = remember(day.id) { mutableStateOf(day.notes) }
 
     val focusManager = LocalFocusManager.current
-    val context = LocalContext.current
+    val context = LocalContext.current // For Toast
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -202,11 +203,11 @@ fun TrackerItemEditableView(day: Day, viewModel: TrackerViewModel) {
                         moneySpent = money.value.removePrefix("$").smartToDouble(),
                         notes = notes.value
                     )
-                    viewModel.updateDay(newDay)
+                    onUpdateDay(newDay) // Call the lambda with the updated day
                     focusManager.clearFocus()
-                    Toast.makeText(context,newDay.prettyPrintShort() + " updated",
+                    Toast.makeText(context, newDay.prettyPrintShort() + " updated",
                         Toast.LENGTH_SHORT).show()
-                    },
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp, end = 8.dp)

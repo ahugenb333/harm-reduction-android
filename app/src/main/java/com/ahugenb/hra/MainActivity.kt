@@ -80,12 +80,50 @@ class MainActivity : ComponentActivity() {
                             composable(NavScreen.SCREEN_LIST.title) {
                                 Column {
                                     MenuListView(navController, menuList)
-                                    QuickActionView(trackerViewModel)
+                                    // Collect TrackerState for QuickActionView
+                                    val trackerStateValueQuickActions = trackerViewModel.trackerState.collectAsState().value
+                                    if (trackerStateValueQuickActions is com.ahugenb.hra.tracker.TrackerState.TrackerStateAll) {
+                                        QuickActionView(
+                                            todayDrinks = trackerStateValueQuickActions.today.drinks,
+                                            todayCravings = trackerStateValueQuickActions.today.cravings,
+                                            todayMoneySpent = trackerStateValueQuickActions.today.moneySpent,
+                                            todayPlannedDrinks = trackerStateValueQuickActions.today.planned,
+                                            onAddMoneySpent = { amount ->
+                                                trackerViewModel.addMoneySpentToday(amount)
+                                            },
+                                            onUpdateDrinks = { newDrinks ->
+                                                trackerViewModel.updateDrinksToday(newDrinks)
+                                            },
+                                            onUpdateCravings = { newCravings ->
+                                                trackerViewModel.updateCravingsToday(newCravings)
+                                            }
+                                        )
+                                    } else {
+                                        // Optionally, show a loading state or an empty QuickActionView
+                                        // For now, it won't be composed if state is not TrackerStateAll
+                                    }
                                 }
                             }
 
                             composable(NavScreen.SCREEN_CALCULATOR.title) {
-                                CalculatorView(calculatorViewModel, trackerViewModel, navController)
+                                // Collect the TrackerState here to pass necessary parts to CalculatorView
+                                val trackerStateValue = trackerViewModel.trackerState.collectAsState().value
+                                val plannedDrinksToday = if (trackerStateValue is com.ahugenb.hra.tracker.TrackerState.TrackerStateAll) {
+                                    trackerStateValue.today.planned
+                                } else {
+                                    0.0 // Default or loading state
+                                }
+
+                                CalculatorView(
+                                    calculatorViewModel = calculatorViewModel,
+                                    navController = navController,
+                                    onAddCalculatedUnitsToDay = { units ->
+                                        trackerViewModel.addDrinksToday(units)
+                                        // The addDrinksToday method in TrackerViewModel returns the new total.
+                                        // This is now correctly used by the Toast inside CalculatorView.
+                                    },
+                                    plannedDrinksToday = plannedDrinksToday
+                                )
                             }
 
                             composable(NavScreen.SCREEN_TRACKER.title) {

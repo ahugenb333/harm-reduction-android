@@ -18,26 +18,33 @@ import com.ahugenb.hra.Utils.Companion.prettyPrintShort
 
 @Composable
 fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
-    var trackerState = viewModel.trackerState.collectAsState().value
-    when (trackerState) {
+    val trackerStateValue = viewModel.trackerState.collectAsState().value // Renamed for clarity
+
+    // Handle empty state or cast to the expected state
+    val currentTrackerState = when (trackerStateValue) {
         is TrackerState.TrackerStateEmpty -> {
+            // Potentially show a loading indicator or an empty state message
             return
         }
-        else -> {
-            trackerState = trackerState as TrackerState.TrackerStateAll
-        }
+        is TrackerState.TrackerStateAll -> trackerStateValue
     }
-    val isDropdownExpanded = remember { mutableStateOf(false) }
-    val selectedIndex = remember { mutableStateOf(0) }
 
-    val weekBeginnings = trackerState.weekBeginnings
-    val selectedMonday = trackerState.selectedMonday
-    val daysOfWeek = trackerState.daysOfWeek
+    val isDropdownExpanded = remember { mutableStateOf(false) }
+    // selectedIndex is not strictly needed from ViewModel's perspective anymore,
+    // as ViewModel now manages selectedMonday directly via index.
+    // However, it was used to clear selectedDay, which is now handled by onUpdateSelectedMonday lambda.
+
+    val weekBeginnings = currentTrackerState.weekBeginnings
+    val selectedMonday = currentTrackerState.selectedMonday
+    val daysOfWeek = currentTrackerState.daysOfWeek
     val selectedOptionText = selectedMonday.prettyPrintShort()
 
+    // Use the ViewModel's onNavigateBack lambda
     BackHandler(enabled = true) {
-        viewModel.updateSelectedMonday(0)
-        navController.navigateUp()
+        val weekWasReset = viewModel.onNavigateBack()
+        if (!weekWasReset) {
+            navController.navigateUp() // Perform default back navigation if not handled by ViewModel
+        }
     }
 
     Column {
@@ -45,7 +52,10 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
             verticalAlignment = Alignment.Bottom,
             modifier = Modifier.padding(end = 8.dp, top = 8.dp)
         ) {
-            TrackerHeaderView(viewModel = viewModel)
+            TrackerHeaderView(
+                currentDaysOfWeek = daysOfWeek,
+                lastWeekDays = viewModel.getLastWeek() // Called here and result passed
+            )
             Column {
                 OutlinedTextField(
                     value = selectedOptionText,
@@ -80,11 +90,8 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
                     weekBeginnings.forEachIndexed { i, it ->
                         DropdownMenuItem(onClick = {
                             isDropdownExpanded.value = false
-                            viewModel.updateSelectedMonday(i)
-                            if (selectedIndex.value != i) {
-                                viewModel.setSelectedDay(null)
-                                selectedIndex.value = i
-                            }
+                            viewModel.onUpdateSelectedMonday(i)
+                            // selectedDay is reset within onUpdateSelectedMonday in ViewModel
                         }) {
                             Text(text = it.prettyPrintShort())
                         }
@@ -99,9 +106,26 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
             .height(8.dp)
             .fillMaxWidth(1f))
         LazyColumn {
-            daysOfWeek.forEachIndexed { i, it ->
-                item(key = i, content = {
-                    TrackerItemView(it, viewModel)
+            daysOfWeek.forEachIndexed { _, day -> // Index 'i' not used, replaced with _
+                val isSelected = day.id == currentTrackerState.selectedDay?.id
+                item(key = day.id, content = {
+                    TrackerItemView(
+                        day = day,
+                        isSelected = isSelected,
+                        onToggleSelected = {
+                            viewModel.onSetSelectedDay(if (isSelected) null else day)
+                        },
+                        editableContent = {
+                            if (isSelected) { // Only compose if actually selected
+                                TrackerItemEditableView(
+                                    day = day,
+                                    onUpdateDay = { updatedDay ->
+                                        viewModel.updateDay(updatedDay)
+                                    }
+                                )
+                            }
+                        }
+                    )
                 })
             }
         }

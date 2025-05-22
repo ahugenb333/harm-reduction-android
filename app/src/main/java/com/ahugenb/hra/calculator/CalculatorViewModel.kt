@@ -15,19 +15,23 @@ class CalculatorViewModel: ViewModel() {
         MutableStateFlow(CalculatorState())
     val calculatorState = _calculatorState.asStateFlow()
 
-    fun updateCalculation(abv: Double, volume: Double, drinks: Double, mlChecked: Boolean) {
-        val newEthanol = volume * drinks * (abv / PERCENT)
-        val newUnits =
-            if (mlChecked)
-                newEthanol * ML_ETHANOL_TO_UNITS
-            else
-                newEthanol * OZ_ETHANOL_TO_UNITS
+    val onUpdateCalculation: (abv: Double, volume: Double, drinks: Double, mlChecked: Boolean) -> Unit =
+        { abv, volume, drinks, mlChecked ->
+            val newEthanol = volume * drinks * (abv / PERCENT)
+            val newUnits =
+                if (mlChecked)
+                    newEthanol * ML_ETHANOL_TO_UNITS
+                else
+                    newEthanol * OZ_ETHANOL_TO_UNITS
 
-        _calculatorState.value = CalculatorState(units = newUnits, ethanol = newEthanol)
+            _calculatorState.value = CalculatorState(units = newUnits, ethanol = newEthanol)
+        }
+
+    val onClear: () -> Unit = {
+        _calculatorState.value = CalculatorState()
     }
 
-    fun clear() {
-        _calculatorState.value =  CalculatorState()
-    }
+    // Original methods can be made private or removed if logic is fully encapsulated by lambdas
+    // For this case, the logic is simple enough to be directly in the lambdas.
 }
 
