@@ -24,4 +24,34 @@
     <string name="hra_tracker_notes">Notes:</string>
     <string name="hra_oz">fl. Oz</string>
     <string name="hra_ml">mL</string>
+
+    <!-- From TrackerView.kt -->
+    <string name="tracker_week_beginning_label">Week Beginning:</string>
+    <string name="dropdown_menu_icon_cd">Dropdown menu icon</string>
+
+    <!-- From TrackerHeaderView.kt -->
+    <string name="tracker_header_drinks">Drinks: %1$s\n(%2$s last week, %3$s planned)</string>
+    <string name="tracker_header_cravings">Cravings: %1$s\n(%2$s last week)</string>
+    <string name="tracker_header_money">Money: $%1$.2f\n($%2$.2f last week)</string>
+
+    <!-- From TrackerItemView.kt -->
+    <string name="expandable_menu_icon_cd">Expandable menu icon</string>
+    <string name="tracker_item_today_suffix">%1$s - Today</string>
+
+    <!-- From TrackerItemEditableView.kt -->
+    <string name="notes_placeholder">Notes</string>
+    <string name="day_updated_toast">%1$s updated</string>
+
+    <!-- From CalculatorView.kt -->
+    <string name="calculator_abv_label">% ABV</string>
+    <string name="calculator_num_drinks_label">No. of Drinks</string>
+
+    <!-- From MoneyDialogView.kt -->
+    <string name="dialog_ok_button">OK</string>
+    <string name="dialog_cancel_button">Cancel</string>
+
+    <!-- From MainActivity.kt -->
+    <string name="menu_item_unit_calculator">Unit Calculator (USA)</string>
+    <string name="menu_item_drink_tracker">Drink Tracker / Planner</string>
+    <string name="menu_item_quick_actions">Quick Actions</string>
 </resources>

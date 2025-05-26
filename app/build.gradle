@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.google.gms.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.android) // Corrected: apply true is default
 }
 
 android {
@@ -86,6 +87,13 @@ dependencies {
     implementation libs.firebase.analytics.ktx
 
     testImplementation libs.junit
+    testImplementation libs.kotlin.test.junit // Added for Kotlin specific tests
+    testImplementation libs.kotlinx.coroutines.test // Added for runTest
+
+    // Hilt
+    implementation libs.hilt.android.lib
+    kapt libs.hilt.compiler
+
     androidTestImplementation libs.androidx.test.ext.junit
     androidTestImplementation libs.androidx.test.espresso.core
     androidTestImplementation libs.androidx.compose.ui.test.junit4

@@ -8,7 +8,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource // Added import
 import androidx.compose.ui.unit.dp
+import com.ahugenb.hra.R // Added import for R
 import com.ahugenb.hra.tracker.db.Day // Added import for Day
 import com.ahugenb.hra.Utils.Companion.getCravingsTotal
 import com.ahugenb.hra.Utils.Companion.getDrinksTotal
@@ -36,15 +38,15 @@ fun TrackerHeaderView(
             modifier = Modifier.padding(4.dp)
         ){
             Text(
-                text = "Drinks: $drinks\r\n($drinksLastWeek last week, $planned planned)",
+                text = stringResource(id = R.string.tracker_header_drinks, drinks, drinksLastWeek, planned),
                 style = MaterialTheme.typography.body2
             )
             Text(
-                text = "Cravings: $cravings\r\n($cravingsLastWeek last week)",
+                text = stringResource(id = R.string.tracker_header_cravings, cravings, cravingsLastWeek),
                 style = MaterialTheme.typography.body2
             )
             Text(
-                text = String.format(Locale.getDefault(), "Money: $%.2f\r\n($%.2f last week)", money, moneyLastWeek),
+                text = stringResource(id = R.string.tracker_header_money, money, moneyLastWeek),
                 style = MaterialTheme.typography.body2
             )
         }

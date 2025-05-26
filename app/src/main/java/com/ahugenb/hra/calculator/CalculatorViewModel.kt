@@ -1,10 +1,13 @@
 package com.ahugenb.hra.calculator
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class CalculatorViewModel: ViewModel() {
+@HiltViewModel
+class CalculatorViewModel @Inject constructor(): ViewModel() {
     companion object {
         const val OZ_ETHANOL_TO_UNITS: Double = 10.0 / 6.0
         const val ML_ETHANOL_TO_UNITS: Double = 1.0 / 17.7

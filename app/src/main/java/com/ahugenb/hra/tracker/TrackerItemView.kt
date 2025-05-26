@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource // Added import
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.ahugenb.hra.R
@@ -26,11 +27,12 @@ fun TrackerItemView(
     editableContent: @Composable () -> Unit // Slot for TrackerItemEditableView
 ) {
     val ic = if (isSelected) R.drawable.ic_caret_down else R.drawable.ic_caret_right
+    val prettyPrintedDay = day.prettyPrintLong()
     val text =
         if (day.isToday())
-            day.prettyPrintLong().plus(" - Today")
+            stringResource(id = R.string.tracker_item_today_suffix, prettyPrintedDay)
         else
-            day.prettyPrintLong()
+            prettyPrintedDay
 
     Row(
         modifier = Modifier.clickable(
@@ -49,7 +51,7 @@ fun TrackerItemView(
             Icon(
                 modifier = Modifier.align(Alignment.CenterEnd).padding(end = 24.dp),
                 painter = painterResource(ic),
-                contentDescription = "Expandable menu icon"
+                contentDescription = stringResource(id = R.string.expandable_menu_icon_cd)
             )
         }
     }

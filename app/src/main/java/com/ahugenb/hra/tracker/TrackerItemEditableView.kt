@@ -10,11 +10,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ahugenb.hra.R
@@ -33,12 +36,27 @@ fun TrackerItemEditableView(
     day: Day, // Use the passed 'day' directly
     onUpdateDay: (Day) -> Unit // Callback to update the day
 ) {
-    // Initialize states from the passed 'day'
-    val drinks = remember(day.id) { mutableStateOf(day.drinks.roundedToTwo().toString()) }
-    val planned = remember(day.id) { mutableStateOf(day.planned.toString()) }
-    val cravings = remember(day.id) { mutableStateOf(day.cravings.toString()) }
-    val money = remember(day.id) { mutableStateOf(String.format(Locale.getDefault(), "%.2f", day.moneySpent)) }
-    val notes = remember(day.id) { mutableStateOf(day.notes) }
+    // Initialize states from the passed 'day' using TextFieldValue
+    val initialDrinksStr = day.drinks.roundedToTwo().toString()
+    val drinksTfv = remember(day.id) {
+        mutableStateOf(TextFieldValue(text = initialDrinksStr, selection = TextRange(initialDrinksStr.length)))
+    }
+    val initialPlannedStr = day.planned.toString()
+    val plannedTfv = remember(day.id) {
+        mutableStateOf(TextFieldValue(text = initialPlannedStr, selection = TextRange(initialPlannedStr.length)))
+    }
+    val initialCravingsStr = day.cravings.toString()
+    val cravingsTfv = remember(day.id) {
+        mutableStateOf(TextFieldValue(text = initialCravingsStr, selection = TextRange(initialCravingsStr.length)))
+    }
+    val initialMoneyStr = String.format(Locale.getDefault(), "%.2f", day.moneySpent)
+    val moneyTfv = remember(day.id) {
+        mutableStateOf(TextFieldValue(text = initialMoneyStr, selection = TextRange(initialMoneyStr.length)))
+    }
+    val initialNotesStr = day.notes
+    val notesTfv = remember(day.id) {
+        mutableStateOf(TextFieldValue(text = initialNotesStr, selection = TextRange(initialNotesStr.length)))
+    }
 
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current // For Toast
@@ -62,13 +80,23 @@ fun TrackerItemEditableView(
             OutlinedTextField(
                 maxLines = 1,
                 modifier = Modifier
-                    .weight(0.3f, true),
-                value = drinks.value,
+                    .weight(0.3f, true)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused) {
+                            val currentText = drinksTfv.value.text
+                            if (currentText == "0.0" || currentText == "0") {
+                                drinksTfv.value = TextFieldValue("")
+                            } else {
+                                drinksTfv.value = drinksTfv.value.copy(selection = TextRange(currentText.length))
+                            }
+                        }
+                    },
+                value = drinksTfv.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next),
-                onValueChange = {
-                    if (it.acceptDrinksText()) {
-                        drinks.value = it
+                onValueChange = { newValue ->
+                    if (newValue.text.acceptDrinksText()) {
+                        drinksTfv.value = newValue
                     }
                 },
                 label = { },
@@ -90,13 +118,24 @@ fun TrackerItemEditableView(
             )
             OutlinedTextField(
                 maxLines = 1,
-                modifier = Modifier.weight(0.3f, true),
-                value = planned.value,
+                modifier = Modifier
+                    .weight(0.3f, true)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused) {
+                            val currentText = plannedTfv.value.text
+                            if (currentText == "0.0" || currentText == "0") {
+                                plannedTfv.value = TextFieldValue("")
+                            } else {
+                                plannedTfv.value = plannedTfv.value.copy(selection = TextRange(currentText.length))
+                            }
+                        }
+                    },
+                value = plannedTfv.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next),
-                onValueChange = {
-                    if (it.acceptDrinksText()) {
-                        planned.value = it
+                onValueChange = { newValue ->
+                    if (newValue.text.acceptDrinksText()) {
+                        plannedTfv.value = newValue
                     }
                 },
                 label = { },
@@ -120,13 +159,23 @@ fun TrackerItemEditableView(
             OutlinedTextField(
                 maxLines = 1,
                 modifier = Modifier
-                    .weight(0.3f, true),
-                value = cravings.value,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal,
+                    .weight(0.3f, true)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused) {
+                            val currentText = cravingsTfv.value.text
+                            if (currentText == "0") { // Cravings are Int
+                                cravingsTfv.value = TextFieldValue("")
+                            } else {
+                                cravingsTfv.value = cravingsTfv.value.copy(selection = TextRange(currentText.length))
+                            }
+                        }
+                    },
+                value = cravingsTfv.value,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, // Kept Decimal for flexibility, validation handles Int
                     imeAction = ImeAction.Next),
-                onValueChange = {
-                    if (it.acceptCravingsText()) {
-                        cravings.value = it
+                onValueChange = { newValue ->
+                    if (newValue.text.acceptCravingsText()) {
+                        cravingsTfv.value = newValue
                     }
                 },
                 label = { },
@@ -150,12 +199,22 @@ fun TrackerItemEditableView(
             OutlinedTextField(
                 maxLines = 1,
                 modifier = Modifier
-                    .weight(0.3f, true),
-                value = money.value,
+                    .weight(0.3f, true)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused) {
+                            val currentText = moneyTfv.value.text
+                            if (currentText == "0.00" || currentText == "0.0" || currentText == "0") {
+                                moneyTfv.value = TextFieldValue(text = "", selection = TextRange(0))
+                            } else {
+                                moneyTfv.value = moneyTfv.value.copy(selection = TextRange(currentText.length))
+                            }
+                        }
+                    },
+                value = moneyTfv.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
-                onValueChange = {
-                    if (it.acceptDollarsText()) {
-                        money.value = it
+                onValueChange = { newValue ->
+                    if (newValue.text.acceptDollarsText()) {
+                        moneyTfv.value = newValue
                     }
                 },
                 label = { },
@@ -180,16 +239,21 @@ fun TrackerItemEditableView(
                 maxLines = 3,
                 modifier = Modifier
                     .padding(end = 8.dp)
-                    .weight(0.5f, true),
-                value = notes.value,
-                onValueChange = {
-                    notes.value = it
+                    .weight(0.5f, true)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused) {
+                            notesTfv.value = notesTfv.value.copy(selection = TextRange(notesTfv.value.text.length))
+                        }
+                    },
+                value = notesTfv.value,
+                onValueChange = { newValue ->
+                    notesTfv.value = newValue
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(
                     onDone = { focusManager.clearFocus() }),
                 label = { },
-                placeholder = {  Text(text = "Notes") }
+                placeholder = {  Text(text = stringResource(id = R.string.notes_placeholder)) }
             )
         }
         Row {
@@ -197,15 +261,15 @@ fun TrackerItemEditableView(
             Button(
                 onClick = {
                     val newDay = day.copy(
-                        drinks = drinks.value.smartToDouble(),
-                        planned = planned.value.smartToDouble(),
-                        cravings = cravings.value.smartToInt(),
-                        moneySpent = money.value.removePrefix("$").smartToDouble(),
-                        notes = notes.value
+                        drinks = drinksTfv.value.text.smartToDouble(),
+                        planned = plannedTfv.value.text.smartToDouble(),
+                        cravings = cravingsTfv.value.text.smartToInt(),
+                        moneySpent = moneyTfv.value.text.removePrefix("$").smartToDouble(),
+                        notes = notesTfv.value.text
                     )
                     onUpdateDay(newDay) // Call the lambda with the updated day
                     focusManager.clearFocus()
-                    Toast.makeText(context, newDay.prettyPrintShort() + " updated",
+                    Toast.makeText(context, stringResource(id = R.string.day_updated_toast, newDay.prettyPrintShort()),
                         Toast.LENGTH_SHORT).show()
                 },
                 modifier = Modifier

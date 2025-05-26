@@ -14,6 +14,8 @@ androidGradlePlugin = "8.8.2"
 kotlin = "2.1.10" # Renamed from kotlinAndroid & kotlinCompose as they are the same
 
 # App module versions
+hilt = "2.48" # Added for Hilt
+kotlinxCoroutinesTest = "1.8.0" # Added for runTest
 coreKtx = "1.15.0"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
@@ -36,6 +38,10 @@ composeMaterialWear = "1.4.0"
 lifecycleRuntimeKtxWear = "2.6.1"
 
 [libraries]
+# Hilt
+hilt-android-lib = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+
 # Buildscript/Plugin Classpath Dependencies (from project build.gradle) - these are applied as plugins now
 # googleServicesPlugin = { group = "com.google.gms", name = "google-services", version.ref = "googleServicesPlugin" }
 # firebaseCrashlyticsPlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsPlugin" }
@@ -62,6 +68,8 @@ firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analy
 
 # Test dependencies (app)
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin" } # Added for Kotlin specific tests
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" } # Added for runTest
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExtJunit" }
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxTestEspressoCore" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose" } # Used in app and wear
@@ -89,3 +97,5 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-kapt = { id = "kotlin-kapt" } # Kapt version is tied to Kotlin plugin version
 google-gms-services = { id = "com.google.gms.google-services", version.ref = "googleServicesPlugin" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
+hilt-android-gradle = { id = "com.google.dagger.hilt.android.gradle", version.ref = "hilt" } # Hilt Gradle Plugin
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" } # Hilt Android Plugin for module

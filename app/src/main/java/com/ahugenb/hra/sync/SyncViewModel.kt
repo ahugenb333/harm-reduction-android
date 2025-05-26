@@ -2,13 +2,15 @@ package com.ahugenb.hra.sync
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SyncViewModel(
+@HiltViewModel
+class SyncViewModel @Inject constructor(
     private val syncRepository: SyncRepository
     ): ViewModel() {
 

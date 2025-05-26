@@ -30,10 +30,12 @@ import com.ahugenb.hra.Utils.Companion.roundedToTwo
 
 @Composable
 fun CalculatorView(
-    calculatorViewModel: CalculatorViewModel,
+    calculatorState: CalculatorState, // Changed: Pass state directly
     navController: NavController,
-    onAddCalculatedUnitsToDay: (units: Double) -> Double, // Returns new total drinks
-    plannedDrinksToday: Double // To keep Toast message detailed
+    onUpdateCalculation: (abv: Double, volume: Double, drinks: Double, mlChecked: Boolean) -> Unit, // New lambda
+    onClear: () -> Unit, // New lambda
+    onAddCalculatedUnitsToDay: (units: Double) -> Double,
+    plannedDrinksToday: Double
 ) {
     val volume = remember { mutableStateOf("") }
     val abv = remember { mutableStateOf("") }
@@ -42,7 +44,7 @@ fun CalculatorView(
     val labelId = if (mlChecked.value) R.string.hra_ml else R.string.hra_oz
     val ethanolId = if (mlChecked.value) R.string.hra_ethanol_ml else R.string.hra_ethanol_oz
 
-    val calculatorState = calculatorViewModel.calculatorState.collectAsState().value
+    // Use the passed calculatorState directly
     val units = calculatorState.units
     val pureEthanol = calculatorState.ethanol
 
@@ -53,7 +55,7 @@ fun CalculatorView(
     val focusManager = LocalFocusManager.current
 
     BackHandler(enabled = true) {
-        calculatorViewModel.onClear() // Use lambda
+        onClear() // Use passed lambda
         navController.navigateUp()
     }
 
@@ -97,7 +99,7 @@ fun CalculatorView(
                 onValueChange = {
                     if (it.acceptVolumeText()) {
                         volume.value = it
-                        calculatorViewModel.onUpdateCalculation( // Use lambda
+                        onUpdateCalculation( // Use passed lambda
                             abv.value.smartToDouble(),
                             volume.value.smartToDouble(),
                             drinks.value.smartToDouble(),
@@ -117,7 +119,7 @@ fun CalculatorView(
                 onValueChange = {
                     if (it.acceptPercentText()) {
                         abv.value = it
-                        calculatorViewModel.onUpdateCalculation( // Use lambda
+                        onUpdateCalculation( // Use passed lambda
                             abv.value.smartToDouble(),
                             volume.value.smartToDouble(),
                             drinks.value.smartToDouble(),
@@ -125,7 +127,7 @@ fun CalculatorView(
                         )
                     }
                 },
-                label = { Text(text = "% ABV") }
+                label = { Text(text = stringResource(id = R.string.calculator_abv_label)) }
             )
             OutlinedTextField(
                 maxLines = 1,
@@ -137,7 +139,7 @@ fun CalculatorView(
                 onValueChange = {
                     if (it.acceptDrinksText()) {
                         drinks.value = it
-                        calculatorViewModel.onUpdateCalculation( // Use lambda
+                        onUpdateCalculation( // Use passed lambda
                             abv.value.smartToDouble(),
                             volume.value.smartToDouble(),
                             drinks.value.smartToDouble(),
@@ -145,7 +147,7 @@ fun CalculatorView(
                         )
                     }
                 },
-                label = { Text(text = "No. of Drinks") },
+                label = { Text(text = stringResource(id = R.string.calculator_num_drinks_label)) },
             )
         }
         Text(
@@ -160,7 +162,7 @@ fun CalculatorView(
                 focusManager.clearFocus()
                 mlChecked.value = it
 
-                calculatorViewModel.onUpdateCalculation( // Use lambda
+                onUpdateCalculation( // Use passed lambda
                     abv.value.smartToDouble(),
                     volume.value.smartToDouble(),
                     drinks.value.smartToDouble(),

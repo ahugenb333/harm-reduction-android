@@ -2,7 +2,6 @@ package com.ahugenb.hra.tracker
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ahugenb.hra.Utils.Companion.filterToday
 import com.ahugenb.hra.Utils.Companion.idToDateTime
@@ -10,11 +9,14 @@ import com.ahugenb.hra.Utils.Companion.isToday
 import com.ahugenb.hra.Utils.Companion.toId
 import com.ahugenb.hra.tracker.db.Day
 import com.ahugenb.hra.tracker.db.DayRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TrackerViewModel(
+@HiltViewModel
+class TrackerViewModel @Inject constructor(
     private val dayRepository: DayRepository
 ) : ViewModel() {
 

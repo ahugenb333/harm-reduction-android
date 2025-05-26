@@ -1,12 +1,11 @@
 package com.ahugenb.hra
 
 import android.app.Application
-import com.ahugenb.hra.sync.SyncRepositoryImpl
-import com.ahugenb.hra.tracker.db.DatabaseBuilder
-import com.ahugenb.hra.tracker.db.DayRepositoryImpl
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class HraApplication: Application() {
-    private val database by lazy { DatabaseBuilder.getInstance(this) }
-    val dayRepository by lazy { DayRepositoryImpl(database) }
-    val syncRepository by lazy { SyncRepositoryImpl(this.applicationContext) }
+    // Repositories will be provided by Hilt modules
+    // and injected into ViewModels directly.
+    // No need to manually instantiate them here.
 }

@@ -12,38 +12,42 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource // Added import
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.ahugenb.hra.R // Added import for R
 import com.ahugenb.hra.Utils.Companion.prettyPrintShort
+import com.ahugenb.hra.tracker.db.Day // Ensure Day is imported
 
 @Composable
-fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
-    val trackerStateValue = viewModel.trackerState.collectAsState().value // Renamed for clarity
-
+fun TrackerView(
+    trackerState: TrackerState, // State passed directly
+    navController: NavController,
+    onUpdateSelectedMonday: (Int) -> Unit,
+    onSetSelectedDay: (Day?) -> Unit,
+    onNavigateBack: () -> Boolean,
+    getLastWeek: () -> List<Day>, // To get data for TrackerHeaderView
+    onUpdateDay: (Day) -> Unit // For TrackerItemEditableView
+) {
     // Handle empty state or cast to the expected state
-    val currentTrackerState = when (trackerStateValue) {
+    val currentTrackerState = when (trackerState) { // Use passed trackerState
         is TrackerState.TrackerStateEmpty -> {
-            // Potentially show a loading indicator or an empty state message
-            return
+            return // Potentially show a loading indicator or an empty state message
         }
-        is TrackerState.TrackerStateAll -> trackerStateValue
+        is TrackerState.TrackerStateAll -> trackerState // Use passed trackerState
     }
 
     val isDropdownExpanded = remember { mutableStateOf(false) }
-    // selectedIndex is not strictly needed from ViewModel's perspective anymore,
-    // as ViewModel now manages selectedMonday directly via index.
-    // However, it was used to clear selectedDay, which is now handled by onUpdateSelectedMonday lambda.
 
     val weekBeginnings = currentTrackerState.weekBeginnings
     val selectedMonday = currentTrackerState.selectedMonday
     val daysOfWeek = currentTrackerState.daysOfWeek
     val selectedOptionText = selectedMonday.prettyPrintShort()
 
-    // Use the ViewModel's onNavigateBack lambda
     BackHandler(enabled = true) {
-        val weekWasReset = viewModel.onNavigateBack()
+        val weekWasReset = onNavigateBack() // Use passed lambda
         if (!weekWasReset) {
-            navController.navigateUp() // Perform default back navigation if not handled by ViewModel
+            navController.navigateUp()
         }
     }
 
@@ -54,14 +58,14 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
         ) {
             TrackerHeaderView(
                 currentDaysOfWeek = daysOfWeek,
-                lastWeekDays = viewModel.getLastWeek() // Called here and result passed
+                lastWeekDays = getLastWeek() // Use passed lambda
             )
             Column {
                 OutlinedTextField(
                     value = selectedOptionText,
                     maxLines = 1,
                     enabled = false,
-                    label = { Text(text = "Week Beginning:") },
+                    label = { Text(text = stringResource(id = R.string.tracker_week_beginning_label)) },
                     onValueChange = { },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -71,7 +75,7 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Filled.ArrowDropDown,
-                            contentDescription = "Dropdown menu icon"
+                            contentDescription = stringResource(id = R.string.dropdown_menu_icon_cd)
                         )
                     },
                     colors = TextFieldDefaults.textFieldColors(
@@ -87,13 +91,12 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
                     onDismissRequest = { isDropdownExpanded.value = false },
                     modifier = Modifier.fillMaxWidth(0.5f)
                 ) {
-                    weekBeginnings.forEachIndexed { i, it ->
+                    weekBeginnings.forEachIndexed { i, dayRef -> // Renamed 'it' to 'dayRef'
                         DropdownMenuItem(onClick = {
                             isDropdownExpanded.value = false
-                            viewModel.onUpdateSelectedMonday(i)
-                            // selectedDay is reset within onUpdateSelectedMonday in ViewModel
+                            onUpdateSelectedMonday(i) // Use passed lambda
                         }) {
-                            Text(text = it.prettyPrintShort())
+                            Text(text = dayRef.prettyPrintShort())
                         }
                     }
                 }
@@ -113,14 +116,14 @@ fun TrackerView(viewModel: TrackerViewModel, navController: NavController) {
                         day = day,
                         isSelected = isSelected,
                         onToggleSelected = {
-                            viewModel.onSetSelectedDay(if (isSelected) null else day)
+                            onSetSelectedDay(if (isSelected) null else day) // Use passed lambda
                         },
                         editableContent = {
-                            if (isSelected) { // Only compose if actually selected
+                            if (isSelected) {
                                 TrackerItemEditableView(
                                     day = day,
                                     onUpdateDay = { updatedDay ->
-                                        viewModel.updateDay(updatedDay)
+                                        onUpdateDay(updatedDay) // Use passed lambda
                                     }
                                 )
                             }

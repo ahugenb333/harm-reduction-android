@@ -59,14 +59,14 @@ fun MoneyDialogView(
                     onDismiss()
                 }
             ) {
-                Text(text = "OK")
+                Text(text = stringResource(id = R.string.dialog_ok_button))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismiss
             ) {
-                Text(text = "Cancel")
+                Text(text = stringResource(id = R.string.dialog_cancel_button))
             }
         }
     )
