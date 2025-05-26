@@ -5,13 +5,15 @@ plugins {
 }
 
 android {
+    // TODO: Consider a unique namespace for the wear module (e.g., com.ahugenb.hra.wear) if it's a distinct application.
     namespace 'com.ahugenb.hra'
-    compileSdk 33
+    compileSdk 35
 
     defaultConfig {
+        // TODO: Consider a unique applicationId for the wear module if it's a distinct application.
         applicationId "com.ahugenb.hra"
         minSdk 30
-        targetSdk 30
+        targetSdk 35
         versionCode 15
         versionName "2.1.6"
         vectorDrawables {
@@ -48,14 +50,14 @@ android {
 
 dependencies {
 
-    implementation libs.androidx.core.ktx.wear
+    implementation libs.androidx.core.ktx
     implementation libs.google.play.services.wearable
     implementation libs.androidx.percentlayout
     implementation libs.androidx.legacy.support.v4
     implementation libs.androidx.recyclerview
 
     //compose
-    implementation libs.androidx.activity.compose.wear
+    implementation libs.androidx.activity.compose
     implementation libs.androidx.compose.ui
     implementation libs.androidx.compose.ui.tooling.preview
     implementation libs.androidx.compose.material.wear // Specific version for wear
@@ -65,11 +67,8 @@ dependencies {
 
     implementation libs.androidx.wear.compose.material
     implementation libs.androidx.wear.compose.foundation
-    implementation libs.androidx.lifecycle.runtime.ktx.wear
-    // implementation libs.androidx.activity.compose.wear // Already declared above
+    implementation libs.androidx.lifecycle.runtime.ktx
     androidTestImplementation libs.androidx.compose.ui.test.junit4
     debugImplementation libs.androidx.compose.ui.tooling
     debugImplementation libs.androidx.compose.ui.test.manifest
-
-    // compose_ui_version removed
 }

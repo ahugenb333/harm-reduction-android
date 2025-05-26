@@ -16,11 +16,11 @@ kotlin = "2.1.10" # Renamed from kotlinAndroid & kotlinCompose as they are the s
 # App module versions
 hilt = "2.48" # Added for Hilt
 kotlinxCoroutinesTest = "1.8.0" # Added for runTest
-coreKtx = "1.15.0"
-lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.10.1"
-playServicesWearable = "18.0.0"
-jodaTime = "2.12.1.1" # Renamed from androidJoda
+coreKtx = "1.15.0" # Used by both app and wear modules
+lifecycleRuntimeKtx = "2.8.7" # Used by both app and wear modules
+activityCompose = "1.10.1" # Used by both app and wear modules
+playServicesWearable = "18.0.0" # Used in app and wear
+jodaTime = "2.12.1.1" # Renamed from androidJoda; Used in app and wear
 accompanistSystemUiController = "0.30.0"
 firebaseAnalytics = "21.2.1"
 firebaseBom = "31.4.0"
@@ -29,13 +29,10 @@ androidxTestExtJunit = "1.1.5"
 androidxTestEspressoCore = "3.5.1"
 
 # HRA Wear module versions
-coreKtxWear = "1.9.0"
 percentLayout = "1.0.0"
 legacySupportV4 = "1.0.0"
 recyclerView = "1.3.0"
-activityComposeWear = "1.7.0"
 composeMaterialWear = "1.4.0"
-lifecycleRuntimeKtxWear = "2.6.1"
 
 [libraries]
 # Hilt
@@ -46,15 +43,15 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.r
 # googleServicesPlugin = { group = "com.google.gms", name = "google-services", version.ref = "googleServicesPlugin" }
 # firebaseCrashlyticsPlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsPlugin" }
 
-# App module dependencies
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
-androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
-androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
-androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "compose" }
+# App module dependencies (some also used by HRA Wear module)
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" } # Shared: app, wear
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" } # Shared: app, wear
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" } # Shared: app, wear
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" } # Shared: app, wear
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" } # Shared: app, wear
+androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "compose" } # Shared: app, wear
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "compose" }
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" } # Shared: app, wear
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
@@ -72,20 +69,17 @@ kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit"
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" } # Added for runTest
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExtJunit" }
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxTestEspressoCore" }
-androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose" } # Used in app and wear
-androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" } # Used in app and wear
-androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "compose" } # Used in app and wear
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose" } # Shared: app, wear
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" } # Shared: app, wear
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "compose" } # Shared: app, wear
 
-# HRA Wear module dependencies
-androidx-core-ktx-wear = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxWear" }
+# HRA Wear module dependencies (specific to Wear)
 androidx-percentlayout = { group = "androidx.percentlayout", name = "percentlayout", version.ref = "percentLayout" }
 androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerView" }
-androidx-activity-compose-wear = { group = "androidx.activity", name = "activity-compose", version.ref = "activityComposeWear" }
 androidx-compose-material-wear = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterialWear" } # Specific material version for wear
 androidx-wear-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "wearCompose" }
 androidx-wear-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "wearCompose" }
-androidx-lifecycle-runtime-ktx-wear = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxWear" }
 
 
 [plugins]

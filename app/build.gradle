@@ -1,12 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.google.gms.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt.android) // Corrected: apply true is default
 }
+
+// Apply Kapt for annotation processing, essential for libraries like Hilt and Room.
+apply plugin: 'kotlin-kapt'
+// Apply the Hilt Android plugin for dependency injection setup.
+apply plugin: 'com.google.dagger.hilt.android'
 
 android {
     namespace 'com.ahugenb.hra'
@@ -46,9 +49,8 @@ android {
     buildFeatures {
         compose true
     }
-    // composeOptions {
-    //     kotlinCompilerExtensionVersion is now managed by the Kotlin Compose plugin
-    // }
+    // composeOptions { // Kotlin Compiler Extension version for Compose is now managed by the Kotlin Compose plugin.
+    // }               // No explicit version setting needed here if using the latest compatible versions.
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
@@ -90,9 +92,9 @@ dependencies {
     testImplementation libs.kotlin.test.junit // Added for Kotlin specific tests
     testImplementation libs.kotlinx.coroutines.test // Added for runTest
 
-    // Hilt
-    implementation libs.hilt.android.lib
-    kapt libs.hilt.compiler
+    // Hilt for Dependency Injection
+    implementation libs.hilt.android.lib // Hilt Android runtime library
+    kapt libs.hilt.compiler          // Hilt annotation processor
 
     androidTestImplementation libs.androidx.test.ext.junit
     androidTestImplementation libs.androidx.test.espresso.core
