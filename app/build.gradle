@@ -59,6 +59,7 @@ android {
 }
 
 dependencies {
+    implementation libs.kotlin.stdlib.jdk8 // Explicitly include Kotlin standard library for version consistency.
     implementation libs.androidx.core.ktx
     implementation libs.androidx.lifecycle.runtime.ktx
 

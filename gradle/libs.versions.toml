@@ -6,7 +6,7 @@
 # composeUi = "1.7.8" -> Renamed to compose for broader use (ui, material, etc.)
 compose = "1.7.8"
 navigation = "2.8.8" # Renamed from nav
-room = "2.5.1"
+room = "2.6.1"
 wearCompose = "1.1.2" # Used for wear.compose.material and wear.compose.foundation
 googleServicesPlugin = "4.3.15" # Renamed from googleServices for clarity (it's a plugin)
 firebaseCrashlyticsPlugin = "2.9.4" # Renamed from firebaseCrashlyticsGradle for clarity
@@ -35,6 +35,9 @@ recyclerView = "1.3.0"
 composeMaterialWear = "1.4.0"
 
 [libraries]
+# Kotlin Standard Library
+kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" } # Aligns Kotlin standard library with the Kotlin plugin version for consistency.
+
 # Hilt
 hilt-android-lib = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }

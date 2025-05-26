@@ -49,7 +49,7 @@ android {
 }
 
 dependencies {
-
+    implementation libs.kotlin.stdlib.jdk8 // Explicitly include Kotlin standard library for version consistency.
     implementation libs.androidx.core.ktx
     implementation libs.google.play.services.wearable
     implementation libs.androidx.percentlayout
