@@ -6,7 +6,7 @@
     <string name="hra_drinks">%.1f Drinks</string>
     <string name="hra_planned">%.1f Planned</string>
     <string name="hra_cravings">%d Cravings</string>
-    <string name="hra_drinks_today">%.1f Drinks Today (%.1f Planned)</string>
+    <string name="hra_drinks_today">%1$.1f Drinks Today (%2$.1f Planned)</string>
     <string name="hra_cravings_today">%d Cravings Today</string>
     <string name="hra_money_spent_today">$%.2f Spent Today</string>
     <string name="hra_half_drink">I Had <![CDATA[\u00BD]]> Drink</string>

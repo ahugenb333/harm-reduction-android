@@ -32,13 +32,3 @@ class SyncViewModel @Inject constructor(
         }
     }
 }
-
-class SyncViewModelFactory(private val syncRepository: SyncRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SyncViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return SyncViewModel(syncRepository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}

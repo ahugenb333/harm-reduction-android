@@ -14,7 +14,7 @@ androidGradlePlugin = "8.8.2"
 kotlin = "2.1.10" # Renamed from kotlinAndroid & kotlinCompose as they are the same
 
 # App module versions
-hilt = "2.48" # Added for Hilt
+hilt = "2.51.1" # Added for Hilt
 kotlinxCoroutinesTest = "1.8.0" # Added for runTest
 coreKtx = "1.15.0" # Used by both app and wear modules
 lifecycleRuntimeKtx = "2.8.7" # Used by both app and wear modules

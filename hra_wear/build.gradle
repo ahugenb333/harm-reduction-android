@@ -5,13 +5,12 @@ plugins {
 }
 
 android {
-    // TODO: Consider a unique namespace for the wear module (e.g., com.ahugenb.hra.wear) if it's a distinct application.
-    namespace 'com.ahugenb.hra'
+    namespace 'com.ahugenb.hra.wear'
     compileSdk 35
 
     defaultConfig {
-        // TODO: Consider a unique applicationId for the wear module if it's a distinct application.
-        applicationId "com.ahugenb.hra"
+        // TODO: CRITICAL! Verify and update this applicationId to match the one listed in your Google Play Console for the released wearable app. This placeholder ("com.ahugenb.hra.wear") MUST be corrected if it doesn't match your actual released package name to ensure app updates work correctly.
+        applicationId "com.ahugenb.hra.wear"
         minSdk 30
         targetSdk 35
         versionCode 15
