@@ -3,6 +3,8 @@ package com.ahugenb.hra
 import com.ahugenb.hra.tracker.db.Day
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.Locale
 
 class Utils {
@@ -55,7 +57,10 @@ class Utils {
 
         private fun Double.isValidDollars(): Boolean = this in 0.0..1000000.0
 
-        fun Double.roundedToTwo(): Double = String.format(Locale.getDefault(), "%.2f", this).toDouble()
+        fun Double.roundedToTwo(): Double =
+            BigDecimal.valueOf(this)
+                .setScale(2, RoundingMode.HALF_UP)
+                .toDouble()
 
         fun String.smartToDouble(): Double =
             when (this.isEmpty() || this == ".") {
