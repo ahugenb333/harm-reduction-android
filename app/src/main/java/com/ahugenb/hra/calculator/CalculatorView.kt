@@ -39,7 +39,7 @@ fun CalculatorView(calculatorViewModel: CalculatorViewModel, trackerViewModel: T
     val ethanolId = if (mlChecked.value) R.string.hra_ethanol_ml else R.string.hra_ethanol_oz
 
     val calculatorState = calculatorViewModel.calculatorState.collectAsState().value
-    val units = calculatorState.units
+    val units = calculatorState.unitsawd
     val pureEthanol = calculatorState.ethanol
 
     val trackerState  = trackerViewModel.trackerState.collectAsState().value
